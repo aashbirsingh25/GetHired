@@ -1,0 +1,25 @@
+# CodeRabbit Configuration File
+# Documentation: https://docs.coderabbit.ai/guides/configure-coderabbit
+
+version: "2"
+language: "en-US"
+tone_instructions: "Provide thorough, professional code review feedback focused on security vulnerabilities, credential handling, error management, pythonic best practices, and data integrity."
+
+reviews:
+  profile: "chill"
+  request_tools:
+    ast_grep:
+      enabled: true
+  auto_review:
+    enabled: true
+    drafts: false
+  collapse_walkthrough: false
+  path_filters:
+    - "!scratch/**"
+    - "!backups/**"
+    - "!uploads/**"
+    - "!*.json"
+    - "!*_log.json"
+
+chat:
+  auto_reply: true
