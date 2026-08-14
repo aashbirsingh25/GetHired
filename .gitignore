@@ -32,7 +32,9 @@ auto_improvement_log.json
 background_search_log.json
 concurrency_log.json
 consensus_log.json
+cycle_yield_history.json
 feedback_log.json
+metrics.json
 pattern_revalidation_log.json
 scoring_log.json
 
