@@ -1,0 +1,74 @@
+# ==============================================================================
+# Environment & Credential Files
+# ==============================================================================
+.env
+.env.local
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+
+# ==============================================================================
+# Python / Bytecode / Testing Caches
+# ==============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ==============================================================================
+# Logs & Usage Tracking Files
+# ==============================================================================
+*_log.json
+*.log
+apify_usage_log.json
+auto_improvement_log.json
+background_search_log.json
+concurrency_log.json
+consensus_log.json
+feedback_log.json
+pattern_revalidation_log.json
+scoring_log.json
+
+# ==============================================================================
+# Temporary Material, Scratch & Audit Outputs
+# ==============================================================================
+scratch/
+backups/
+uploads/
+*.tmp
+*.temp
+smoke_test_results.json
+live_scan_status.json
+filter_metrics.json
+bulk_import_scan_report.json
+
+# ==============================================================================
+# Local Caches & Generated Index Files
+# ==============================================================================
+faiss_index.index
+faiss_index.store
+
+# ==============================================================================
+# Local User Data & Scraped Databases
+# ==============================================================================
+resume_store.json
+applications.json
+saved_jobs.json
+viewed_jobs.json
+jobs_store.json
+jobs_curated.json
+
+# ==============================================================================
+# System & IDE Metadata
+# ==============================================================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

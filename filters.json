@@ -1,0 +1,92 @@
+{
+  "exclude_keywords": [
+    "Senior",
+    "Lead",
+    "Manager",
+    "Principal",
+    "Director",
+    "Architect",
+    "Staff"
+  ],
+  "global_filters": {
+    "Skills & Tech Stack": [],
+    "Company Type & Industry": [],
+    "Job Type": [],
+    "Role & Seniority": [],
+    "Location & Model": [],
+    "Compensation & Level": []
+  },
+  "priority_tiers": [
+    {
+      "id": "tier-1",
+      "label": "TIER 1 \u2014 ABSOLUTE REQUIREMENTS",
+      "category_groups": [
+        {
+          "group_name": "Role & Seniority",
+          "values": [
+            "Software Engineer"
+          ]
+        },
+        {
+          "group_name": "Location & Model",
+          "values": [
+            "Gurugram",
+            "Bangalore",
+            "Remote"
+          ]
+        },
+        {
+          "group_name": "Compensation & Level",
+          "values": [
+            "Entry Level"
+          ]
+        }
+      ]
+    }
+  ],
+  "target_experience": [
+    "0 years",
+    "Fresher",
+    "Entry-level",
+    "0-1 years",
+    "0-2 years"
+  ],
+  "target_location": [
+    {
+      "id": "tier-1",
+      "label": "TIER 1 \u2014 ABSOLUTE REQUIREMENTS",
+      "category_groups": [
+        {
+          "group_name": "Role & Seniority",
+          "values": [
+            "Software Engineer"
+          ]
+        },
+        {
+          "group_name": "Location & Model",
+          "values": [
+            "Gurugram",
+            "Bangalore",
+            "Remote"
+          ]
+        },
+        {
+          "group_name": "Compensation & Level",
+          "values": [
+            "Entry Level"
+          ]
+        }
+      ]
+    }
+  ],
+  "target_role": [
+    "Software Engineer",
+    "Intern",
+    "Fresher",
+    "Entry-level",
+    "Backend Engineer",
+    "Frontend Engineer",
+    "Full Stack Engineer",
+    "Microsoft Developer"
+  ]
+}

@@ -1,0 +1,1276 @@
+{
+  "scan_order": [
+    {
+      "rank": 1,
+      "id": "microsoft-india",
+      "name": "Microsoft India",
+      "reason": "preference 0.95 + success 0% + salary 0 + difficulty 0.3"
+    },
+    {
+      "rank": 2,
+      "id": "google-india",
+      "name": "Google India",
+      "reason": "preference 0.95 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 3,
+      "id": "amazon-india",
+      "name": "Amazon India",
+      "reason": "preference 0.95 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 4,
+      "id": "paytm",
+      "name": "Paytm",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.3"
+    },
+    {
+      "rank": 5,
+      "id": "urban-company",
+      "name": "Urban Company",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.3"
+    },
+    {
+      "rank": 6,
+      "id": "razorpay",
+      "name": "Razorpay",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 7,
+      "id": "swiggy",
+      "name": "Swiggy",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 8,
+      "id": "zomato",
+      "name": "Zomato",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 9,
+      "id": "flipkart",
+      "name": "Flipkart",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 10,
+      "id": "phonepe",
+      "name": "PhonePe",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 11,
+      "id": "cred",
+      "name": "Cred",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 12,
+      "id": "meesho",
+      "name": "Meesho",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 13,
+      "id": "byjus",
+      "name": "Byju's",
+      "reason": "preference 0.90 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 14,
+      "id": "workday-india",
+      "name": "Workday India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.3"
+    },
+    {
+      "rank": 15,
+      "id": "intel-india",
+      "name": "Intel India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.3"
+    },
+    {
+      "rank": 16,
+      "id": "fractal-analytics",
+      "name": "Fractal Analytics",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.3"
+    },
+    {
+      "rank": 17,
+      "id": "vyapar",
+      "name": "Vyapar",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.3"
+    },
+    {
+      "rank": 18,
+      "id": "zepto",
+      "name": "Zepto",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 19,
+      "id": "bulktestcorp1",
+      "name": "BulkTestCorp1",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 20,
+      "id": "bulktestcorp2",
+      "name": "BulkTestCorp2",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 21,
+      "id": "bulktestcorp3",
+      "name": "BulkTestCorp3",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 22,
+      "id": "bulktestcorp4",
+      "name": "BulkTestCorp4",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 23,
+      "id": "bulktestcorp5",
+      "name": "BulkTestCorp5",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 24,
+      "id": "bulktestcorp6",
+      "name": "BulkTestCorp6",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 25,
+      "id": "bulktestcorp7",
+      "name": "BulkTestCorp7",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 26,
+      "id": "bulktestcorp8",
+      "name": "BulkTestCorp8",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 27,
+      "id": "bulktestcorp9",
+      "name": "BulkTestCorp9",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 28,
+      "id": "bulktestcorp10",
+      "name": "BulkTestCorp10",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 29,
+      "id": "netflix-india",
+      "name": "Netflix India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 30,
+      "id": "meta-india",
+      "name": "Meta India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 31,
+      "id": "apple-india",
+      "name": "Apple India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 32,
+      "id": "adobe-india",
+      "name": "Adobe India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 33,
+      "id": "salesforce-india",
+      "name": "Salesforce India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 34,
+      "id": "uber-india",
+      "name": "Uber India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 35,
+      "id": "atlassian-india",
+      "name": "Atlassian India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 36,
+      "id": "stripe-india",
+      "name": "Stripe India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 37,
+      "id": "linkedin-india",
+      "name": "LinkedIn India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 38,
+      "id": "airbnb-india",
+      "name": "Airbnb India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 39,
+      "id": "servicenow-india",
+      "name": "ServiceNow India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 40,
+      "id": "snowflake-india",
+      "name": "Snowflake India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 41,
+      "id": "nvidia-india",
+      "name": "NVIDIA India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 42,
+      "id": "qualcomm-india",
+      "name": "Qualcomm India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 43,
+      "id": "cisco-india",
+      "name": "Cisco India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 44,
+      "id": "vmware-india",
+      "name": "VMware India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 45,
+      "id": "sap-labs-india",
+      "name": "SAP Labs India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 46,
+      "id": "oracle-india",
+      "name": "Oracle India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 47,
+      "id": "ibm-india",
+      "name": "IBM India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 48,
+      "id": "dell-technologies-india",
+      "name": "Dell Technologies India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 49,
+      "id": "autodesk-india",
+      "name": "Autodesk India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 50,
+      "id": "intuit-india",
+      "name": "Intuit India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 51,
+      "id": "paypal-india",
+      "name": "PayPal India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 52,
+      "id": "visa-india",
+      "name": "Visa India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 53,
+      "id": "goldman-sachs-india",
+      "name": "Goldman Sachs India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 54,
+      "id": "jpmorgan-chase-india",
+      "name": "JPMorgan Chase India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 55,
+      "id": "morgan-stanley-india",
+      "name": "Morgan Stanley India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 56,
+      "id": "barclays-india",
+      "name": "Barclays India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 57,
+      "id": "deutsche-bank-india",
+      "name": "Deutsche Bank India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 58,
+      "id": "walmart-global-tech-india",
+      "name": "Walmart Global Tech India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 59,
+      "id": "american-express-india",
+      "name": "American Express India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 60,
+      "id": "nutanix-india",
+      "name": "Nutanix India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 61,
+      "id": "databricks-india",
+      "name": "Databricks India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 62,
+      "id": "mongodb-india",
+      "name": "MongoDB India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 63,
+      "id": "confluent-india",
+      "name": "Confluent India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 64,
+      "id": "hashicorp-india",
+      "name": "HashiCorp India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 65,
+      "id": "hcl-technologies",
+      "name": "HCL Technologies",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 66,
+      "id": "tech-mahindra",
+      "name": "Tech Mahindra",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 67,
+      "id": "cognizant",
+      "name": "Cognizant",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 68,
+      "id": "mphasis",
+      "name": "Mphasis",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 69,
+      "id": "ltimindtree",
+      "name": "LTIMindtree",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 70,
+      "id": "persistent-systems",
+      "name": "Persistent Systems",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 71,
+      "id": "hexaware",
+      "name": "Hexaware",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 72,
+      "id": "zensar",
+      "name": "Zensar",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 73,
+      "id": "birlasoft",
+      "name": "Birlasoft",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 74,
+      "id": "coforge",
+      "name": "Coforge",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 75,
+      "id": "l&t-infotech",
+      "name": "L&T Infotech",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 76,
+      "id": "capgemini-india",
+      "name": "Capgemini India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 77,
+      "id": "deloitte-india",
+      "name": "Deloitte India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 78,
+      "id": "ey-india",
+      "name": "EY India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 79,
+      "id": "kpmg-india",
+      "name": "KPMG India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 80,
+      "id": "myntra",
+      "name": "Myntra",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 81,
+      "id": "zerodha",
+      "name": "Zerodha",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 82,
+      "id": "groww",
+      "name": "Groww",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 83,
+      "id": "zoho",
+      "name": "Zoho",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 84,
+      "id": "freshworks",
+      "name": "Freshworks",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 85,
+      "id": "postman",
+      "name": "Postman",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 86,
+      "id": "nykaa",
+      "name": "Nykaa",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 87,
+      "id": "pharmeasy",
+      "name": "PharmEasy",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 88,
+      "id": "bigbasket",
+      "name": "BigBasket",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 89,
+      "id": "lenskart",
+      "name": "Lenskart",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 90,
+      "id": "policybazaar",
+      "name": "PolicyBazaar",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 91,
+      "id": "makemytrip",
+      "name": "MakeMyTrip",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 92,
+      "id": "ola",
+      "name": "Ola",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 93,
+      "id": "ola-electric",
+      "name": "Ola Electric",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 94,
+      "id": "inmobi",
+      "name": "InMobi",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 95,
+      "id": "cars24",
+      "name": "Cars24",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 96,
+      "id": "cultfit",
+      "name": "Cult.fit",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 97,
+      "id": "dream11",
+      "name": "Dream11",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 98,
+      "id": "games24x7",
+      "name": "Games24x7",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 99,
+      "id": "juspay",
+      "name": "Juspay",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 100,
+      "id": "rapido",
+      "name": "Rapido",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 101,
+      "id": "chargebee",
+      "name": "Chargebee",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 102,
+      "id": "rocketlane",
+      "name": "Rocketlane",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 103,
+      "id": "everstage",
+      "name": "Everstage",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 104,
+      "id": "uniphore",
+      "name": "Uniphore",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 105,
+      "id": "yubi",
+      "name": "Yubi",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 106,
+      "id": "m2p-fintech",
+      "name": "M2P Fintech",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 107,
+      "id": "innovaccer",
+      "name": "Innovaccer",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 108,
+      "id": "highradius",
+      "name": "HighRadius",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 109,
+      "id": "whatfix",
+      "name": "Whatfix",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 110,
+      "id": "darwinbox",
+      "name": "Darwinbox",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 111,
+      "id": "icertis",
+      "name": "Icertis",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 112,
+      "id": "zenoti",
+      "name": "Zenoti",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 113,
+      "id": "leadsquared",
+      "name": "LeadSquared",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 114,
+      "id": "hasura",
+      "name": "Hasura",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 115,
+      "id": "fyle",
+      "name": "Fyle",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 116,
+      "id": "cleartax",
+      "name": "ClearTax",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 117,
+      "id": "slice",
+      "name": "Slice",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 118,
+      "id": "jupiter-money",
+      "name": "Jupiter Money",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 119,
+      "id": "fi-money",
+      "name": "Fi Money",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 120,
+      "id": "onecard",
+      "name": "OneCard",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 121,
+      "id": "bharatpe",
+      "name": "BharatPe",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 122,
+      "id": "pine-labs",
+      "name": "Pine Labs",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 123,
+      "id": "cashfree",
+      "name": "Cashfree",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 124,
+      "id": "setu",
+      "name": "Setu",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 125,
+      "id": "open-financial-technologies",
+      "name": "Open Financial Technologies",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 126,
+      "id": "blinkit",
+      "name": "Blinkit",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 127,
+      "id": "dunzo",
+      "name": "Dunzo",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 128,
+      "id": "udaan",
+      "name": "Udaan",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 129,
+      "id": "shiprocket",
+      "name": "Shiprocket",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 130,
+      "id": "delhivery",
+      "name": "Delhivery",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 131,
+      "id": "purplle",
+      "name": "Purplle",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 132,
+      "id": "firstcry",
+      "name": "FirstCry",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 133,
+      "id": "licious",
+      "name": "Licious",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 134,
+      "id": "upstox",
+      "name": "Upstox",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 135,
+      "id": "smallcase",
+      "name": "Smallcase",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 136,
+      "id": "indmoney",
+      "name": "INDmoney",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 137,
+      "id": "angel-one",
+      "name": "Angel One",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 138,
+      "id": "coindcx",
+      "name": "CoinDCX",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 139,
+      "id": "coinswitch",
+      "name": "CoinSwitch",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 140,
+      "id": "unacademy",
+      "name": "Unacademy",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 141,
+      "id": "vedantu",
+      "name": "Vedantu",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 142,
+      "id": "physicswallah",
+      "name": "PhysicsWallah",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 143,
+      "id": "upgrad",
+      "name": "upGrad",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 144,
+      "id": "simplilearn",
+      "name": "Simplilearn",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 145,
+      "id": "scaler",
+      "name": "Scaler",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 146,
+      "id": "coding-ninjas",
+      "name": "Coding Ninjas",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 147,
+      "id": "practo",
+      "name": "Practo",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 148,
+      "id": "pristyn-care",
+      "name": "Pristyn Care",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 149,
+      "id": "1mg",
+      "name": "1mg",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 150,
+      "id": "healthifyme",
+      "name": "HealthifyMe",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 151,
+      "id": "browserstack",
+      "name": "BrowserStack",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 152,
+      "id": "clevertap",
+      "name": "CleverTap",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 153,
+      "id": "webengage",
+      "name": "WebEngage",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 154,
+      "id": "moengage",
+      "name": "MoEngage",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 155,
+      "id": "netcore-cloud",
+      "name": "Netcore Cloud",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 156,
+      "id": "wingify-(vwo)",
+      "name": "Wingify (VWO)",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 157,
+      "id": "locussh",
+      "name": "Locus.sh",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 158,
+      "id": "shipsy",
+      "name": "Shipsy",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 159,
+      "id": "signzy",
+      "name": "Signzy",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 160,
+      "id": "hyperface",
+      "name": "Hyperface",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 161,
+      "id": "mu-sigma",
+      "name": "Mu Sigma",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 162,
+      "id": "tiger-analytics",
+      "name": "Tiger Analytics",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 163,
+      "id": "latentview-analytics",
+      "name": "LatentView Analytics",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 164,
+      "id": "tredence",
+      "name": "Tredence",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 165,
+      "id": "sigmoid",
+      "name": "Sigmoid",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 166,
+      "id": "thoughtworks-india",
+      "name": "ThoughtWorks India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 167,
+      "id": "epam-systems-india",
+      "name": "EPAM Systems India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 168,
+      "id": "globant-india",
+      "name": "Globant India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 169,
+      "id": "nazara-technologies",
+      "name": "Nazara Technologies",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 170,
+      "id": "zupee",
+      "name": "Zupee",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 171,
+      "id": "winzo",
+      "name": "WinZO",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 172,
+      "id": "porter",
+      "name": "Porter",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 173,
+      "id": "blackbuck",
+      "name": "BlackBuck",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 174,
+      "id": "shadowfax",
+      "name": "Shadowfax",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 175,
+      "id": "tower-research-capital-india",
+      "name": "Tower Research Capital India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 176,
+      "id": "de-shaw-india",
+      "name": "DE Shaw India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 177,
+      "id": "optiver-india",
+      "name": "Optiver India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 178,
+      "id": "graviton-research-capital",
+      "name": "Graviton Research Capital",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 179,
+      "id": "quadeye",
+      "name": "Quadeye",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 180,
+      "id": "worldquant-india",
+      "name": "WorldQuant India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 181,
+      "id": "zscaler-india",
+      "name": "Zscaler India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 182,
+      "id": "crowdstrike-india",
+      "name": "CrowdStrike India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 183,
+      "id": "sentinelone-india",
+      "name": "SentinelOne India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 184,
+      "id": "rapid7-india",
+      "name": "Rapid7 India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 185,
+      "id": "qualys-india",
+      "name": "Qualys India",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 186,
+      "id": "dehaat",
+      "name": "DeHaat",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 187,
+      "id": "ninjacart",
+      "name": "Ninjacart",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 188,
+      "id": "ecozen",
+      "name": "Ecozen",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 189,
+      "id": "skyroot-aerospace",
+      "name": "Skyroot Aerospace",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 190,
+      "id": "agnikul-cosmos",
+      "name": "Agnikul Cosmos",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 191,
+      "id": "pixxel",
+      "name": "Pixxel",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 192,
+      "id": "mamaearth",
+      "name": "Mamaearth",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 193,
+      "id": "boat",
+      "name": "boAt",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 194,
+      "id": "ather-energy",
+      "name": "Ather Energy",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 195,
+      "id": "sarvam-ai",
+      "name": "Sarvam AI",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 196,
+      "id": "krutrim",
+      "name": "Krutrim",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 197,
+      "id": "nobroker",
+      "name": "NoBroker",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 198,
+      "id": "housingcom",
+      "name": "Housing.com",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 199,
+      "id": "moglix",
+      "name": "Moglix",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 200,
+      "id": "ofbusiness",
+      "name": "OfBusiness",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 201,
+      "id": "zetwerk",
+      "name": "Zetwerk",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 202,
+      "id": "khatabook",
+      "name": "Khatabook",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 203,
+      "id": "digit-insurance",
+      "name": "Digit Insurance",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 204,
+      "id": "acko",
+      "name": "Acko",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 205,
+      "id": "hdfc-bank",
+      "name": "HDFC Bank",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 206,
+      "id": "icici-bank",
+      "name": "ICICI Bank",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 207,
+      "id": "axis-bank",
+      "name": "Axis Bank",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 208,
+      "id": "kotak-mahindra-bank",
+      "name": "Kotak Mahindra Bank",
+      "reason": "preference 0.70 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 209,
+      "id": "tcs",
+      "name": "TCS",
+      "reason": "preference 0.50 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 210,
+      "id": "infosys",
+      "name": "Infosys",
+      "reason": "preference 0.50 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 211,
+      "id": "wipro",
+      "name": "Wipro",
+      "reason": "preference 0.50 + success 0% + salary 0 + difficulty 0.8"
+    },
+    {
+      "rank": 212,
+      "id": "accenture-india",
+      "name": "Accenture India",
+      "reason": "preference 0.50 + success 0% + salary 0 + difficulty 0.8"
+    }
+  ]
+}

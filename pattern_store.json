@@ -1,0 +1,1441 @@
+{
+  "amazon-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 23,
+      "failure_count": 22,
+      "last_used": "2026-08-12T07:31:29.294815+00:00",
+      "last_validated": "2026-08-12T07:31:29.294815+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "microsoft-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "[class*='jobCard']",
+      "title_selector": "h1, h2, h3, h4, a, strong",
+      "location_selector": "[class*='loc'], [class*='city']",
+      "apply_link_selector": "a",
+      "success_count": 33,
+      "failure_count": 3,
+      "last_used": "2026-08-14T12:36:12.074808+00:00",
+      "last_validated": "2026-08-14T12:36:12.074808+00:00",
+      "status": "active"
+    }
+  },
+  "razorpay": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 40,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:36:46.670179+00:00",
+      "last_validated": "2026-08-14T12:36:46.670179+00:00",
+      "status": "active"
+    }
+  },
+  "phonepe": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 21,
+      "failure_count": 11,
+      "last_used": "2026-08-12T07:32:34.106797+00:00",
+      "last_validated": "2026-08-12T07:32:34.106797+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "paytm": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 23,
+      "failure_count": 19,
+      "last_used": "2026-08-12T07:31:43.038203+00:00",
+      "last_validated": "2026-08-12T07:31:43.038203+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "urban-company": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 39,
+      "failure_count": 3,
+      "last_used": "2026-08-14T12:36:38.706628+00:00",
+      "last_validated": "2026-08-14T12:36:38.706628+00:00",
+      "status": "active"
+    }
+  },
+  "flipkart": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 21,
+      "failure_count": 14,
+      "last_used": "2026-08-12T07:32:27.420414+00:00",
+      "last_validated": "2026-08-12T07:32:27.420414+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "byjus": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 20,
+      "failure_count": 11,
+      "last_used": "2026-08-12T07:32:50.102586+00:00",
+      "last_validated": "2026-08-12T07:32:50.102586+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "wipro": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 22,
+      "failure_count": 0,
+      "last_used": "2026-08-14T13:02:29.585881+00:00",
+      "last_validated": "2026-08-14T13:02:29.585881+00:00",
+      "status": "active"
+    }
+  },
+  "accenture-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 16,
+      "failure_count": 6,
+      "last_used": "2026-08-12T08:21:53.716613+00:00",
+      "last_validated": "2026-08-12T08:21:53.716613+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "test-comp-phase6c": {
+    "last_successful_pattern": {
+      "job_card_selector": "div.job-card",
+      "title_selector": "h2.title",
+      "location_selector": "span.loc",
+      "apply_link_selector": "a.apply",
+      "success_count": 7,
+      "failure_count": 3,
+      "last_used": "2026-08-12T07:16:23.409328+00:00",
+      "last_validated": "2026-08-12T07:16:23.409328+00:00",
+      "status": "active"
+    }
+  },
+  "meta-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 8,
+      "last_used": "2026-08-12T07:35:18.848611+00:00",
+      "last_validated": "2026-08-12T07:35:18.848611+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "apple-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 12,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:41:32.711080+00:00",
+      "last_validated": "2026-08-14T12:41:32.711080+00:00",
+      "status": "active"
+    }
+  },
+  "adobe-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 12,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:41:43.214240+00:00",
+      "last_validated": "2026-08-14T12:41:43.214240+00:00",
+      "status": "active"
+    }
+  },
+  "atlassian-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 12,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:42:02.982967+00:00",
+      "last_validated": "2026-08-14T12:42:02.982967+00:00",
+      "status": "active"
+    }
+  },
+  "stripe-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 12,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:42:10.137377+00:00",
+      "last_validated": "2026-08-14T12:42:10.137377+00:00",
+      "status": "active"
+    }
+  },
+  "linkedin-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:36:23.580745+00:00",
+      "last_validated": "2026-08-12T07:36:23.580745+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "airbnb-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 8,
+      "failure_count": 4,
+      "last_used": "2026-08-13T12:24:21.858428+00:00",
+      "last_validated": "2026-08-13T12:24:21.858428+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "servicenow-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 8,
+      "last_used": "2026-08-12T07:36:42.626785+00:00",
+      "last_validated": "2026-08-12T07:36:42.626785+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "snowflake-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 12,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:42:40.288733+00:00",
+      "last_validated": "2026-08-14T12:42:40.288733+00:00",
+      "status": "active"
+    }
+  },
+  "nvidia-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 1,
+      "failure_count": 11,
+      "last_used": "2026-08-09T17:24:37.518630+00:00",
+      "last_validated": "2026-08-11T07:13:15.392634+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "qualcomm-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 12,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:43:00.295210+00:00",
+      "last_validated": "2026-08-14T12:43:00.295210+00:00",
+      "status": "active"
+    }
+  },
+  "cisco-india": {
+    "last_successful_pattern": {
+      "job_card_selector": ".jobs-list-item",
+      "title_selector": "h1, h2, h3, h4, a, strong",
+      "location_selector": "[class*='loc'], [class*='city']",
+      "apply_link_selector": "a",
+      "success_count": 3,
+      "failure_count": 1,
+      "last_used": "2026-08-13T12:25:13.494597+00:00",
+      "last_validated": "2026-08-13T12:25:13.494597+00:00",
+      "status": "active"
+    }
+  },
+  "sap-labs-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 12,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:43:21.345480+00:00",
+      "last_validated": "2026-08-14T12:43:21.345480+00:00",
+      "status": "active"
+    }
+  },
+  "oracle-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:37:45.282569+00:00",
+      "last_validated": "2026-08-12T07:37:45.282569+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "ibm-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:37:55.356555+00:00",
+      "last_validated": "2026-08-12T07:37:55.356555+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "dell-technologies-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 12,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:43:45.825298+00:00",
+      "last_validated": "2026-08-14T12:43:45.825298+00:00",
+      "status": "active"
+    }
+  },
+  "intuit-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 8,
+      "failure_count": 4,
+      "last_used": "2026-08-13T19:17:28.950812+00:00",
+      "last_validated": "2026-08-13T19:17:28.950812+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "paypal-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 3,
+      "last_used": "2026-08-14T12:44:09.303649+00:00",
+      "last_validated": "2026-08-14T12:44:09.303649+00:00",
+      "status": "active"
+    }
+  },
+  "goldman-sachs-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:38:51.412224+00:00",
+      "last_validated": "2026-08-12T07:38:51.412224+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "jpmorgan-chase-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:39:01.722688+00:00",
+      "last_validated": "2026-08-12T07:39:01.722688+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "barclays-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 12,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:45:29.792596+00:00",
+      "last_validated": "2026-08-14T12:45:29.792596+00:00",
+      "status": "active"
+    }
+  },
+  "deutsche-bank-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:39:42.937601+00:00",
+      "last_validated": "2026-08-12T07:39:42.937601+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "nutanix-india": {
+    "last_successful_pattern": {
+      "job_card_selector": ".job-listing",
+      "title_selector": "h1, h2, h3, h4, a, strong",
+      "location_selector": "[class*='loc'], [class*='city']",
+      "apply_link_selector": "a",
+      "success_count": 1,
+      "failure_count": 1,
+      "last_used": "2026-08-09T17:26:46.774032+00:00",
+      "last_validated": "2026-08-09T17:26:46.774032+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "databricks-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:40:26.596654+00:00",
+      "last_validated": "2026-08-12T07:40:26.596654+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "mongodb-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:40:45.629982+00:00",
+      "last_validated": "2026-08-12T07:40:45.629982+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "cognizant": {
+    "last_successful_pattern": {
+      "job_card_selector": ".job-listing",
+      "title_selector": "h1, h2, h3, h4, a, strong",
+      "location_selector": "[class*='loc'], [class*='city']",
+      "apply_link_selector": "a",
+      "success_count": 1,
+      "failure_count": 1,
+      "last_used": "2026-08-09T17:27:16.410020+00:00",
+      "last_validated": "2026-08-09T17:27:16.410020+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "mphasis": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:41:30.663153+00:00",
+      "last_validated": "2026-08-12T07:41:30.663153+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "ltimindtree": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:41:37.325530+00:00",
+      "last_validated": "2026-08-12T07:41:37.325530+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "zensar": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 9,
+      "last_used": "2026-08-12T08:06:32.359245+00:00",
+      "last_validated": "2026-08-12T08:06:32.359245+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "birlasoft": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:47:14.615175+00:00",
+      "last_validated": "2026-08-14T12:47:14.615175+00:00",
+      "status": "active"
+    }
+  },
+  "l&t-infotech": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:42:14.927025+00:00",
+      "last_validated": "2026-08-12T07:42:14.927025+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "capgemini-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 6,
+      "last_used": "2026-08-12T08:07:07.163331+00:00",
+      "last_validated": "2026-08-12T08:07:07.163331+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "deloitte-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:47:49.073909+00:00",
+      "last_validated": "2026-08-14T12:47:49.073909+00:00",
+      "status": "active"
+    }
+  },
+  "ey-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:48:00.671607+00:00",
+      "last_validated": "2026-08-14T12:48:00.671607+00:00",
+      "status": "active"
+    }
+  },
+  "kpmg-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:42:53.984076+00:00",
+      "last_validated": "2026-08-12T07:42:53.984076+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "zoho": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:43:13.409601+00:00",
+      "last_validated": "2026-08-12T07:43:13.409601+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "freshworks": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:43:19.088535+00:00",
+      "last_validated": "2026-08-12T07:43:19.088535+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "postman": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:48:39.724253+00:00",
+      "last_validated": "2026-08-14T12:48:39.724253+00:00",
+      "status": "active"
+    }
+  },
+  "lenskart": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:48:57.327446+00:00",
+      "last_validated": "2026-08-14T12:48:57.327446+00:00",
+      "status": "active"
+    }
+  },
+  "inmobi": {
+    "last_successful_pattern": {
+      "job_card_selector": ".job-listing",
+      "title_selector": "h1, h2, h3, h4, a, strong",
+      "location_selector": "[class*='loc'], [class*='city']",
+      "apply_link_selector": "a",
+      "success_count": 1,
+      "failure_count": 0,
+      "last_used": "2026-08-09T17:29:16.754491+00:00",
+      "last_validated": "2026-08-11T07:13:15.392634+00:00",
+      "status": "active"
+    }
+  },
+  "juspay": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:50:11.800109+00:00",
+      "last_validated": "2026-08-14T12:50:11.800109+00:00",
+      "status": "active"
+    }
+  },
+  "rocketlane": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 8,
+      "last_used": "2026-08-12T07:45:35.874292+00:00",
+      "last_validated": "2026-08-12T07:45:35.874292+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "everstage": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 7,
+      "failure_count": 4,
+      "last_used": "2026-08-13T12:32:46.497500+00:00",
+      "last_validated": "2026-08-13T12:32:46.497500+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "uniphore": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 5,
+      "failure_count": 7,
+      "last_used": "2026-08-12T08:10:01.992092+00:00",
+      "last_validated": "2026-08-12T08:10:01.992092+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "yubi": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 8,
+      "last_used": "2026-08-12T07:45:55.563102+00:00",
+      "last_validated": "2026-08-12T07:45:55.563102+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "highradius": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:51:12.807024+00:00",
+      "last_validated": "2026-08-14T12:51:12.807024+00:00",
+      "status": "active"
+    }
+  },
+  "whatfix": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:46:21.773057+00:00",
+      "last_validated": "2026-08-12T07:46:21.773057+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "icertis": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:51:37.069364+00:00",
+      "last_validated": "2026-08-14T12:51:37.069364+00:00",
+      "status": "active"
+    }
+  },
+  "zenoti": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:51:47.226936+00:00",
+      "last_validated": "2026-08-14T12:51:47.226936+00:00",
+      "status": "active"
+    }
+  },
+  "leadsquared": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:51:52.723160+00:00",
+      "last_validated": "2026-08-14T12:51:52.723160+00:00",
+      "status": "active"
+    }
+  },
+  "hasura": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:47:10.584048+00:00",
+      "last_validated": "2026-08-12T07:47:10.584048+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "cleartax": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 11,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:52:06.390868+00:00",
+      "last_validated": "2026-08-14T12:52:06.390868+00:00",
+      "status": "active"
+    }
+  },
+  "pine-labs": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:47:46.318806+00:00",
+      "last_validated": "2026-08-12T07:47:46.318806+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "cashfree": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:47:53.208557+00:00",
+      "last_validated": "2026-08-12T07:47:53.208557+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "open-financial-technologies": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:48:04.481577+00:00",
+      "last_validated": "2026-08-12T07:48:04.481577+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "shiprocket": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 8,
+      "last_used": "2026-08-12T07:48:32.406559+00:00",
+      "last_validated": "2026-08-12T07:48:32.406559+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "delhivery": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:53:26.992724+00:00",
+      "last_validated": "2026-08-14T12:53:26.992724+00:00",
+      "status": "active"
+    }
+  },
+  "purplle": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:48:50.271050+00:00",
+      "last_validated": "2026-08-12T07:48:50.271050+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "indmoney": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:54:06.161378+00:00",
+      "last_validated": "2026-08-14T12:54:06.161378+00:00",
+      "status": "active"
+    }
+  },
+  "angel-one": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:54:10.641477+00:00",
+      "last_validated": "2026-08-14T12:54:10.641477+00:00",
+      "status": "active"
+    }
+  },
+  "physicswallah": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 8,
+      "last_used": "2026-08-12T07:49:55.013107+00:00",
+      "last_validated": "2026-08-12T07:49:55.013107+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "upgrad": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 6,
+      "failure_count": 4,
+      "last_used": "2026-08-13T12:37:12.891106+00:00",
+      "last_validated": "2026-08-13T12:37:12.891106+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "scaler": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:54:48.535579+00:00",
+      "last_validated": "2026-08-14T12:54:48.535579+00:00",
+      "status": "active"
+    }
+  },
+  "coding-ninjas": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 8,
+      "last_used": "2026-08-12T07:50:34.429497+00:00",
+      "last_validated": "2026-08-12T07:50:34.429497+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "pristyn-care": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:55:01.207302+00:00",
+      "last_validated": "2026-08-14T12:55:01.207302+00:00",
+      "status": "active"
+    }
+  },
+  "browserstack": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 6,
+      "last_used": "2026-08-12T08:14:36.717620+00:00",
+      "last_validated": "2026-08-12T08:14:36.717620+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "clevertap": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:55:24.229377+00:00",
+      "last_validated": "2026-08-14T12:55:24.229377+00:00",
+      "status": "active"
+    }
+  },
+  "webengage": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:55:44.120546+00:00",
+      "last_validated": "2026-08-14T12:55:44.120546+00:00",
+      "status": "active"
+    }
+  },
+  "moengage": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:55:51.482113+00:00",
+      "last_validated": "2026-08-14T12:55:51.482113+00:00",
+      "status": "active"
+    }
+  },
+  "netcore-cloud": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:55:57.104362+00:00",
+      "last_validated": "2026-08-14T12:55:57.104362+00:00",
+      "status": "active"
+    }
+  },
+  "wingify-(vwo)": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:52:06.245395+00:00",
+      "last_validated": "2026-08-12T07:52:06.245395+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "locussh": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 6,
+      "last_used": "2026-08-12T08:15:33.730677+00:00",
+      "last_validated": "2026-08-12T08:15:33.730677+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "shipsy": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:52:21.507066+00:00",
+      "last_validated": "2026-08-12T07:52:21.507066+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "signzy": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 10,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:56:30.623056+00:00",
+      "last_validated": "2026-08-14T12:56:30.623056+00:00",
+      "status": "active"
+    }
+  },
+  "mu-sigma": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:53:05.418707+00:00",
+      "last_validated": "2026-08-12T07:53:05.418707+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "tiger-analytics": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 7,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:56:52.013065+00:00",
+      "last_validated": "2026-08-14T12:56:52.013065+00:00",
+      "status": "active"
+    }
+  },
+  "latentview-analytics": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 8,
+      "last_used": "2026-08-12T07:53:24.272804+00:00",
+      "last_validated": "2026-08-12T07:53:24.272804+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "tredence": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 4,
+      "failure_count": 7,
+      "last_used": "2026-08-12T08:16:32.323475+00:00",
+      "last_validated": "2026-08-12T08:16:32.323475+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "sigmoid": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 2,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:53:51.351014+00:00",
+      "last_validated": "2026-08-12T07:53:51.351014+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "thoughtworks-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 2,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:54:00.278876+00:00",
+      "last_validated": "2026-08-12T07:54:00.278876+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "tower-research-capital-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 2,
+      "failure_count": 8,
+      "last_used": "2026-08-12T07:54:36.499342+00:00",
+      "last_validated": "2026-08-12T07:54:36.499342+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "de-shaw-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 2,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:54:45.497475+00:00",
+      "last_validated": "2026-08-12T07:54:45.497475+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "quadeye": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 9,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:58:36.370152+00:00",
+      "last_validated": "2026-08-14T12:58:36.370152+00:00",
+      "status": "active"
+    }
+  },
+  "worldquant-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 9,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:58:42.952627+00:00",
+      "last_validated": "2026-08-14T12:58:42.952627+00:00",
+      "status": "active"
+    }
+  },
+  "zscaler-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 3,
+      "failure_count": 6,
+      "last_used": "2026-08-12T08:18:11.827811+00:00",
+      "last_validated": "2026-08-12T08:18:11.828812+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "crowdstrike-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 9,
+      "failure_count": 0,
+      "last_used": "2026-08-14T12:58:56.362152+00:00",
+      "last_validated": "2026-08-14T12:58:56.362152+00:00",
+      "status": "active"
+    }
+  },
+  "sentinelone-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 2,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:55:56.414378+00:00",
+      "last_validated": "2026-08-12T07:55:56.414378+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "rapid7-india": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 2,
+      "failure_count": 7,
+      "last_used": "2026-08-12T07:56:05.070667+00:00",
+      "last_validated": "2026-08-12T07:56:05.070667+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "sarvam-ai": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 8,
+      "failure_count": 0,
+      "last_used": "2026-08-14T13:00:39.119057+00:00",
+      "last_validated": "2026-08-14T13:00:39.119057+00:00",
+      "status": "active"
+    }
+  },
+  "zetwerk": {
+    "last_successful_pattern": {
+      "job_card_selector": ".job-listing",
+      "title_selector": "h1, h2, h3, h4, a, strong",
+      "location_selector": "[class*='loc'], [class*='city']",
+      "apply_link_selector": "a",
+      "success_count": 1,
+      "failure_count": 0,
+      "last_used": "2026-08-09T17:38:09.286927+00:00",
+      "last_validated": "2026-08-11T07:13:15.392634+00:00",
+      "status": "active"
+    }
+  },
+  "khatabook": {
+    "last_successful_pattern": {
+      "job_card_selector": ".job-card",
+      "title_selector": "h1, h2, h3, h4, a, strong",
+      "location_selector": "[class*='loc'], [class*='city']",
+      "apply_link_selector": "a",
+      "success_count": 1,
+      "failure_count": 2,
+      "last_used": "2026-08-09T17:38:13.125235+00:00",
+      "last_validated": "2026-08-09T17:38:13.125235+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "acko": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 1,
+      "failure_count": 7,
+      "last_used": "2026-08-09T17:38:24.824596+00:00",
+      "last_validated": "2026-08-11T07:13:15.392634+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "axis-bank": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 1,
+      "failure_count": 7,
+      "last_used": "2026-08-09T17:38:37.424060+00:00",
+      "last_validated": "2026-08-11T07:13:15.392634+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "kotak-mahindra-bank": {
+    "last_successful_pattern": {
+      "job_card_selector": "a[href]",
+      "title_selector": "self",
+      "location_selector": null,
+      "apply_link_selector": "self",
+      "success_count": 1,
+      "failure_count": 8,
+      "last_used": "2026-08-09T17:38:42.357767+00:00",
+      "last_validated": "2026-08-09T17:38:42.357767+00:00",
+      "status": "stale",
+      "needs_relearning": true
+    }
+  },
+  "vyapar": {
+    "last_successful_pattern": {
+      "job_card_selector": ".job-card",
+      "title_selector": "h1, h2, h3, h4, a, strong",
+      "location_selector": "[class*='loc'], [class*='city']",
+      "apply_link_selector": "a",
+      "success_count": 12,
+      "failure_count": 1,
+      "last_used": "2026-08-14T12:41:08.869136+00:00",
+      "last_validated": "2026-08-14T12:41:08.869136+00:00",
+      "status": "active"
+    }
+  }
+}
