@@ -2,15 +2,43 @@ import re
 from typing import List, Dict, Any, Tuple
 
 KNOWN_TECH_SKILLS = [
-    "Python", "Java", "C++", "C#", "JavaScript", "TypeScript", "React", "Angular",
+    "Python", "Java", "C++", "C#", "Go", "C", "R", "JavaScript", "TypeScript", "React", "Angular",
     "Vue", "Node.js", "Express", "Flask", "Django", "FastAPI", "Spring Boot",
     "SQL", "PostgreSQL", "MySQL", "MongoDB", "Redis", "AWS", "Azure", "GCP",
     "Docker", "Kubernetes", "Git", "Linux", "REST API", "GraphQL", "Microservices",
-    "Machine Learning", "Deep Learning", "NLP", "Pandas", "NumPy", "PyTorch", "TensorFlow",
+    "Machine Learning", "Deep Learning", "AI", "NLP", "Pandas", "NumPy", "PyTorch", "TensorFlow",
     "HTML", "CSS", "Tailwind", "Bootstrap", "CI/CD"
 ]
 
-SKILL_PATTERNS = [(skill, re.compile(r"\b" + re.escape(skill.upper()) + r"\b")) for skill in KNOWN_TECH_SKILLS]
+CUSTOM_SKILL_PATTERNS = {
+    "Go": re.compile(
+        r"(?:^|\s|\b)(?:GOLANG|GO\s*(?:DEVELOPER|ENGINEER|PROGRAMMING|LANGUAGE|BACKEND|STACK|CODE)|(?:WRITTEN IN|EXPERIENCE IN|PROFICIENT IN|KNOWLEDGE OF|USING)\s+GO|GO\s*[/,]\s*(?:PYTHON|C\+\+|JAVA|RUST|DOCKER|KUBERNETES))(?:$|\s|\b)",
+        re.IGNORECASE
+    ),
+    "C": re.compile(
+        r"(?:^|\s|\b)(?:C\s*(?:/\s*C\+\+|PROGRAMMING|LANGUAGE|DEVELOPER|ENGINEER|CODE)|EMBEDDED\s+C|C\s+(?:OR|,)\s+C\+\+|(?:WRITTEN IN|EXPERIENCE IN|PROFICIENT IN|KNOWLEDGE OF)\s+C)(?:$|\s|\b)",
+        re.IGNORECASE
+    ),
+    "R": re.compile(
+        r"(?:^|\s|\b)(?:RSTUDIO|R-STUDIO|R\s*(?:PROGRAMMING|LANGUAGE|STUDIO|DEVELOPER|ANALYTICS)|(?:WRITTEN IN|EXPERIENCE IN|PROFICIENT IN)\s+R|R\s*[/,]\s*(?:PYTHON|SQL|SAS|STATA|PANDAS))(?:$|\s|\b)",
+        re.IGNORECASE
+    ),
+    "AI": re.compile(
+        r"(?:^|\s|\b)(?:ARTIFICIAL INTELLIGENCE|GENAI|GENERATIVE AI|AI/ML|AI\s*(?:ENGINEER|DEVELOPER|MODEL|SYSTEM|PLATFORM|SOLUTION|APPLICATION|RESEARCH|TOOLS))(?:$|\s|\b)",
+        re.IGNORECASE
+    ),
+    "CSS": re.compile(
+        r"(?:^|\s|\b)(?:CSS3?|HTML\s*[/,&\+]\s*CSS|TAILWIND|BOOTSTRAP|CSS\s+DEVELOPER|CSS\s+STYLING)(?:$|\s|\b)",
+        re.IGNORECASE
+    )
+}
+
+SKILL_PATTERNS = []
+for skill in KNOWN_TECH_SKILLS:
+    if skill in CUSTOM_SKILL_PATTERNS:
+        SKILL_PATTERNS.append((skill, CUSTOM_SKILL_PATTERNS[skill]))
+    else:
+        SKILL_PATTERNS.append((skill, re.compile(r"(?:^|\s|\b)" + re.escape(skill.upper()) + r"(?:$|\s|\b)")))
 
 def classify_role(title: str, description: str) -> Tuple[int, str]:
     title_upper = (title or "").upper()

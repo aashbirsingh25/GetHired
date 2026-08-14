@@ -43,7 +43,7 @@ def fetch_indeed_jobs(role: str = "Software Engineer", location: str = "Gurugram
     try:
         response = requests.get(url, params=params, timeout=10)
         if response.status_code != 200:
-            print(f"[IndeedFetcher] HTTP error {response.status_code}: {response.text}")
+            print(f"[IndeedFetcher] Indeed legacy API search endpoint retired (HTTP {response.status_code}). Returning empty job list.")
             return []
 
         data = response.json()

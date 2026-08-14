@@ -46,7 +46,7 @@ def fetch_naukri_jobs(role: str = "Software Engineer", location: str = "Gurugram
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         resp = requests.get(feed_url, headers=headers, timeout=5)
         if resp.status_code != 200:
-            print(f"[NaukriFetcher] RSS feed HTTP {resp.status_code}")
+            print(f"[NaukriFetcher] Naukri search endpoint returned HTTP {resp.status_code}. Returning empty job list.")
             return []
         parsed_feed = feedparser.parse(resp.content)
         entries = getattr(parsed_feed, "entries", [])

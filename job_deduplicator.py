@@ -101,9 +101,25 @@ class JobDeduplicator:
                 loc_match = (norm_loc == head_loc) or ("remote" in norm_loc and "remote" in head_loc) or (difflib.SequenceMatcher(None, norm_loc, head_loc).ratio() > 0.80)
 
                 # Title match
-                title_ratio = token_set_ratio(norm_title, head_title)
-                diff_ratio = difflib.SequenceMatcher(None, norm_title, head_title).ratio()
-                title_match = (title_ratio >= 0.85 or diff_ratio >= 0.85)
+                t1 = set(norm_title.lower().split())
+                t2 = set(head_title.lower().split())
+                if not t1 or not t2:
+                    title_match = False
+                else:
+                    intersection = t1.intersection(t2)
+                    jaccard_ratio = len(intersection) / float(max(len(t1), len(t2)))
+                    subset_ratio = len(intersection) / float(min(len(t1), len(t2)))
+                    diff_ratio = difflib.SequenceMatcher(None, norm_title, head_title).ratio()
+
+                    seniority_kws = {"senior", "sr", "lead", "principal", "junior", "jr", "intern", "trainee", "fresher", "staff", "manager", "architect", "director"}
+                    s1 = t1.intersection(seniority_kws)
+                    s2 = t2.intersection(seniority_kws)
+                    seniority_mismatch = (s1 != s2)
+
+                    if seniority_mismatch:
+                        title_match = (jaccard_ratio >= 0.85 or diff_ratio >= 0.88)
+                    else:
+                        title_match = (jaccard_ratio >= 0.75 or diff_ratio >= 0.85 or (subset_ratio >= 0.85 and len(intersection) >= 2))
 
                 if comp_match and loc_match and title_match:
                     cluster.append(job)
