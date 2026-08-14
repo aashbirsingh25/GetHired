@@ -77,7 +77,7 @@ def execute_authoritative_pipeline(
             role_filtered.append(job)
             continue
         t_lower = (job.get("title") or "").lower()
-        if any(r.lower() in t_lower for r in target_roles):
+        if any(re.search(r"(?:^|\s|\b)" + re.escape(r.lower().strip()) + r"(?:$|\s|\b)", t_lower) for r in target_roles):
             role_filtered.append(job)
 
     # 5. LOCATION FILTER
@@ -91,14 +91,27 @@ def execute_authoritative_pipeline(
             continue
         l_lower = (job.get("location") or "").lower()
         d_lower = (job.get("description") or "").lower()
-        if any(loc.lower() in l_lower or loc.lower() in d_lower for loc in target_locs):
+        matched_loc = False
+        for loc in target_locs:
+            loc_clean = loc.lower().strip()
+            if loc_clean == "remote":
+                if "remote" in l_lower or re.search(r"\bremote\b", d_lower):
+                    matched_loc = True
+                    break
+            else:
+                if re.search(r"\b" + re.escape(loc_clean) + r"\b", l_lower):
+                    matched_loc = True
+                    break
+        if matched_loc:
             loc_filtered.append(job)
 
     # 6. EXPERIENCE FILTER
     exp_filtered = loc_filtered
 
     # 7. EXCLUSION FILTER
-    raw_excludes = filters.get("exclude_keywords") or ["Senior", "Lead", "Manager", "Principal", "Director", "Architect"]
+    raw_excludes = filters.get("exclude_keywords")
+    if raw_excludes is None:
+        raw_excludes = ["Senior", "Lead", "Manager", "Principal", "Director", "Architect"]
     exclude_kws = _extract_filter_strings(raw_excludes)
     exclusion_filtered = []
     for job in exp_filtered:

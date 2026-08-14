@@ -5,7 +5,7 @@ import io
 import hashlib
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Flask, jsonify, request
 from werkzeug.utils import secure_filename
 
@@ -217,8 +217,6 @@ def get_jobs():
         resume_data=resume_data,
         applied_job_ids=applied_job_ids
     )
-
-    save_json(JOBS_FILE, {"jobs": raw_jobs})
 
     jobs_list = pipeline_res["jobs"]
     for job in jobs_list:
@@ -668,7 +666,25 @@ def rescan_company(company_id):
 
     return jsonify({"message": f"Rescan initiated for company '{company_id}'"}), 202
 
-# --- RESUME & SCORING ENDPOINTS ---
+rescore_lock = threading.Lock()
+
+def _async_rescore_jobs(resume_data):
+    if not rescore_lock.acquire(blocking=False):
+        print("[AppRescore] Rescoring already in progress. Skipping duplicate thread.")
+        return
+    try:
+        scorer = HybridJobScorer(resume_data)
+        jobs_data = load_json(JOBS_FILE, {"jobs": []})
+        jobs_list = jobs_data.get("jobs", [])
+        for job in jobs_list:
+            job["match"] = scorer.score_job(job)
+        jobs_data["jobs"] = jobs_list
+        save_json(JOBS_FILE, jobs_data)
+        print(f"[AppRescore] Rescored {len(jobs_list)} jobs in background successfully.")
+    except Exception as e:
+        print(f"[AppRescore] Error rescoring jobs in background: {e}")
+    finally:
+        rescore_lock.release()
 
 @app.route("/api/resume", methods=["POST"])
 def upload_resume():
@@ -725,14 +741,7 @@ def upload_resume():
     }
     save_json(RESUME_FILE, resume_data)
 
-    scorer = HybridJobScorer(resume_data, vector_store)
-    jobs_data = load_json(JOBS_FILE, {"jobs": []})
-    jobs_list = jobs_data.get("jobs", [])
-    for job in jobs_list:
-        job["match"] = None # Invalidate prior score
-        job["match"] = scorer.score_job(job)
-    jobs_data["jobs"] = jobs_list
-    save_json(JOBS_FILE, jobs_data)
+    threading.Thread(target=_async_rescore_jobs, args=(resume_data,), daemon=True).start()
 
     return jsonify({
         "has_resume": True,
@@ -1186,6 +1195,42 @@ def export_data_endpoint():
         headers={"Content-Disposition": "attachment; filename=gethired_backup.json"}
     )
 
+def parse_datetime_safely(val):
+    if not val or not isinstance(val, str):
+        return None
+    val = val.strip()
+    if not val:
+        return None
+
+    dt = None
+    try:
+        dt = datetime.fromisoformat(val.replace("Z", "+00:00"))
+    except Exception:
+        pass
+
+    if dt is None:
+        common_formats = [
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d",
+            "%d/%m/%Y",
+            "%Y/%m/%d",
+            "%a, %d %b %Y %H:%M:%S %Z",
+            "%a, %d %b %Y %H:%M:%S GMT"
+        ]
+        for fmt in common_formats:
+            try:
+                dt = datetime.strptime(val, fmt)
+                break
+            except Exception:
+                pass
+
+    if dt is not None:
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        else:
+            dt = dt.astimezone(timezone.utc)
+    return dt
+
 @app.route("/api/daily-digest", methods=["GET", "POST"])
 def manage_daily_digest():
     cfg = load_json(CONFIG_FILE, {})
@@ -1207,17 +1252,16 @@ def manage_daily_digest():
     high_matches_count = 0
 
     if last_viewed:
-        try:
-            lv_dt = datetime.fromisoformat(last_viewed.replace("Z", "+00:00"))
+        lv_dt = parse_datetime_safely(last_viewed)
+        if lv_dt:
             for j in jobs:
                 first_seen = j.get("first_seen")
-                if first_seen:
-                    fs_dt = datetime.fromisoformat(first_seen.replace("Z", "+00:00"))
-                    if fs_dt > lv_dt:
-                        new_jobs_count += 1
-                        if j.get("match", {}).get("score", 0) >= min_score:
-                            high_matches_count += 1
-        except Exception:
+                fs_dt = parse_datetime_safely(first_seen) if first_seen else None
+                if fs_dt and fs_dt > lv_dt:
+                    new_jobs_count += 1
+                    if j.get("match", {}).get("score", 0) >= min_score:
+                        high_matches_count += 1
+        else:
             new_jobs_count = len(jobs)
             high_matches_count = len([j for j in jobs if j.get("match", {}).get("score", 0) >= min_score])
     else:
@@ -1226,7 +1270,7 @@ def manage_daily_digest():
 
     tracker = ApplicationTracker()
     all_apps = tracker.list_applications()
-    now_dt = datetime.now()
+    now_dt = datetime.now(timezone.utc)
     followup_count = 0
     for app_item in all_apps:
         if app_item.get("status") == "interviewed":
@@ -1235,14 +1279,12 @@ def manage_daily_digest():
             if history:
                 last_upd = history[-1].get("timestamp")
             if last_upd:
-                try:
-                    l_dt = datetime.fromisoformat(last_upd.replace("Z", "+00:00"))
+                l_dt = parse_datetime_safely(last_upd)
+                if l_dt:
                     if (now_dt - l_dt).days >= 5:
                         followup_count += 1
-                except Exception:
-                    followup_count += 1
-            else:
-                followup_count += 1
+                else:
+                    pass
 
     return jsonify({
         "last_viewed_timestamp": last_viewed,
@@ -1319,9 +1361,6 @@ def check_duplicate_application(job_id):
     return jsonify({"is_duplicate": False})
 
 if __name__ == "__main__":
-    scan_thread = threading.Thread(target=background_scanner_loop, daemon=True)
-    scan_thread.start()
-
     port = int(os.environ.get("PORT", 5050))
     print(f"Starting GetHired Flask server on http://127.0.0.1:{port}...")
     app.run(host="0.0.0.0", port=port, debug=False, threaded=True)

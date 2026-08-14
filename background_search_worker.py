@@ -420,11 +420,26 @@ class BackgroundSearchWorker:
                 continue
 
             title_lower = job.get("title", "").lower()
-            if target_roles and not any(r in title_lower or title_lower in r for r in target_roles):
+            if target_roles and not any(re.search(r"(?:^|\s|\b)" + re.escape(r.strip()) + r"(?:$|\s|\b)", title_lower) for r in target_roles):
                 continue
 
             loc_lower = job.get("location", "").lower()
-            if target_locs and not any(l in loc_lower or loc_lower in l for l in target_locs):
+            desc_lower = job.get("description", "").lower()
+            matched_loc = False
+            if not target_locs:
+                matched_loc = True
+            else:
+                for l in target_locs:
+                    l_clean = l.strip()
+                    if l_clean == "remote":
+                        if "remote" in loc_lower or re.search(r"\bremote\b", desc_lower):
+                            matched_loc = True
+                            break
+                    else:
+                        if re.search(r"\b" + re.escape(l_clean) + r"\b", loc_lower):
+                            matched_loc = True
+                            break
+            if not matched_loc:
                 continue
 
             first_seen_str = job.get("first_seen")
