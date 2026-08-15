@@ -16,7 +16,7 @@ CUSTOM_SKILL_PATTERNS = {
         re.IGNORECASE
     ),
     "C": re.compile(
-        r"(?:^|\s|\b)(?:C\s*(?:/\s*C\+\+|PROGRAMMING|LANGUAGE|DEVELOPER|ENGINEER|CODE)|EMBEDDED\s+C|C\s+(?:OR|,)\s+C\+\+|(?:WRITTEN IN|EXPERIENCE IN|PROFICIENT IN|KNOWLEDGE OF)\s+C)(?:$|\s|\b)",
+        r"(?:^|\s|\b)(?:C\s*(?:/\s*C\+\+|PROGRAMMING|PROGRAMMER|LANGUAGE|DEVELOPER|ENGINEER|CODE|DRIVER)|EMBEDDED\s+C|C\s+(?:OR|,)\s+C\+\+|(?:WRITTEN IN|EXPERIENCE IN|PROFICIENT IN|KNOWLEDGE OF)\s+C)(?:$|\s|\b)",
         re.IGNORECASE
     ),
     "R": re.compile(
@@ -139,6 +139,37 @@ def classify_role(title: str, description: str) -> Tuple[int, str]:
     return 40, "unknown"
 
 
+SYNONYM_MAP = {
+    "POSTGRES": "PostgreSQL",
+    "POSTGRESQL": "PostgreSQL",
+    "JS": "JavaScript",
+    "JAVASCRIPT": "JavaScript",
+    "TS": "TypeScript",
+    "TYPESCRIPT": "TypeScript",
+    "AMAZON WEB SERVICES": "AWS",
+    "AWS": "AWS",
+    "GOOGLE CLOUD PLATFORM": "GCP",
+    "GCP": "GCP",
+    "MICROSOFT AZURE": "Azure",
+    "AZURE": "Azure",
+    "NODE": "Node.js",
+    "NODEJS": "Node.js",
+    "NODE.JS": "Node.js",
+    "REACT": "React",
+    "REACTJS": "React",
+    "REACT.JS": "React",
+    "RESTFUL API": "REST API",
+    "RESTFUL APIS": "REST API",
+    "REST API": "REST API",
+    "REST APIS": "REST API"
+}
+
+def canonicalize_skill(skill_str: str) -> str:
+    if not skill_str:
+        return ""
+    clean = skill_str.strip().upper()
+    return SYNONYM_MAP.get(clean, skill_str.strip())
+
 def score_locally(
     resume_skills: List[str],
     job_title: str,
@@ -150,31 +181,44 @@ def score_locally(
     title_upper = (job_title or "").upper()
     desc_len = len((job_description or "").strip())
 
-    # 1. Skill Overlap Component & 3-State Confidence Model
-    job_skills = []
+    # 1. Skill Overlap Component with Synonym Resolution
+    raw_job_skills = []
     for skill, pat in SKILL_PATTERNS:
         if pat.search(combined_text):
-            job_skills.append(skill)
+            raw_job_skills.append(skill)
 
-    resume_skills_upper = {s.upper(): s for s in (resume_skills or [])}
+    # Check for text synonyms not caught by exact skill regex
+    if re.search(r"\bPOSTGRES\b", combined_text) and "PostgreSQL" not in raw_job_skills:
+        raw_job_skills.append("PostgreSQL")
+    if re.search(r"\b(?:AMAZON WEB SERVICES|AWS EC2)\b", combined_text) and "AWS" not in raw_job_skills:
+        raw_job_skills.append("AWS")
+    if re.search(r"\b(?:GOOGLE CLOUD PLATFORM|GCP)\b", combined_text) and "GCP" not in raw_job_skills:
+        raw_job_skills.append("GCP")
+    if re.search(r"\b(?:JS|JAVASCRIPT)\b", combined_text) and "JavaScript" not in raw_job_skills:
+        raw_job_skills.append("JavaScript")
+    if re.search(r"\b(?:TS|TYPESCRIPT)\b", combined_text) and "TypeScript" not in raw_job_skills:
+        raw_job_skills.append("TypeScript")
+
+    canonical_job_skills = sorted(list(set([canonicalize_skill(s) for s in raw_job_skills])))
+
+    canonical_resume_skills = set([canonicalize_skill(s) for s in (resume_skills or [])])
+
     matched = []
-    for js in job_skills:
-        if js.upper() in resume_skills_upper:
-            matched.append(resume_skills_upper[js.upper()])
+    for js in canonical_job_skills:
+        if js in canonical_resume_skills or js.upper() in [s.upper() for s in canonical_resume_skills]:
+            matched.append(js)
 
     matched = sorted(list(set(matched)))
-    missing = [s for s in job_skills if s not in matched]
+    missing = [s for s in canonical_job_skills if s not in matched]
 
-    if len(job_skills) >= 2 or (len(job_skills) == 1 and desc_len <= 300):
+    if len(canonical_job_skills) >= 2 or (len(canonical_job_skills) == 1 and desc_len <= 300):
         skill_confidence = "explicit"
-        ratio = len(matched) / float(len(job_skills))
+        ratio = len(matched) / float(len(canonical_job_skills))
         skill_score = min(98, max(10, int(round(ratio * 100))))
-    elif len(job_skills) == 1 and desc_len > 300:
-        # Partial skill extraction on long job description (single skill matched)
+    elif len(canonical_job_skills) == 1 and desc_len > 300:
         skill_confidence = "inferred"
         skill_score = 65 if len(matched) == 1 else 10
     else:
-        # 0 tech skills extracted (title-only, truncated, or lacks tech keywords)
         skill_confidence = "unknown"
         skill_score = None
 
@@ -185,13 +229,25 @@ def score_locally(
     cand_exp = resume_exp_years if resume_exp_years is not None else 0
 
     norm_senior_text = re.sub(r"[^A-Z0-9\+]", " ", combined_text)
-    senior_patterns = [r"\bSENIOR\b", r"\bLEAD\b", r"\bPRINCIPAL\b", r"\bMANAGER\b", r"\bARCHITECT\b", r"\bDIRECTOR\b", r"\b5\+\s*YEARS\b", r"\b8\+\s*YEARS\b"]
-    is_senior_job = any(re.search(pat, norm_senior_text) for pat in senior_patterns)
+
+    exec_senior_patterns = [
+        r"\bPRINCIPAL\b", r"\bSTAFF\b", r"\bDIRECTOR\b", r"\bPARTNER\b", r"\bFELLOW\b",
+        r"\b10\+\s*YEARS\b", r"\b12\+\s*YEARS\b", r"\b15\+\s*YEARS\b"
+    ]
+    is_exec_senior_job = any(re.search(pat, norm_senior_text) for pat in exec_senior_patterns)
+
+    senior_patterns = [
+        r"\bSENIOR\b", r"\bLEAD\b", r"\bARCHITECT\b", r"\bMANAGER\b",
+        r"\b5\+\s*YEARS\b", r"\b8\+\s*YEARS\b"
+    ]
+    is_senior_job = is_exec_senior_job or any(re.search(pat, norm_senior_text) for pat in senior_patterns)
 
     entry_patterns = [r"\bINTERN\b", r"\bFRESHER\b", r"\bENTRY\s*LEVEL\b", r"\bGRADUATE\b", r"\b0-1\s*YEAR\b", r"\b0-2\s*YEARS\b"]
     is_entry_job = any(re.search(pat, combined_text) for pat in entry_patterns)
 
-    if is_senior_job:
+    if is_exec_senior_job:
+        exp_score = 15 if cand_exp <= 2 else 85
+    elif is_senior_job:
         exp_score = 30 if cand_exp <= 2 else 85
     elif is_entry_job or "INTERN" in title_upper:
         exp_score = 95 if cand_exp <= 2 else 70
@@ -200,10 +256,8 @@ def score_locally(
 
     # 4. Multi-component Weighted Score Combination
     if skill_score is not None:
-        # Standard weighted score: 45% skill + 35% role + 20% experience
         combined_score = int(round(0.45 * skill_score + 0.35 * role_score + 0.20 * exp_score))
     else:
-        # UNKNOWN skills: re-normalize weights over role (35/55) and experience (20/55)
         combined_score = int(round((0.35 * role_score + 0.20 * exp_score) / 0.55))
 
     final_score = min(98, max(10, combined_score))
@@ -212,9 +266,12 @@ def score_locally(
     if skill_confidence == "unknown":
         final_score = min(65, final_score)
 
-    # Apply Hard Seniority Cap (60%) when candidate experience <= 2 years
-    if cand_exp <= 2 and is_senior_job:
-        final_score = min(60, final_score)
+    # Apply Hard Seniority Caps when candidate experience <= 2 years
+    if cand_exp <= 2:
+        if is_exec_senior_job:
+            final_score = min(35, final_score)
+        elif is_senior_job:
+            final_score = min(60, final_score)
 
     # Apply Hard Role Caps for non-software / non-technical / support roles
     if role_category in ("non_technical", "non_software_engineering"):
@@ -230,6 +287,7 @@ def score_locally(
         "role_category": role_category,
         "experience_score": exp_score,
         "is_senior_job": is_senior_job,
+        "is_exec_senior_job": is_exec_senior_job,
         "confidence": "medium",
         "matched_skills": matched,
         "missing_skills": missing,
