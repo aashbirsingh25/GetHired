@@ -98,25 +98,26 @@ def classify_role(title: str, description: str) -> Tuple[int, str]:
     if any(nse in title_upper for nse in non_sw_eng_phrases) and not any(t in title_upper for t in ["SOFTWARE", "DEVELOPER", "EMBEDDED SOFTWARE"]):
         return 20, "non_software_engineering"
 
-    # 3. Core Software Engineering
-    core_sw_phrases = [
-        "SOFTWARE ENGINEER", "SOFTWARE DEVELOPER", "BACKEND ENGINEER", "BACKEND DEVELOPER",
-        "FULL STACK ENGINEER", "FULL STACK DEVELOPER", "FULLSTACK ENGINEER", "FULLSTACK DEVELOPER",
-        "FRONTEND ENGINEER", "FRONTEND DEVELOPER", "WEB DEVELOPER", "API DEVELOPER",
-        "PLATFORM ENGINEER", "SOFTWARE ARCHITECT", "APPLICATION DEVELOPER", "SYSTEMS DEVELOPER",
-        "PYTHON DEVELOPER", "REACT DEVELOPER", "NODE DEVELOPER"
-    ]
-    if any(cs in title_upper for cs in core_sw_phrases) or title_upper.strip() in ["DEVELOPER", "ENGINEER", "SOFTWARE ENGINEER"]:
-        score = 95 if any(kw in title_upper for kw in ["INTERN", "TRAINEE", "FRESHER"]) else 90
-        return check_description_support_override(score, "core_software")
-
-    # 4. AI / ML
+    # 3. AI / ML
     ai_ml_phrases = [
-        "AI ENGINEER", "MACHINE LEARNING ENGINEER", "ML ENGINEER", "DATA SCIENTIST",
+        "AI ENGINEER", "AI APPLICATIONS ENGINEER", "AI APPLICATION ENGINEER", "AI DEVELOPER",
+        "MACHINE LEARNING ENGINEER", "ML ENGINEER", "DATA SCIENTIST",
         "DEEP LEARNING ENGINEER", "NLP ENGINEER", "ARTIFICIAL INTELLIGENCE", "AI RESEARCH"
     ]
     if any(am in title_upper for am in ai_ml_phrases):
         return check_description_support_override(90, "ai_ml")
+
+    # 4. Core Software Engineering
+    core_sw_phrases = [
+        "SOFTWARE ENGINEER", "SOFTWARE DEVELOPER", "BACKEND ENGINEER", "BACKEND DEVELOPER",
+        "FULL STACK ENGINEER", "FULL STACK DEVELOPER", "FULLSTACK ENGINEER", "FULLSTACK DEVELOPER",
+        "FULL STACK", "FULLSTACK", "FRONTEND ENGINEER", "FRONTEND DEVELOPER", "WEB DEVELOPER", "API DEVELOPER",
+        "PLATFORM ENGINEER", "SOFTWARE ARCHITECT", "APPLICATION DEVELOPER", "APPLICATION ENGINEER", "APPLICATIONS ENGINEER",
+        "PRODUCT ENGINEER", "SYSTEMS DEVELOPER", "PYTHON DEVELOPER", "REACT DEVELOPER", "NODE DEVELOPER"
+    ]
+    if any(cs in title_upper for cs in core_sw_phrases) or title_upper.strip() in ["DEVELOPER", "ENGINEER", "SOFTWARE ENGINEER"]:
+        score = 95 if any(kw in title_upper for kw in ["INTERN", "TRAINEE", "FRESHER"]) else 90
+        return check_description_support_override(score, "core_software")
 
     # 5. Adjacent Engineering & QA
     qa_phrases = ["QA AUTOMATION", "AUTOMATION ENGINEER", "QUALITY ASSURANCE", "QA ENGINEER", "TEST ENGINEER"]
