@@ -27,6 +27,7 @@ def load_json_cached(filepath, default):
 def load_json(filepath, default):
     return load_json_cached(filepath, default)
 
+import time
 import threading
 
 def save_json(filepath, data, indent=2):
@@ -38,7 +39,14 @@ def save_json(filepath, data, indent=2):
             json.dump(data, f, indent=indent)
             f.flush()
             os.fsync(f.fileno())
-        os.replace(tmp_path, filepath)
+        for attempt in range(5):
+            try:
+                os.replace(tmp_path, filepath)
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.02)
     except Exception as e:
         if os.path.exists(tmp_path):
             try:

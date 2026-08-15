@@ -111,13 +111,13 @@ class JobDeduplicator:
                     subset_ratio = len(intersection) / float(min(len(t1), len(t2)))
                     diff_ratio = difflib.SequenceMatcher(None, norm_title, head_title).ratio()
 
-                    seniority_kws = {"senior", "sr", "lead", "principal", "junior", "jr", "intern", "trainee", "fresher", "staff", "manager", "architect", "director"}
+                    seniority_kws = {"senior", "sr", "lead", "principal", "junior", "jr", "intern", "trainee", "fresher", "staff", "manager", "architect", "director", "head", "vp"}
                     s1 = t1.intersection(seniority_kws)
                     s2 = t2.intersection(seniority_kws)
                     seniority_mismatch = (s1 != s2)
 
                     if seniority_mismatch:
-                        title_match = (jaccard_ratio >= 0.85 or diff_ratio >= 0.88)
+                        title_match = False
                     else:
                         title_match = (jaccard_ratio >= 0.75 or diff_ratio >= 0.85 or (subset_ratio >= 0.85 and len(intersection) >= 2))
 

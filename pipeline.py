@@ -23,6 +23,56 @@ def _extract_filter_strings(raw_val: Any, category_keyword: str = None) -> List[
                                 strings.append(v.strip())
     return strings
 
+LOCATION_SYNONYMS = {
+    "gurugram": ["gurugram", "gurgaon"],
+    "gurgaon": ["gurugram", "gurgaon"],
+    "bangalore": ["bangalore", "bengaluru"],
+    "bengaluru": ["bangalore", "bengaluru"],
+    "delhi ncr": ["delhi ncr", "delhi", "noida", "gurugram", "gurgaon", "ghaziabad", "faridabad"],
+    "ncr": ["delhi ncr", "delhi", "noida", "gurugram", "gurgaon", "ghaziabad", "faridabad"],
+}
+
+def _matches_role_title(target_role: str, title: str) -> bool:
+    if not target_role or not title:
+        return False
+    t_clean = title.lower().strip()
+    r_clean = target_role.lower().strip()
+
+    if t_clean == r_clean:
+        return True
+
+    if r_clean == "c":
+        pattern = r"(?:^|[\s,/\(\)\[\]\-])c(?:$|[\s,/\(\)\[\]\-])"
+        return bool(re.search(pattern, t_clean)) and not ("c++" in t_clean or "c#" in t_clean)
+
+    if r_clean in ["c++", "c#", ".net"]:
+        pattern = r"(?:^|[\s,/\(\)\[\]\-])" + re.escape(r_clean) + r"(?:$|[\s,/\(\)\[\]\-])"
+        return bool(re.search(pattern, t_clean))
+
+    if r_clean == "r":
+        pattern = r"(?:^|[\s,/\(\)\[\]\-])r(?:$|[\s,/\(\)\[\]\-])"
+        return bool(re.search(pattern, t_clean)) and "r&d" not in t_clean
+
+    escaped = re.escape(r_clean)
+    pattern = r"(?:^|[\s,/\(\)\[\]\b])" + escaped + r"(?:$|[\s,/\(\)\[\]\b])"
+    return bool(re.search(pattern, t_clean))
+
+def _matches_location(target_loc: str, location: str, description: str = "") -> bool:
+    if not target_loc:
+        return True
+    loc_clean = target_loc.lower().strip()
+    l_lower = (location or "").lower()
+    d_lower = (description or "").lower()
+
+    if loc_clean == "remote":
+        return "remote" in l_lower or bool(re.search(r"\bremote\b", d_lower))
+
+    synonyms = LOCATION_SYNONYMS.get(loc_clean, [loc_clean])
+    for syn in synonyms:
+        if re.search(r"\b" + re.escape(syn) + r"\b", l_lower):
+            return True
+    return False
+
 def execute_authoritative_pipeline(
     raw_jobs: List[Dict[str, Any]],
     custom_filters: Dict[str, Any] = None,
@@ -75,8 +125,8 @@ def execute_authoritative_pipeline(
         if not target_roles:
             role_filtered.append(job)
             continue
-        t_lower = (job.get("title") or "").lower()
-        if any(re.search(r"(?:^|\s|\b)" + re.escape(r.lower().strip()) + r"(?:$|\s|\b)", t_lower) for r in target_roles):
+        t_title = job.get("title") or ""
+        if any(_matches_role_title(r, t_title) for r in target_roles):
             role_filtered.append(job)
 
     # 5. LOCATION FILTER
@@ -88,20 +138,9 @@ def execute_authoritative_pipeline(
         if not target_locs:
             loc_filtered.append(job)
             continue
-        l_lower = (job.get("location") or "").lower()
-        d_lower = (job.get("description") or "").lower()
-        matched_loc = False
-        for loc in target_locs:
-            loc_clean = loc.lower().strip()
-            if loc_clean == "remote":
-                if "remote" in l_lower or re.search(r"\bremote\b", d_lower):
-                    matched_loc = True
-                    break
-            else:
-                if re.search(r"\b" + re.escape(loc_clean) + r"\b", l_lower):
-                    matched_loc = True
-                    break
-        if matched_loc:
+        j_loc = job.get("location") or ""
+        j_desc = job.get("description") or ""
+        if any(_matches_location(loc, j_loc, j_desc) for loc in target_locs):
             loc_filtered.append(job)
 
     # 6. EXPERIENCE FILTER

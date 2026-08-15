@@ -1,5 +1,6 @@
 import os
 import json
+import threading
 import time
 from typing import Dict, Any, List
 
@@ -15,7 +16,7 @@ def load_json(filepath, default):
             return default
     return default
 
-import threading
+import time
 
 def save_json(filepath, data, indent=2):
     dir_name = os.path.dirname(filepath) or "."
@@ -26,7 +27,14 @@ def save_json(filepath, data, indent=2):
             json.dump(data, f, indent=indent)
             f.flush()
             os.fsync(f.fileno())
-        os.replace(tmp_path, filepath)
+        for attempt in range(5):
+            try:
+                os.replace(tmp_path, filepath)
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.02)
     except Exception as e:
         if os.path.exists(tmp_path):
             try:
