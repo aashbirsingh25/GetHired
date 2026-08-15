@@ -76,14 +76,27 @@ def classify_role(title: str, description: str) -> Tuple[int, str]:
             return 45, "support"
         return current_score, current_category
 
-    # 2. Non-Technical Roles
+    if any(bl in title_upper.lower() for bl in ["developer docs", "developer documentation", "api documentation", "api reference", "documentation"]):
+        return 15, "non_technical"
+
+    # 2. Non-Technical Roles (Recruiting, Marketing, Sales, Legal, Finance)
     non_tech_phrases = [
         "MARKETING", "SALES", "RECRUITER", "RECRUITING", "HR", "HUMAN RESOURCES",
         "OPERATIONS", "CONTRACTS", "PROGRAM MANAGER", "PROJECT MANAGER", "ACCOUNT MANAGER",
-        "BUSINESS DEVELOPMENT", "LEGAL", "FINANCE", "ACCOUNTANT", "CONTENT"
+        "ACCOUNT EXECUTIVE", "BUSINESS DEVELOPMENT", "LEGAL", "FINANCE", "ACCOUNTANT", "CONTENT"
     ]
-    if any(nt in title_upper for nt in non_tech_phrases) and not any(t in title_upper for t in ["SOFTWARE", "DEVELOPER", "ENGINEER", "FASTAPI", "PYTHON"]):
+    is_non_tech = any(re.search(r"\b" + re.escape(nt) + r"\b", title_upper) for nt in non_tech_phrases)
+    is_dev_role = any(re.search(r"\b" + re.escape(dev) + r"\b", title_upper) for dev in ["SOFTWARE ENGINEER", "SOFTWARE DEVELOPER", "PYTHON DEVELOPER", "FULLSTACK", "BACKEND DEVELOPER", "FRONTEND DEVELOPER"])
+    if is_non_tech and not is_dev_role:
         return 15, "non_technical"
+
+    # 2b. Non-Software Engineering Roles (Mechanical, Civil, Chemical, Electrical, NOC, Hardware)
+    non_sw_eng_phrases = [
+        "MECHANICAL", "CIVIL", "CHEMICAL", "ELECTRICAL", "HARDWARE", "BIOMEDICAL",
+        "AEROSPACE", "ENVIRONMENTAL", "STRUCTURAL", "NOC ENGINEER", "NETWORK OPERATIONS CENTER"
+    ]
+    if any(nse in title_upper for nse in non_sw_eng_phrases) and not any(t in title_upper for t in ["SOFTWARE", "DEVELOPER", "EMBEDDED SOFTWARE"]):
+        return 20, "non_software_engineering"
 
     # 3. Core Software Engineering
     core_sw_phrases = [
@@ -105,7 +118,11 @@ def classify_role(title: str, description: str) -> Tuple[int, str]:
     if any(am in title_upper for am in ai_ml_phrases):
         return check_description_support_override(90, "ai_ml")
 
-    # 5. Adjacent Engineering
+    # 5. Adjacent Engineering & QA
+    qa_phrases = ["QA AUTOMATION", "AUTOMATION ENGINEER", "QUALITY ASSURANCE", "QA ENGINEER", "TEST ENGINEER"]
+    if any(qa in title_upper for qa in qa_phrases):
+        return check_description_support_override(45, "testing_qa")
+
     adjacent_phrases = [
         "DEVOPS ENGINEER", "CLOUD ENGINEER", "INFRASTRUCTURE ENGINEER", "SRE",
         "SITE RELIABILITY", "DATABASE ENGINEER", "DATABASE RELIABILITY", "DBA",
@@ -113,13 +130,13 @@ def classify_role(title: str, description: str) -> Tuple[int, str]:
         "NETWORK ENGINEER"
     ]
     if any(adj in title_upper for adj in adjacent_phrases):
-        return check_description_support_override(75, "adjacent_engineering")
+        return check_description_support_override(70, "adjacent_engineering")
 
     # 6. Fallback General Tech
     if any(tr in title_upper for tr in ["SOFTWARE", "DEVELOPER", "ENGINEER", "PRODUCT DEVELOPMENT", "DATA", "TECH"]):
-        return check_description_support_override(65, "general_tech")
+        return check_description_support_override(60, "general_tech")
 
-    return 50, "unknown"
+    return 40, "unknown"
 
 
 def score_locally(
@@ -198,6 +215,12 @@ def score_locally(
     # Apply Hard Seniority Cap (60%) when candidate experience <= 2 years
     if cand_exp <= 2 and is_senior_job:
         final_score = min(60, final_score)
+
+    # Apply Hard Role Caps for non-software / non-technical / support roles
+    if role_category in ("non_technical", "non_software_engineering"):
+        final_score = min(25, final_score)
+    elif role_category in ("support", "testing_qa"):
+        final_score = min(45, final_score)
 
     return {
         "score": final_score,

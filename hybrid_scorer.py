@@ -160,6 +160,14 @@ class HybridJobScorer:
             res["ambiguity_band"] = routing["ambiguity_band"]
             res["cycle_yield_multiplier"] = routing["cycle_yield_multiplier"]
             res["routing_reason"] = routing["routing_reason"]
+
+            from local_scorer import classify_role
+            _, r_cat = classify_role(job_title, job_desc)
+            if r_cat in ("non_technical", "non_software_engineering"):
+                res["score"] = min(25, res.get("score", 50))
+            elif r_cat in ("support", "testing_qa"):
+                res["score"] = min(45, res.get("score", 50))
+
             return res
 
         # Direct Hybrid Semantic Fallback route (skip LLM)

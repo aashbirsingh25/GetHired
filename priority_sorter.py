@@ -101,7 +101,9 @@ class PrioritySorter:
         def sort_key(j):
             match_score = j.get("match", {}).get("score", 0) if j.get("match") else 0
             ts = j.get("scan_timestamp") or j.get("first_seen_at") or j.get("first_seen") or ""
+            tier_group = 0 if match_score >= 80 else (1 if match_score >= 65 else (2 if match_score >= 50 else 3))
             return (
+                tier_group,
                 j.get("location_priority", 99),
                 -match_score,
                 ts
