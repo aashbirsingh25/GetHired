@@ -25,8 +25,8 @@ def learn_from_positive_feedback(job_title: str, reason: str):
         target_roles.append(candidate_kw)
         filters["target_role"] = target_roles
 
-        with open(FILTERS_FILE, "w", encoding="utf-8") as f:
-            json.dump(filters, f, indent=2)
+        from scan_coordinator import save_json
+        save_json(FILTERS_FILE, filters)
 
         entry = {
             "timestamp": datetime.now().isoformat(),
@@ -65,8 +65,8 @@ def learn_from_negative_feedback(job_title: str, reason: str):
                 exclude_kws.append(x)
         filters["exclude_keywords"] = exclude_kws
 
-        with open(FILTERS_FILE, "w", encoding="utf-8") as f:
-            json.dump(filters, f, indent=2)
+        from scan_coordinator import save_json
+        save_json(FILTERS_FILE, filters)
 
         entry = {
             "timestamp": datetime.now().isoformat(),

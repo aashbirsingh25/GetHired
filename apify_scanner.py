@@ -26,9 +26,25 @@ def load_json(filepath, default):
             return default
     return default
 
-def save_json(filepath, data):
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+import threading
+
+def save_json(filepath, data, indent=2):
+    dir_name = os.path.dirname(filepath) or "."
+    os.makedirs(dir_name, exist_ok=True)
+    tmp_path = f"{filepath}.tmp_{os.getpid()}_{threading.get_ident()}"
+    try:
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=indent)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_path, filepath)
+    except Exception as e:
+        if os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except Exception:
+                pass
+        raise e
 
 def log_apify_usage(company_name: str, credits_used: float, duration_s: float):
     now = datetime.now()

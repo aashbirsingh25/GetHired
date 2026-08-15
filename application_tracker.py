@@ -4,6 +4,7 @@ import hashlib
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 from status_manager import validate_transition
+from scan_coordinator import save_json
 
 BASE_DIR = os.path.dirname(__file__)
 APPLICATIONS_FILE = os.path.join(BASE_DIR, "applications.json")
@@ -23,8 +24,7 @@ class ApplicationTracker:
         return {"applications": []}
 
     def _save(self):
-        with open(self.filepath, "w", encoding="utf-8") as f:
-            json.dump(self.data, f, indent=2)
+        save_json(self.filepath, self.data)
 
     def create_application(self, job_id: str, company: str, job_title: str, location: str,
                            applied_date: str = None, application_url: str = None,

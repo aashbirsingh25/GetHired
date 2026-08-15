@@ -3,7 +3,6 @@ from typing import List, Dict, Any, Set
 from job_deduplicator import JobDeduplicator
 from store_integrity_checker import check_job_posting_validity
 from recency_filter import filter_by_recency
-from hybrid_scorer import HybridJobScorer
 
 def _extract_filter_strings(raw_val: Any, category_keyword: str = None) -> List[str]:
     strings = []
@@ -120,25 +119,33 @@ def execute_authoritative_pipeline(
             continue
         exclusion_filtered.append(job)
 
-    # 8. CURRENT RESUME SCORING (Deterministic personalized scoring for all candidates)
+    # 8. CURRENT RESUME SCORING (Non-blocking: uses cached matches; background rescorer updates store)
     scored_jobs = []
-    if resume_data and resume_data.get("has_resume"):
-        scorer = HybridJobScorer(resume_data)
-
-        for job in exclusion_filtered:
-            if not job.get("match") or job["match"].get("resume_version_hash") != scorer.resume_hash:
-                job["match"] = scorer.score_job(job)
+    for job in exclusion_filtered:
+        match_obj = job.get("match")
+        if not match_obj or not isinstance(match_obj, dict):
+            job_copy = dict(job)
+            job_copy["match"] = {
+                "score": 0,
+                "match_grade": "PENDING",
+                "confidence": "pending",
+                "reasoning": "Pending background resume scoring",
+                "matched_skills": [],
+                "missing_skills": []
+            }
+            scored_jobs.append(job_copy)
+        else:
             scored_jobs.append(job)
-    else:
-        scored_jobs = exclusion_filtered
 
 
     # 9. MINIMUM MATCH SCORE
     min_score = filters.get("min_match_score", 0)
     score_filtered = []
     for job in scored_jobs:
-        score = job.get("match", {}).get("score", 50) if job.get("match") else 50
-        if score >= min_score:
+        match_obj = job.get("match") or {}
+        is_pending = isinstance(match_obj, dict) and match_obj.get("match_grade") == "PENDING"
+        score = match_obj.get("score", 50) if isinstance(match_obj, dict) else 50
+        if is_pending or score >= min_score:
             score_filtered.append(job)
 
     # 10. EXCLUDE APPLIED JOBS (Phase 9: Applied jobs must not pollute feed)

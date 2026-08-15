@@ -106,8 +106,8 @@ class LLMRouter:
         for k in safe_cfg.get("llm", {}).get("keys", []):
             prov = str(k.get("provider", "LLM")).upper()
             k["api_key"] = f"YOUR_{prov}_API_KEY"
-        with open(self.filepath, "w", encoding="utf-8") as f:
-            json.dump(safe_cfg, f, indent=2)
+        from scan_coordinator import save_json
+        save_json(self.filepath, safe_cfg)
 
     def get_best_available_key(self):
         """

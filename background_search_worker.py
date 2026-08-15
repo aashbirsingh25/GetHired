@@ -30,9 +30,30 @@ def load_json(filepath, default):
             return default
     return default
 
-def save_json(filepath, data):
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+def save_json(filepath, data, indent=2):
+    dir_name = os.path.dirname(filepath) or "."
+    os.makedirs(dir_name, exist_ok=True)
+    tmp_path = f"{filepath}.tmp_{os.getpid()}_{threading.get_ident()}"
+    try:
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=indent)
+            f.flush()
+            os.fsync(f.fileno())
+        for attempt in range(5):
+            try:
+                os.replace(tmp_path, filepath)
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.02)
+    except Exception as e:
+        if os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except Exception:
+                pass
+        raise e
 
 def flatten_locations(locations):
     flat = []
@@ -63,6 +84,7 @@ class BackgroundSearchWorker:
         self.last_search_time = now_utc
         self.next_search_time = now_utc + timedelta(hours=2)
         self.is_currently_searching = False
+        self.interactive_tasks = {}
         self.current_scan_status = {"is_scanning": False, "currently_scanning": None, "progress": None}
         self.deduplicator = JobDeduplicator()
         self.concurrency_mgr = AdaptiveConcurrencyManager(min_concurrent=3, max_concurrent=15)
@@ -168,13 +190,78 @@ class BackgroundSearchWorker:
                 print(f"[BackgroundSearchWorker] Pattern revalidation error: {e}")
             time.sleep(86400 * 7) # Check weekly
 
+    def trigger_interactive_search(self, custom_filters=None, task_id=None):
+        task_id = task_id or f"search_{int(time.time() * 1000)}"
+        task_entry = {
+            "task_id": task_id,
+            "status": "queued",
+            "started_at": datetime.now(timezone.utc).isoformat(),
+            "completed_at": None,
+            "filters": custom_filters,
+            "result": None,
+            "error": None
+        }
+
+        with self.lock:
+            if self.is_currently_searching:
+                return {
+                    "task_id": task_id,
+                    "status": "running",
+                    "is_scanning": True,
+                    "message": "A search cycle is already in progress. Try again after completion."
+                }
+            self.is_currently_searching = True
+            self.interactive_tasks[task_id] = task_entry
+
+        def _async_worker():
+            try:
+                task_entry["status"] = "running"
+                curated_output = self._run_search_cycle_internal(custom_filters=custom_filters)
+                task_entry["status"] = "completed"
+                task_entry["completed_at"] = datetime.now(timezone.utc).isoformat()
+                task_entry["result"] = curated_output
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] Interactive search error: {e}")
+                task_entry["status"] = "failed"
+                task_entry["error"] = str(e)
+                task_entry["completed_at"] = datetime.now(timezone.utc).isoformat()
+            finally:
+                with self.lock:
+                    self.is_currently_searching = False
+                self.update_live_scan_status(False, None, None)
+
+        threading.Thread(target=_async_worker, daemon=True).start()
+        return {
+            "task_id": task_id,
+            "status": "queued",
+            "message": "Interactive search cycle initiated in background",
+            "status_url": f"/api/jobs/search/status/{task_id}"
+        }
+
+    def get_interactive_search_status(self, task_id=None):
+        with self.lock:
+            if task_id in self.interactive_tasks:
+                return self.interactive_tasks[task_id]
+            if not task_id and self.interactive_tasks:
+                latest_id = list(self.interactive_tasks.keys())[-1]
+                return self.interactive_tasks[latest_id]
+        return {"task_id": task_id, "status": "not_found", "message": "No task recorded with given task_id"}
+
     def execute_search_cycle(self, custom_filters=None):
         with self.lock:
-            if self.is_currently_searching and not custom_filters:
+            if self.is_currently_searching:
                 print("[BackgroundSearchWorker] Search already in progress. Skipping.")
                 return load_json(JOBS_CURATED_FILE, {"jobs": []})
             self.is_currently_searching = True
 
+        try:
+            return self._run_search_cycle_internal(custom_filters=custom_filters)
+        finally:
+            with self.lock:
+                self.is_currently_searching = False
+            self.update_live_scan_status(False, None, None)
+
+    def _run_search_cycle_internal(self, custom_filters=None):
         start_time = time.time()
         filters_to_use = custom_filters or self.config["default_filters"]
         print(f"[BackgroundSearchWorker] Starting search cycle with filters: {filters_to_use}")
@@ -214,11 +301,11 @@ class BackgroundSearchWorker:
 
         # 6. Keep only last 7 days (prune older)
         curated_jobs = self._prune_old_jobs(final_jobs, max_days=7)
-        curated_jobs.sort(key=lambda j: j.get("match", {}).get("score", 0), reverse=True)
+        curated_jobs.sort(key=lambda j: (j.get("match") or {}).get("score", 0), reverse=True)
 
         duration_sec = int(time.time() - start_time)
         avg_score = round(
-            sum(j.get("match", {}).get("score", 0) for j in curated_jobs) / len(curated_jobs), 1
+            sum((j.get("match") or {}).get("score", 0) for j in curated_jobs) / len(curated_jobs), 1
         ) if curated_jobs else 0
 
         now_iso = datetime.now(timezone.utc).isoformat()
@@ -277,7 +364,7 @@ class BackgroundSearchWorker:
             try:
                 from cycle_yield_tracker import CycleYieldTracker
                 yield_tracker = CycleYieldTracker()
-                high_rel_count = sum(1 for j in curated_jobs if j.get("match", {}).get("relevance_score", 0) >= 0.6 or j.get("match", {}).get("score", 0) >= 75)
+                high_rel_count = sum(1 for j in curated_jobs if (j.get("match") or {}).get("relevance_score", 0) >= 0.6 or (j.get("match") or {}).get("score", 0) >= 75)
                 yield_tracker.record_cycle_outcome(datetime.now(timezone.utc), raw_total, high_rel_count)
             except Exception as e:
                 print(f"[BackgroundSearchWorker] Cycle yield logging error: {e}")
@@ -285,10 +372,6 @@ class BackgroundSearchWorker:
             self.last_search_time = datetime.now(timezone.utc)
             self.next_search_time = next_time
 
-        with self.lock:
-            self.is_currently_searching = False
-
-        self.update_live_scan_status(False, None, None)
         print(f"[BackgroundSearchWorker] Search cycle completed in {duration_sec}s. Retained {len(curated_jobs)} jobs.")
         return curated_output
 
@@ -360,6 +443,8 @@ class BackgroundSearchWorker:
         return []
 
     def _score_jobs(self, jobs, resume_data):
+        if not isinstance(resume_data, dict):
+            resume_data = {}
         if resume_data.get("has_resume"):
             try:
                 from hybrid_scorer import HybridJobScorer

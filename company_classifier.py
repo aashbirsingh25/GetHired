@@ -1,5 +1,6 @@
 import json
 import os
+from scan_coordinator import save_json
 
 COMPANIES_FILE = os.path.join(os.path.dirname(__file__), "companies.json")
 
@@ -27,9 +28,8 @@ def update_company_difficulty(company_id: str, jobs_extracted_count: int, is_suc
             updated = True
             break
 
-    if updated:
-        with open(COMPANIES_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
+        if updated:
+            save_json(COMPANIES_FILE, data)
 
 def classify_all_from_metrics(metrics_data: dict):
     """
@@ -55,5 +55,4 @@ def classify_all_from_metrics(metrics_data: dict):
             else:
                 comp["difficulty_estimate"] = 0.8
 
-    with open(COMPANIES_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+    save_json(COMPANIES_FILE, data)

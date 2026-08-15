@@ -69,8 +69,8 @@ class SemanticFilterEngine:
             metric_key = f"{filter_type}_filter"
             if metric_key in self.metrics:
                 self.metrics[metric_key]["threshold"] = round(new_threshold, 2)
-            with open(self.metrics_path, "w", encoding="utf-8") as f:
-                json.dump(self.metrics, f, indent=2)
+            from scan_coordinator import save_json
+            save_json(self.metrics_path, self.metrics)
 
     def filter_job(self, job: Dict[str, Any]) -> Tuple[bool, Dict[str, Any]]:
         title = job.get("title", "")

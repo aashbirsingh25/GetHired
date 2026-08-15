@@ -1,18 +1,7 @@
 import json
 import os
+import threading
 from datetime import datetime
-
-from company_ranker import rank_companies
-from pattern_store import PatternStore
-from browser_scanner import BrowserScanner, compute_parse_confidence_score
-from company_classifier import update_company_difficulty
-from apify_scanner import ApifyScanner, ApifyUnavailableError
-from threshold_optimizer import get_scan_confidence_threshold, record_outcome
-
-BASE_DIR = os.path.dirname(__file__)
-COMPANIES_FILE = os.path.join(BASE_DIR, "companies.json")
-JOBS_FILE = os.path.join(BASE_DIR, "jobs_store.json")
-METRICS_FILE = os.path.join(BASE_DIR, "metrics.json")
 
 def load_json(filepath, default):
     if os.path.exists(filepath):
@@ -23,9 +12,39 @@ def load_json(filepath, default):
             return default
     return default
 
-def save_json(filepath, data):
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+import time
+
+def save_json(filepath, data, indent=2):
+    dir_name = os.path.dirname(filepath) or "."
+    os.makedirs(dir_name, exist_ok=True)
+    tmp_path = f"{filepath}.tmp_{os.getpid()}_{threading.get_ident()}"
+    try:
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=indent)
+            f.flush()
+            os.fsync(f.fileno())
+        for attempt in range(5):
+            try:
+                os.replace(tmp_path, filepath)
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.02)
+    except Exception as e:
+        if os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except Exception:
+                pass
+        raise e
+
+from company_ranker import rank_companies
+from pattern_store import PatternStore
+from browser_scanner import BrowserScanner, compute_parse_confidence_score
+from company_classifier import update_company_difficulty
+from apify_scanner import ApifyScanner, ApifyUnavailableError
+from threshold_optimizer import get_scan_confidence_threshold, record_outcome
 
 class ScanCoordinator:
     def __init__(self):

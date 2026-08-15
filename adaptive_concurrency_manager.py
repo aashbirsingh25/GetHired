@@ -1,5 +1,6 @@
 import os
 import json
+import threading
 import time
 from typing import Dict, Any
 
@@ -20,9 +21,32 @@ def load_json(filepath, default):
             return default
     return default
 
-def save_json(filepath, data):
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+import time
+
+def save_json(filepath, data, indent=2):
+    dir_name = os.path.dirname(filepath) or "."
+    os.makedirs(dir_name, exist_ok=True)
+    tmp_path = f"{filepath}.tmp_{os.getpid()}_{threading.get_ident()}"
+    try:
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=indent)
+            f.flush()
+            os.fsync(f.fileno())
+        for attempt in range(5):
+            try:
+                os.replace(tmp_path, filepath)
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.02)
+    except Exception as e:
+        if os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except Exception:
+                pass
+        raise e
 
 class AdaptiveConcurrencyManager:
     def __init__(self, min_concurrent: int = 3, max_concurrent: int = 15, target_ram_percent: float = 70.0):

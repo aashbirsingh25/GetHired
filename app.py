@@ -55,12 +55,23 @@ if os.path.exists(JOBS_FILE):
         if not _is_valid:
             print(f"[AppStartup] Integrity Safeguard warning: Flagged {len(_errs)} items. Cleaning store...")
             _sdata["jobs"] = enforce_jobs_store_safeguard(_raw_jobs)
-            with open(JOBS_FILE, "w", encoding="utf-8") as _f:
-                json.dump(_sdata, _f, indent=2)
+            save_json(JOBS_FILE, _sdata)
         else:
             print(f"[AppStartup] Store Integrity Safeguard verified: {len(_raw_jobs)} real jobs.")
     except Exception as _e:
         print(f"[AppStartup] Safeguard check error: {_e}")
+
+
+def _get_job_match_score(job, default=50):
+    if not isinstance(job, dict):
+        return default
+    match_obj = job.get("match")
+    if not isinstance(match_obj, dict):
+        return default
+    score_val = match_obj.get("score")
+    if score_val is None or not isinstance(score_val, (int, float)):
+        return default
+    return int(score_val)
 
 bg_worker = BackgroundSearchWorker()
 bg_worker.start()
@@ -359,7 +370,7 @@ def apply_direct(job_id):
             job_title=job.get("title", "Software Developer"),
             location=job.get("location", "India"),
             application_url=target_url,
-            match_score=(job.get("match") or {}).get("score", 50)
+            match_score=_get_job_match_score(job, 50)
         )
     except Exception as e:
         app_record = {"status": "applied", "job_id": job_id}
@@ -412,51 +423,22 @@ def get_saved_jobs():
 
 @app.route("/api/jobs/search", methods=["POST"])
 def real_time_search():
-    from pipeline import execute_authoritative_pipeline
     body = request.get_json(force=True) or {}
     filters = body.get("filters") or body
+    if not isinstance(filters, dict):
+        filters = {}
     filters["is_manual_search"] = True
-    start_time = time.time()
 
-    res = bg_worker.execute_search_cycle(custom_filters=filters)
-    raw_found = list(res.get("jobs", []))
+    status_resp = bg_worker.trigger_interactive_search(custom_filters=filters)
+    http_code = 409 if status_resp.get("status") == "running" else 202
+    return jsonify(status_resp), http_code
 
-    store_data = load_json(JOBS_FILE, {"jobs": []})
-    all_raw = raw_found + store_data.get("jobs", [])
-    resume_data = load_json(RESUME_FILE, {})
-
-    tracker = ApplicationTracker()
-    user_apps = tracker.list_applications()
-    app_map = {a.get("job_id"): {"app_id": a.get("id"), "status": a.get("status"), "applied_date": a.get("applied_date")} for a in user_apps if a.get("job_id")}
-
-    pipeline_res = execute_authoritative_pipeline(
-        raw_jobs=all_raw,
-        custom_filters=filters,
-        resume_data=resume_data,
-        applied_job_ids=None
-    )
-
-    jobs_found = pipeline_res["jobs"]
-    for j in jobs_found:
-        j["user_application"] = app_map.get(j.get("id"))
-
-    duration_sec = round(time.time() - start_time, 1)
-    timeframe_info = res.get("timeframe_expansion") or {}
-    was_expanded = timeframe_info.get("was_expanded", False)
-    used_hours = timeframe_info.get("timeframe_used_hours", filters.get("upload_time_hours", 24))
-
-    notice = f"Expanded search to last {int(used_hours)} hours to find enough matches" if was_expanded else None
-
-    return jsonify({
-        "source": "real_time_search",
-        "jobs": jobs_found,
-        "search_duration": f"{duration_sec}s",
-        "total_jobs": len(jobs_found),
-        "pipeline_metrics": pipeline_res["metrics"],
-        "timeframe_used_hours": used_hours,
-        "was_expanded": was_expanded,
-        "expansion_notice": notice
-    })
+@app.route("/api/jobs/search/status/<task_id>", methods=["GET"])
+def get_search_task_status(task_id):
+    st = bg_worker.get_interactive_search_status(task_id)
+    if st.get("status") == "not_found":
+        return jsonify(st), 404
+    return jsonify(st), 200
 
 @app.route("/api/ollama-status", methods=["GET"])
 def get_ollama_status():
@@ -659,32 +641,131 @@ def rescan_company(company_id):
 
     def run_rescan():
         coordinator = ScanCoordinator()
-        coordinator.run_scan(target_company_id=company_id)
+    coordinator.run_scan(target_company_id=company_id)
 
     thread = threading.Thread(target=run_rescan, daemon=True)
     thread.start()
 
     return jsonify({"message": f"Rescan initiated for company '{company_id}'"}), 202
 
+def _app_startup_safeguard():
+    try:
+        _raw_jobs = load_json(JOBS_FILE, {"jobs": []}).get("jobs", [])
+        _sdata = {"jobs": []}
+        _changed = False
+        for _j in _raw_jobs:
+            if not isinstance(_j.get("match"), dict):
+                _j["match"] = None
+                _changed = True
+            _sdata["jobs"].append(_j)
+        if _changed:
+            save_json(JOBS_FILE, _sdata)
+        else:
+            print(f"[AppStartup] Store Integrity Safeguard verified: {len(_raw_jobs)} real jobs.")
+    except Exception as _e:
+        print(f"[AppStartup] Safeguard check error: {_e}")
+
+
+def _get_job_match_score(job, default=50):
+    if not isinstance(job, dict):
+        return default
+    match_obj = job.get("match")
+    if not isinstance(match_obj, dict):
+        return default
+    score_val = match_obj.get("score")
+    if score_val is None or not isinstance(score_val, (int, float)):
+        return default
+    return int(score_val)
+
 rescore_lock = threading.Lock()
+active_rescore_hash = None
+pending_rescore_data = None
 
 def _async_rescore_jobs(resume_data):
-    if not rescore_lock.acquire(blocking=False):
-        print("[AppRescore] Rescoring already in progress. Skipping duplicate thread.")
+    global active_rescore_hash, pending_rescore_data
+    if not resume_data or not isinstance(resume_data, dict):
         return
+
+    version_hash = resume_data.get("version_hash")
+    active_rescore_hash = version_hash
+
+    if not rescore_lock.acquire(blocking=False):
+        print(f"[AppRescore] Rescoring already in progress. Queueing pending rescore for {version_hash}.")
+        pending_rescore_data = resume_data
+        return
+
+    now_iso = datetime.now().isoformat()
+    r_store = load_json(RESUME_FILE, resume_data or {})
+    rescore_status = {
+        "status": "in_progress",
+        "total_jobs": 0,
+        "scored_jobs": 0,
+        "failed_jobs": 0,
+        "started_at": now_iso,
+        "completed_at": None,
+        "error": None,
+        "resume_version_hash": version_hash
+    }
+    r_store["rescore_status"] = rescore_status
+    save_json(RESUME_FILE, r_store)
+
     try:
         scorer = HybridJobScorer(resume_data)
         jobs_data = load_json(JOBS_FILE, {"jobs": []})
         jobs_list = jobs_data.get("jobs", [])
-        for job in jobs_list:
-            job["match"] = scorer.score_job(job)
+        total_jobs = len(jobs_list)
+        rescore_status["total_jobs"] = total_jobs
+        r_store["rescore_status"] = rescore_status
+        save_json(RESUME_FILE, r_store)
+
+        scored_count = 0
+        failed_count = 0
+        for idx, job in enumerate(jobs_list):
+            if active_rescore_hash != version_hash:
+                print(f"[AppRescore] Obsolete rescore thread for hash {version_hash} aborted in favor of {active_rescore_hash}.")
+                return
+
+            try:
+                job["match"] = scorer.score_job(job)
+                scored_count += 1
+            except Exception as item_err:
+                print(f"[AppRescore] Error scoring job {job.get('id')}: {item_err}")
+                failed_count += 1
+
+            if (idx + 1) % 25 == 0 or (idx + 1) == total_jobs:
+                rescore_status["scored_jobs"] = scored_count
+                rescore_status["failed_jobs"] = failed_count
+                r_store["rescore_status"] = rescore_status
+                save_json(RESUME_FILE, r_store)
+
+        if active_rescore_hash != version_hash:
+            print(f"[AppRescore] Obsolete rescore thread for hash {version_hash} aborted before final write.")
+            return
+
         jobs_data["jobs"] = jobs_list
         save_json(JOBS_FILE, jobs_data)
-        print(f"[AppRescore] Rescored {len(jobs_list)} jobs in background successfully.")
+
+        rescore_status["status"] = "completed"
+        rescore_status["scored_jobs"] = scored_count
+        rescore_status["failed_jobs"] = failed_count
+        rescore_status["completed_at"] = datetime.now().isoformat()
+        r_store["rescore_status"] = rescore_status
+        save_json(RESUME_FILE, r_store)
+
+        print(f"[AppRescore] Rescored {scored_count}/{total_jobs} jobs in background successfully for hash {version_hash}.")
     except Exception as e:
         print(f"[AppRescore] Error rescoring jobs in background: {e}")
+        rescore_status["status"] = "error"
+        rescore_status["error"] = str(e)
+        rescore_status["completed_at"] = datetime.now().isoformat()
+        r_store["rescore_status"] = rescore_status
+        save_json(RESUME_FILE, r_store)
     finally:
         rescore_lock.release()
+        if pending_rescore_data and pending_rescore_data.get("version_hash") == active_rescore_hash:
+            next_data = pending_rescore_data
+            pending_rescore_data = None
+            threading.Thread(target=_async_rescore_jobs, args=(next_data,), daemon=True).start()
 
 @app.route("/api/resume", methods=["POST"])
 def upload_resume():
@@ -765,16 +846,34 @@ def get_resume():
 def get_resume_status():
     data = load_json(RESUME_FILE, {"has_resume": False, "skills": [], "chunk_count": 0})
     jobs_data = load_json(JOBS_FILE, {"jobs": []})
-    scored_jobs = [j for j in jobs_data.get("jobs", []) if j.get("match")]
+    jobs_list = jobs_data.get("jobs", [])
+    scored_jobs_count = sum(1 for j in jobs_list if j.get("match"))
+
+    r_status = data.get("rescore_status") or {
+        "status": "idle" if data.get("has_resume") else "no_resume",
+        "total_jobs": len(jobs_list),
+        "scored_jobs": scored_jobs_count,
+        "failed_jobs": 0,
+        "started_at": None,
+        "completed_at": None,
+        "error": None,
+        "resume_version_hash": data.get("version_hash")
+    }
 
     return jsonify({
         "has_resume": data.get("has_resume", False),
         "skills_count": len(data.get("skills", [])),
         "chunk_count": data.get("chunk_count", 0),
         "uploaded_at": data.get("uploaded_at"),
-        "total_jobs": len(jobs_data.get("jobs", [])),
-        "scored_jobs": len(scored_jobs),
-        "version_hash": data.get("version_hash")
+        "total_jobs": len(jobs_list),
+        "scored_jobs": r_status.get("scored_jobs", scored_jobs_count),
+        "version_hash": data.get("version_hash"),
+        "rescore_status": r_status,
+        "status": r_status.get("status", "idle"),
+        "failed_jobs": r_status.get("failed_jobs", 0),
+        "started_at": r_status.get("started_at"),
+        "completed_at": r_status.get("completed_at"),
+        "error": r_status.get("error")
     })
 
 @app.route("/api/llm-quota", methods=["GET"])
@@ -1114,7 +1213,7 @@ def test_background_search_config():
     matched_jobs = []
 
     for job in eval_jobs:
-        score = job.get("match", {}).get("score", 50)
+        score = _get_job_match_score(job, 50)
         if score >= min_score:
             matched_jobs.append(job)
 
@@ -1259,14 +1358,14 @@ def manage_daily_digest():
                 fs_dt = parse_datetime_safely(first_seen) if first_seen else None
                 if fs_dt and fs_dt > lv_dt:
                     new_jobs_count += 1
-                    if j.get("match", {}).get("score", 0) >= min_score:
+                    if _get_job_match_score(j, 0) >= min_score:
                         high_matches_count += 1
         else:
             new_jobs_count = len(jobs)
-            high_matches_count = len([j for j in jobs if j.get("match", {}).get("score", 0) >= min_score])
+            high_matches_count = len([j for j in jobs if _get_job_match_score(j, 0) >= min_score])
     else:
         new_jobs_count = len(jobs)
-        high_matches_count = len([j for j in jobs if j.get("match", {}).get("score", 0) >= min_score])
+        high_matches_count = len([j for j in jobs if _get_job_match_score(j, 0) >= min_score])
 
     tracker = ApplicationTracker()
     all_apps = tracker.list_applications()

@@ -21,33 +21,55 @@ def load_config() -> Dict[str, Any]:
             pass
     return {}
 
-def fetch_naukri_jobs(role: str = "Software Engineer", location: str = "Gurugram", max_results: int = 25) -> List[Dict[str, Any]]:
+class JobFetcherList(list):
+    """List subclass that attaches source health metadata without breaking list compatibility."""
+    def __init__(self, items=(), source_health=None):
+        super().__init__(items)
+        self.source_health = source_health or {
+            "status": "success" if items else "zero_results",
+            "message": f"Returned {len(items)} jobs",
+            "http_status": 200,
+            "jobs_count": len(items)
+        }
+
+def fetch_naukri_jobs(role: str = "Software Engineer", location: str = "Gurugram", max_results: int = 25, return_metadata: bool = False) -> List[Dict[str, Any]]:
     config = load_config()
     job_boards = config.get("job_boards", {})
     naukri_cfg = job_boards.get("naukri", {})
 
     if not naukri_cfg.get("enabled", True):
-        print("[NaukriFetcher] Naukri fetcher disabled in config.")
-        return []
+        health = {"status": "unconfigured", "message": "Naukri fetcher disabled in config", "http_status": None, "jobs_count": 0}
+        print(f"[NaukriFetcher] {health['message']}")
+        res = JobFetcherList([], source_health=health)
+        return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
 
     base_url = naukri_cfg.get("rss_base_url", "https://www.naukri.com/jobapi/v3/search")
     encoded_role = urllib.parse.quote(role)
     encoded_loc = urllib.parse.quote(location)
     
-    # Construct RSS / Feed URL
     feed_url = f"{base_url}?k={encoded_role}&l={encoded_loc}&rss=true"
 
     if feedparser is None:
-        print("[NaukriFetcher] Warning: 'feedparser' library is not installed.")
-        return []
+        health = {"status": "unconfigured", "message": "'feedparser' library is not installed", "http_status": None, "jobs_count": 0}
+        print(f"[NaukriFetcher] Warning: {health['message']}")
+        res = JobFetcherList([], source_health=health)
+        return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
 
     try:
         import requests
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         resp = requests.get(feed_url, headers=headers, timeout=5)
-        if resp.status_code != 200:
-            print(f"[NaukriFetcher] Naukri search endpoint returned HTTP {resp.status_code}. Returning empty job list.")
-            return []
+        if resp.status_code == 403:
+            health = {"status": "blocked", "message": f"HTTP {resp.status_code} Forbidden by anti-bot", "http_status": 403, "jobs_count": 0}
+            print(f"[NaukriFetcher] {health['message']}")
+            res = JobFetcherList([], source_health=health)
+            return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
+        elif resp.status_code != 200:
+            health = {"status": "unavailable", "message": f"Naukri RSS feed returned HTTP {resp.status_code}", "http_status": resp.status_code, "jobs_count": 0}
+            print(f"[NaukriFetcher] {health['message']}")
+            res = JobFetcherList([], source_health=health)
+            return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
+
         parsed_feed = feedparser.parse(resp.content)
         entries = getattr(parsed_feed, "entries", [])
         
@@ -65,7 +87,6 @@ def fetch_naukri_jobs(role: str = "Software Engineer", location: str = "Gurugram
                     print(f"[NaukriFetcher] Skipping entry #{idx}: missing required title or link.")
                     continue
 
-                # Extract company from title if format is "Title - Company" or similar
                 company = "Naukri Listed Partner"
                 if " - " in title:
                     parts = title.split(" - ")
@@ -101,9 +122,14 @@ def fetch_naukri_jobs(role: str = "Software Engineer", location: str = "Gurugram
                 print(f"[NaukriFetcher] Warning: Failed parsing RSS entry #{idx}: {entry_err}")
                 continue
 
+        h_status = "success" if jobs else "zero_results"
+        health = {"status": h_status, "message": f"Fetched {len(jobs)} jobs from Naukri", "http_status": 200, "jobs_count": len(jobs)}
         print(f"[NaukriFetcher] Successfully fetched {len(jobs)} jobs from Naukri RSS.")
-        return jobs
+        res = JobFetcherList(jobs, source_health=health)
+        return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
 
     except Exception as e:
+        health = {"status": "unavailable", "message": str(e), "http_status": None, "jobs_count": 0}
         print(f"[NaukriFetcher] Error accessing Naukri RSS feed ({feed_url}): {e}")
-        return []
+        res = JobFetcherList([], source_health=health)
+        return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res

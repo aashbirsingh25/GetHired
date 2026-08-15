@@ -27,9 +27,25 @@ def load_json(filepath, default):
     except Exception:
         return default
 
-def save_json(filepath, data):
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+import threading
+
+def save_json(filepath, data, indent=2):
+    dir_name = os.path.dirname(filepath) or "."
+    os.makedirs(dir_name, exist_ok=True)
+    tmp_path = f"{filepath}.tmp_{os.getpid()}_{threading.get_ident()}"
+    try:
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=indent)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_path, filepath)
+    except Exception as e:
+        if os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except Exception:
+                pass
+        raise e
     _to_file_cache.pop(filepath, None)
 
 def log_auto_improvement(entry: dict):
@@ -52,8 +68,7 @@ def log_auto_improvement(entry: dict):
             return
 
     data["improvements"].append(entry)
-    with open(LOG_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+    save_json(LOG_FILE, data)
 
 def get_confident_misses() -> List[dict]:
     if not os.path.exists(FEEDBACK_FILE):
@@ -417,8 +432,7 @@ def analyze_and_optimize():
             adjustments.append(entry)
             log_auto_improvement(entry)
 
-    with open(METRICS_FILE, "w", encoding="utf-8") as f:
-        json.dump(metrics, f, indent=2)
+    save_json(METRICS_FILE, metrics)
 
     # Check for quota pacing adjustments
     pacing_adj = apply_pacing_driven_adjustment()

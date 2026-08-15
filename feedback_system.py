@@ -1,7 +1,8 @@
 import json
 import os
-from datetime import datetime
-from typing import Dict, Any, List
+from datetime import datetime, timezone
+from typing import Dict, Any, List, Optional
+from scan_coordinator import save_json
 
 BASE_DIR = os.path.dirname(__file__)
 FEEDBACK_FILE = os.path.join(BASE_DIR, "feedback_log.json")
@@ -23,8 +24,7 @@ class FeedbackCollector:
         return {"feedback": []}
 
     def _save_feedback(self):
-        with open(self.feedback_path, "w", encoding="utf-8") as f:
-            json.dump(self.feedback_data, f, indent=2)
+        save_json(self.feedback_path, self.feedback_data)
 
     def record_feedback(self, job_id: str, action: str, reason: str, job_dict: Dict[str, Any] = None) -> Dict[str, Any]:
         job_dict = job_dict or {}
@@ -104,8 +104,7 @@ class FeedbackCollector:
             except Exception:
                 pass
 
-        with open(self.metrics_path, "w", encoding="utf-8") as f:
-            json.dump(metrics_data, f, indent=2)
+        save_json(self.metrics_path, metrics_data)
 
         return {
             "total_feedback": total,

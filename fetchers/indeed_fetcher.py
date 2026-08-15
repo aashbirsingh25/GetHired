@@ -16,19 +16,34 @@ def load_config() -> Dict[str, Any]:
             pass
     return {}
 
-def fetch_indeed_jobs(role: str = "Software Engineer", location: str = "Gurugram", max_results: int = 25) -> List[Dict[str, Any]]:
+class JobFetcherList(list):
+    """List subclass that attaches source health metadata without breaking list compatibility."""
+    def __init__(self, items=(), source_health=None):
+        super().__init__(items)
+        self.source_health = source_health or {
+            "status": "success" if items else "zero_results",
+            "message": f"Returned {len(items)} jobs",
+            "http_status": 200,
+            "jobs_count": len(items)
+        }
+
+def fetch_indeed_jobs(role: str = "Software Engineer", location: str = "Gurugram", max_results: int = 25, return_metadata: bool = False) -> List[Dict[str, Any]]:
     config = load_config()
     job_boards = config.get("job_boards", {})
     indeed_cfg = job_boards.get("indeed", {})
 
     if not indeed_cfg.get("enabled", True):
-        print("[IndeedFetcher] Indeed fetcher disabled in config.")
-        return []
+        health = {"status": "unconfigured", "message": "Indeed fetcher disabled in config", "http_status": None, "jobs_count": 0}
+        print(f"[IndeedFetcher] {health['message']}")
+        res = JobFetcherList([], source_health=health)
+        return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
 
     publisher_id = indeed_cfg.get("publisher_id", "").strip()
     if not publisher_id:
-        print("[IndeedFetcher] Indeed fetcher skipped - no publisher_id configured")
-        return []
+        health = {"status": "unconfigured", "message": "No publisher_id configured", "http_status": None, "jobs_count": 0}
+        print(f"[IndeedFetcher] Indeed fetcher skipped - {health['message']}")
+        res = JobFetcherList([], source_health=health)
+        return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
 
     url = "http://api.indeed.com/ads/apisearch"
     params = {
@@ -42,9 +57,16 @@ def fetch_indeed_jobs(role: str = "Software Engineer", location: str = "Gurugram
 
     try:
         response = requests.get(url, params=params, timeout=10)
-        if response.status_code != 200:
-            print(f"[IndeedFetcher] Indeed legacy API search endpoint retired (HTTP {response.status_code}). Returning empty job list.")
-            return []
+        if response.status_code == 403:
+            health = {"status": "blocked", "message": f"HTTP {response.status_code} Forbidden", "http_status": 403, "jobs_count": 0}
+            print(f"[IndeedFetcher] {health['message']}")
+            res = JobFetcherList([], source_health=health)
+            return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
+        elif response.status_code != 200:
+            health = {"status": "unavailable", "message": f"Indeed API returned HTTP {response.status_code}", "http_status": response.status_code, "jobs_count": 0}
+            print(f"[IndeedFetcher] {health['message']}")
+            res = JobFetcherList([], source_health=health)
+            return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
 
         data = response.json()
         results = data.get("results", [])
@@ -81,9 +103,14 @@ def fetch_indeed_jobs(role: str = "Software Engineer", location: str = "Gurugram
             raw_job["canonical_url"] = normalize_url(job_url)
             jobs.append(raw_job)
 
+        h_status = "success" if jobs else "zero_results"
+        health = {"status": h_status, "message": f"Fetched {len(jobs)} jobs", "http_status": 200, "jobs_count": len(jobs)}
         print(f"[IndeedFetcher] Successfully fetched {len(jobs)} jobs from Indeed.")
-        return jobs
+        res = JobFetcherList(jobs, source_health=health)
+        return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
 
     except Exception as e:
+        health = {"status": "unavailable", "message": str(e), "http_status": None, "jobs_count": 0}
         print(f"[IndeedFetcher] Error fetching jobs from Indeed: {e}")
-        return []
+        res = JobFetcherList([], source_health=health)
+        return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res

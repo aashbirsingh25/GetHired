@@ -58,8 +58,8 @@ def rank_companies(companies=None):
 
     result = {"scan_order": scan_order}
     
-    with open(SCAN_ORDER_FILE, "w", encoding="utf-8") as f:
-        json.dump(result, f, indent=2)
+    from scan_coordinator import save_json
+    save_json(SCAN_ORDER_FILE, result)
 
     return sorted_companies, result
 
