@@ -129,7 +129,8 @@ def fetch_naukri_jobs(role: str = "Software Engineer", location: str = "Gurugram
         return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res
 
     except Exception as e:
-        health = {"status": "unavailable", "message": str(e), "http_status": None, "jobs_count": 0}
+        status_name = "timeout" if isinstance(e, requests.exceptions.Timeout) else "unavailable"
+        health = {"status": status_name, "message": str(e), "http_status": None, "jobs_count": 0}
         print(f"[NaukriFetcher] Error accessing Naukri RSS feed ({feed_url}): {e}")
         res = JobFetcherList([], source_health=health)
         return {"status": health["status"], "health": health, "jobs": res} if return_metadata else res

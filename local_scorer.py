@@ -44,6 +44,14 @@ def classify_role(title: str, description: str) -> Tuple[int, str]:
     title_upper = (title or "").upper()
     desc_upper = (description or "").upper()
     
+    # 0. Non-Job Listing / Course / Bootcamp Rejection
+    course_phrases = [
+        "BOOTCAMP", "CERTIFICATION PROGRAM", "POST GRADUATE CERTIFICATE",
+        "MASTERCLASS", "WEBINAR", "HACKATHON", "SUMMIT"
+    ]
+    if any(cp in title_upper for cp in course_phrases):
+        return 15, "non_technical"
+
     # 1. High-Priority Support Roles (overrides generic "Engineer")
     support_phrases = [
         "TECHNICAL SUPPORT", "APPLICATION SUPPORT", "PRODUCT SUPPORT", "CUSTOMER SUPPORT",
@@ -233,6 +241,7 @@ def score_locally(
 
     exec_senior_patterns = [
         r"\bPRINCIPAL\b", r"\bSTAFF\b", r"\bDIRECTOR\b", r"\bPARTNER\b", r"\bFELLOW\b",
+        r"\bVP\b", r"\bVICE\s+PRESIDENT\b", r"\bCTO\b", r"\bCHIEF\s+(?:TECHNOLOGY|TECHNICAL|ARCHITECT|OFFICER)\b",
         r"\b10\+\s*YEARS\b", r"\b12\+\s*YEARS\b", r"\b15\+\s*YEARS\b"
     ]
     is_exec_senior_job = any(re.search(pat, norm_senior_text) for pat in exec_senior_patterns)

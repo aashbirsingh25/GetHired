@@ -1,5 +1,6 @@
 import re
 import time
+import json
 import hashlib
 from datetime import datetime
 from typing import Tuple, List, Dict, Any
@@ -67,11 +68,28 @@ class BrowserScanner:
         company_name = company.get("name")
         company_id = company.get("id")
 
-        # Direct Workday REST API Extractor (bypass SPA DOM empty state)
-        if "myworkdayjobs.com" in url or company.get("ats") == "workday":
+        # Direct ATS REST API Extractors (bypass SPA DOM empty state)
+        ats_type = (company.get("ats") or "").lower()
+        if "myworkdayjobs.com" in url or ats_type == "workday":
             workday_jobs = self._extract_workday_jobs(company, target_url=url)
             if workday_jobs:
                 return workday_jobs, None, "workday_api", None
+        elif "greenhouse.io" in url or ats_type == "greenhouse":
+            gh_jobs = self._extract_greenhouse_jobs(company, target_url=url)
+            if gh_jobs:
+                return gh_jobs, None, "greenhouse_api", None
+        elif "lever.co" in url or ats_type == "lever":
+            lever_jobs = self._extract_lever_jobs(company, target_url=url)
+            if lever_jobs:
+                return lever_jobs, None, "lever_api", None
+        elif "ashbyhq.com" in url or ats_type == "ashby":
+            ashby_jobs = self._extract_ashby_jobs(company, target_url=url)
+            if ashby_jobs:
+                return ashby_jobs, None, "ashby_api", None
+        elif "smartrecruiters.com" in url or ats_type == "smartrecruiters":
+            sr_jobs = self._extract_smartrecruiters_jobs(company, target_url=url)
+            if sr_jobs:
+                return sr_jobs, None, "smartrecruiters_api", None
 
         self.start()
 
@@ -80,74 +98,74 @@ class BrowserScanner:
             viewport={"width": 1280, "height": 800}
         )
         page = context.new_page()
-
         error_msg = None
+        jobs = []
+        learned_pattern = None
+        method = "heuristic"
+
         try:
-            # Navigate with 15 second timeout
-            page.goto(url, timeout=15000, wait_until="domcontentloaded")
-            final_url = page.url
+            try:
+                page.goto(url, timeout=15000, wait_until="domcontentloaded")
+                final_url = page.url
 
-            # Check if page redirected to a Workday portal
-            if "myworkdayjobs.com" in final_url and not ("myworkdayjobs.com" in url):
-                workday_jobs = self._extract_workday_jobs(company, target_url=final_url)
-                if workday_jobs:
-                    context.close()
-                    return workday_jobs, None, "workday_api", None
+                if "myworkdayjobs.com" in final_url and not ("myworkdayjobs.com" in url):
+                    workday_jobs = self._extract_workday_jobs(company, target_url=final_url)
+                    if workday_jobs:
+                        return workday_jobs, None, "workday_api", None
 
-            # Dynamic pause for client-side JS rendering widgets (Groww/Darwinbox/React/Vue)
-            page.wait_for_timeout(3500)
-            html_content = page.content()
-        except PlaywrightTimeoutError:
-            error_msg = f"Timeout (15s) navigating to {url}"
-            context.close()
-            return [], None, "heuristic", error_msg
-        except Exception as e:
-            error_msg = f"Error opening page: {str(e)}"
-            context.close()
-            return [], None, "heuristic", error_msg
+                page.wait_for_timeout(3500)
+                html_content = page.content()
+            except PlaywrightTimeoutError:
+                error_msg = f"Timeout (15s) navigating to {url}"
+                return [], None, "heuristic", error_msg
+            except Exception as e:
+                error_msg = f"Error opening page: {str(e)}"
+                return [], None, "heuristic", error_msg
 
+            soup = BeautifulSoup(html_content, "html.parser")
+            now_iso = datetime.now().isoformat()
 
-        soup = BeautifulSoup(html_content, "html.parser")
-        now_iso = datetime.now().isoformat()
+            # 1. Try Schema.org JobPosting JSON-LD structured data
+            json_ld_jobs = self._extract_json_ld_jobs(soup, company, now_iso)
+            if len(json_ld_jobs) >= 1:
+                return json_ld_jobs, None, "json_ld", None
 
-        # 1. Try stored pattern if available
-        if stored_pattern:
-            jobs = self._extract_with_pattern(soup, company, stored_pattern, now_iso)
-            if len(jobs) >= 1:
+            # 2. Try stored pattern if available
+            if stored_pattern:
+                p_jobs = self._extract_with_pattern(soup, company, stored_pattern, now_iso)
+                if len(p_jobs) >= 1:
+                    return p_jobs, stored_pattern, "stored_pattern", None
+
+            # 3. Try Heuristic Extraction
+            jobs, learned_pattern = self._extract_with_heuristics(soup, page, company, now_iso)
+
+            if not jobs:
+                ats_iframes = []
+                for iframe in soup.find_all("iframe", src=True):
+                    src = iframe["src"]
+                    if any(ats_domain in src.lower() for ats_domain in ["greenhouse.io", "lever.co", "workday", "ashbyhq", "smartrecruiters", "bamboohr", "workable", "taleo", "icims", "param.ai", "job"]):
+                        ats_iframes.append(self._fix_url(src, url))
+
+                if ats_iframes:
+                    target_iframe_url = ats_iframes[0]
+                    try:
+                        page.goto(target_iframe_url, timeout=12000, wait_until="domcontentloaded")
+                        page.wait_for_timeout(3000)
+                        iframe_html = page.content()
+                        iframe_soup = BeautifulSoup(iframe_html, "html.parser")
+                        jobs, learned_pattern = self._extract_with_heuristics(iframe_soup, page, company, now_iso)
+                    except Exception:
+                        pass
+        finally:
+            try:
                 context.close()
-                return jobs, stored_pattern, "stored_pattern", None
+            except Exception:
+                pass
 
-        # 2. Try Heuristic Extraction
-        jobs, learned_pattern = self._extract_with_heuristics(soup, page, company, now_iso)
-
-        # 3. If 0 jobs found, check for ATS iframe embeds (Porter / Greenhouse / Lever / Workday)
-        if not jobs:
-            ats_iframes = []
-            for iframe in soup.find_all("iframe", src=True):
-                src = iframe["src"]
-                if any(ats_domain in src.lower() for ats_domain in ["greenhouse.io", "lever.co", "workday", "ashbyhq", "smartrecruiters", "bamboohr", "workable", "taleo", "icims", "param.ai", "job"]):
-                    ats_iframes.append(self._fix_url(src, url))
-
-            if ats_iframes:
-                target_iframe_url = ats_iframes[0]
-                try:
-                    page.goto(target_iframe_url, timeout=12000, wait_until="domcontentloaded")
-                    page.wait_for_timeout(3000)
-                    iframe_html = page.content()
-                    iframe_soup = BeautifulSoup(iframe_html, "html.parser")
-                    jobs, learned_pattern = self._extract_with_heuristics(iframe_soup, page, company, now_iso)
-                except Exception:
-                    pass
-
-        context.close()
-
-        if len(jobs) >= 5:
-            return jobs, learned_pattern, "heuristic", None
-        elif len(jobs) > 0:
-            # Low yield, heuristic partially worked
-            return jobs, learned_pattern, "heuristic", None
+        if len(jobs) >= 1:
+            return jobs, learned_pattern, method, error_msg
         else:
-            return [], None, "heuristic", "No jobs found on page using heuristic extraction"
+            return [], None, "heuristic", error_msg or "Zero jobs extracted from page using heuristic extraction"
 
 
     def _extract_with_pattern(self, soup: BeautifulSoup, company: dict, pattern: dict, timestamp: str):
@@ -441,9 +459,247 @@ class BrowserScanner:
                             jobs.append(cand_job)
                 else:
                     break
-            return jobs
+            return jobs[:50]
         except Exception as e:
             print(f"[BrowserScanner] Workday API extraction error for {company['name']}: {e}")
         return []
+
+    def _extract_json_ld_jobs(self, soup: BeautifulSoup, company: dict, timestamp: str) -> list:
+        """
+        Extracts Schema.org JobPosting objects embedded in <script type="application/ld+json">.
+        Used universally by Google Careers, Greenhouse, Lever, Ashby, SmartRecruiters, and corporate portals.
+        """
+        jobs = []
+        scripts = soup.find_all("script", type=re.compile(r"application/ld\+json", re.I))
+        for script in scripts:
+            if not script.string:
+                continue
+            try:
+                data = json.loads(script.string)
+                items = []
+                if isinstance(data, list):
+                    items = data
+                elif isinstance(data, dict):
+                    if data.get("@type") == "JobPosting":
+                        items = [data]
+                    elif "@graph" in data and isinstance(data["@graph"], list):
+                        items = [item for item in data["@graph"] if isinstance(item, dict) and item.get("@type") == "JobPosting"]
+                for item in items:
+                    if not isinstance(item, dict) or item.get("@type") != "JobPosting":
+                        continue
+                    title = item.get("title") or item.get("name", "")
+                    if not title or len(title) < 3:
+                        continue
+
+                    raw_loc = "India"
+                    loc_obj = item.get("jobLocation")
+                    if isinstance(loc_obj, dict):
+                        address = loc_obj.get("address", {})
+                        if isinstance(address, dict):
+                            raw_loc = address.get("addressLocality") or address.get("addressRegion") or address.get("addressCountry") or "India"
+                        elif isinstance(address, str):
+                            raw_loc = address
+                    elif isinstance(loc_obj, list) and loc_obj:
+                        first_loc = loc_obj[0]
+                        if isinstance(first_loc, dict):
+                            address = first_loc.get("address", {})
+                            if isinstance(address, dict):
+                                raw_loc = address.get("addressLocality") or address.get("addressCountry") or "India"
+
+                    url = item.get("url") or item.get("sameAs") or item.get("directApplyUrl") or company.get("career_url", "")
+                    final_url = self._fix_url(url, company.get("career_url", ""))
+                    desc = item.get("description") or title
+
+                    job_id = self._generate_job_id(company["id"], title, final_url)
+                    cand_job = {
+                        "id": job_id,
+                        "company": company["name"],
+                        "title": title,
+                        "location": str(raw_loc).strip(),
+                        "url": final_url,
+                        "description": str(desc)[:500],
+                        "posted_date": item.get("datePosted"),
+                        "extraction_method": "json_ld",
+                        "scan_timestamp": timestamp,
+                        "first_seen_at": timestamp,
+                        "closed": False,
+                        "needs_manual_link_review": False,
+                        "match": None
+                    }
+                    is_valid, _ = check_job_posting_validity(cand_job)
+                    if is_valid:
+                        jobs.append(cand_job)
+            except Exception:
+                continue
+        return jobs
+
+    def _extract_greenhouse_jobs(self, company: dict, target_url: str = None) -> list:
+        url = target_url or company.get("career_url", "")
+        import requests
+        m = re.search(r"(?:greenhouse\.io|boards\.greenhouse\.io)/embed/job_board\?for=([^&]+)", url)
+        if not m:
+            m = re.search(r"(?:greenhouse\.io|boards\.greenhouse\.io)/([^/?#]+)", url)
+        if not m:
+            return []
+        board_token = m.group(1)
+        api_url = f"https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true"
+        now_iso = datetime.now().isoformat()
+        jobs = []
+        try:
+            r = requests.get(api_url, timeout=6)
+            if r.status_code == 200:
+                data = r.json()
+                for item in data.get("jobs", []):
+                    title = item.get("title", "")
+                    loc = (item.get("location") or {}).get("name") or "India"
+                    full_url = item.get("absolute_url") or url
+                    job_id = self._generate_job_id(company["id"], title, full_url)
+                    cand_job = {
+                        "id": job_id,
+                        "company": company["name"],
+                        "title": title,
+                        "location": loc,
+                        "url": full_url,
+                        "description": f"Greenhouse posting: {title}",
+                        "posted_date": item.get("updated_at"),
+                        "extraction_method": "greenhouse_api",
+                        "scan_timestamp": now_iso,
+                        "first_seen_at": now_iso,
+                        "closed": False,
+                        "needs_manual_link_review": False,
+                        "match": None
+                    }
+                    is_valid, _ = check_job_posting_validity(cand_job)
+                    if is_valid:
+                        jobs.append(cand_job)
+        except Exception:
+            pass
+        return jobs
+
+    def _extract_lever_jobs(self, company: dict, target_url: str = None) -> list:
+        url = target_url or company.get("career_url", "")
+        import requests
+        m = re.search(r"jobs\.lever\.co/([^/?#]+)", url)
+        if not m:
+            return []
+        site = m.group(1)
+        api_url = f"https://api.lever.co/v0/postings/{site}?mode=json"
+        now_iso = datetime.now().isoformat()
+        jobs = []
+        try:
+            r = requests.get(api_url, timeout=6)
+            if r.status_code == 200:
+                data = r.json()
+                if isinstance(data, list):
+                    for item in data:
+                        title = item.get("text", "")
+                        cats = item.get("categories", {})
+                        loc = cats.get("location") or "India"
+                        full_url = item.get("hostedUrl") or url
+                        job_id = self._generate_job_id(company["id"], title, full_url)
+                        cand_job = {
+                            "id": job_id,
+                            "company": company["name"],
+                            "title": title,
+                            "location": loc,
+                            "url": full_url,
+                            "description": f"Lever posting: {title}",
+                            "posted_date": None,
+                            "extraction_method": "lever_api",
+                            "scan_timestamp": now_iso,
+                            "first_seen_at": now_iso,
+                            "closed": False,
+                            "needs_manual_link_review": False,
+                            "match": None
+                        }
+                        is_valid, _ = check_job_posting_validity(cand_job)
+                        if is_valid:
+                            jobs.append(cand_job)
+        except Exception:
+            pass
+        return jobs
+
+    def _extract_ashby_jobs(self, company: dict, target_url: str = None) -> list:
+        url = target_url or company.get("career_url", "")
+        import requests
+        m = re.search(r"jobs\.ashbyhq\.com/([^/?#]+)", url)
+        if not m:
+            return []
+        board = m.group(1)
+        api_url = f"https://api.ashbyhq.com/posting-api/job-board/{board}"
+        now_iso = datetime.now().isoformat()
+        jobs = []
+        try:
+            r = requests.get(api_url, timeout=6)
+            if r.status_code == 200:
+                data = r.json()
+                for item in data.get("jobs", []):
+                    title = item.get("title", "")
+                    loc = item.get("locationName") or "India"
+                    full_url = item.get("jobUrl") or url
+                    job_id = self._generate_job_id(company["id"], title, full_url)
+                    cand_job = {
+                        "id": job_id,
+                        "company": company["name"],
+                        "title": title,
+                        "location": loc,
+                        "url": full_url,
+                        "description": f"Ashby posting: {title}",
+                        "posted_date": item.get("publishedAt"),
+                        "extraction_method": "ashby_api",
+                        "scan_timestamp": now_iso,
+                        "first_seen_at": now_iso,
+                        "closed": False,
+                        "needs_manual_link_review": False,
+                        "match": None
+                    }
+                    is_valid, _ = check_job_posting_validity(cand_job)
+                    if is_valid:
+                        jobs.append(cand_job)
+        except Exception:
+            pass
+        return jobs
+
+    def _extract_smartrecruiters_jobs(self, company: dict, target_url: str = None) -> list:
+        url = target_url or company.get("career_url", "")
+        import requests
+        m = re.search(r"jobs\.smartrecruiters\.com/([^/?#]+)", url)
+        if not m:
+            return []
+        comp_id = m.group(1)
+        api_url = f"https://api.smartrecruiters.com/v1/companies/{comp_id}/postings"
+        now_iso = datetime.now().isoformat()
+        jobs = []
+        try:
+            r = requests.get(api_url, timeout=6)
+            if r.status_code == 200:
+                data = r.json()
+                for item in data.get("content", []):
+                    title = item.get("name", "")
+                    loc_info = item.get("location", {})
+                    loc = loc_info.get("city") or loc_info.get("country") or "India"
+                    full_url = f"https://jobs.smartrecruiters.com/{comp_id}/{item.get('id')}"
+                    job_id = self._generate_job_id(company["id"], title, full_url)
+                    cand_job = {
+                        "id": job_id,
+                        "company": company["name"],
+                        "title": title,
+                        "location": loc,
+                        "url": full_url,
+                        "description": f"SmartRecruiters posting: {title}",
+                        "posted_date": item.get("releasedDate"),
+                        "extraction_method": "smartrecruiters_api",
+                        "scan_timestamp": now_iso,
+                        "first_seen_at": now_iso,
+                        "closed": False,
+                        "needs_manual_link_review": False,
+                        "match": None
+                    }
+                    is_valid, _ = check_job_posting_validity(cand_job)
+                    if is_valid:
+                        jobs.append(cand_job)
+        except Exception:
+            pass
+        return jobs
 
 

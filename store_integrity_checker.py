@@ -48,7 +48,9 @@ STATIC_PAGE_BLACKLIST = [
     "industry analyst recognition", "analyst recognition", "analyst reports",
     "awards and recognition", "honoring leadership", "accolades", "recognition",
     "discord community", "slack community", "community", "join discord",
-    "follow us", "connect on linkedin", "twitter community", "telegram channel"
+    "follow us", "connect on linkedin", "twitter community", "telegram channel",
+    "developer docs", "developer documentation", "api documentation", "api reference",
+    "user guide", "developer guide", "documentation", "privacy policy", "terms of service"
 ]
 
 EXACT_TITLE_BLACKLIST = {
@@ -104,7 +106,7 @@ def check_job_posting_validity(job: Dict[str, Any]) -> Tuple[bool, List[str]]:
     # 2. Non-Job URL Subdomain and Path Patterns
     parsed_url = urlparse(url)
     url_host_and_path = (parsed_url.netloc + parsed_url.path).lower()
-    non_job_url_patterns = ["/blog/", "blog.", "/news/", "news.", "/press/", "press.", "/events/", "events.", "/courses/", "courses.", "/certificate/", "/webinar/", "/summit/"]
+    non_job_url_patterns = ["/blog/", "blog.", "/news/", "news.", "/press/", "press.", "/events/", "events.", "/courses/", "courses.", "/certificate/", "/webinar/", "/summit/", "/docs/", "/docs", "docs.", "/documentation/", "/api-reference/", "/help/", "/support/"]
     for path_pat in non_job_url_patterns:
         if path_pat in url_host_and_path:
             reasons.append(f"URL hostname/path indicates non-job article/event/course: '{path_pat}' in '{url_host_and_path}'")

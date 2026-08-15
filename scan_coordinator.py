@@ -3,6 +3,11 @@ import os
 import threading
 from datetime import datetime
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+JOBS_FILE = os.path.join(BASE_DIR, "jobs_store.json")
+METRICS_FILE = os.path.join(BASE_DIR, "company_metrics.json")
+COMPANIES_FILE = os.path.join(BASE_DIR, "companies.json")
+
 def load_json(filepath, default):
     if os.path.exists(filepath):
         try:
@@ -87,7 +92,11 @@ class ScanCoordinator:
                 stored_pattern = self.pattern_store.get_pattern(cid)
 
                 # b. Scan company page
-                jobs, learned_pattern, method, error_msg = self.scanner.scan_company(company, stored_pattern)
+                try:
+                    jobs, learned_pattern, method, error_msg = self.scanner.scan_company(company, stored_pattern)
+                except Exception as scan_err:
+                    print(f"Error scanning [{cid}]: {cname}: {scan_err}")
+                    jobs, learned_pattern, method, error_msg = [], None, "heuristic", str(scan_err)
 
                 now_iso = datetime.now().isoformat()
                 is_success = len(jobs) > 0 and error_msg is None
@@ -191,7 +200,8 @@ class ScanCoordinator:
                 m_comp["extraction_method"] = method
                 m_comp["parse_confidence_score"] = parse_conf_score
                 m_comp["cross_check_note"] = cross_check_note
-                m_comp["errors"].append(error_msg)
+                if error_msg:
+                    m_comp["errors"].append(error_msg)
 
                 metrics_store["companies"][cid] = m_comp
 
