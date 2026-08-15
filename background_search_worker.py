@@ -11,6 +11,7 @@ from job_deduplicator import JobDeduplicator
 from recency_filter import expand_search_if_sparse
 from adaptive_concurrency_manager import AdaptiveConcurrencyManager
 from pattern_store import PatternStore
+import re
 
 BASE_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(BASE_DIR, "config.json")
@@ -270,7 +271,7 @@ class BackgroundSearchWorker:
         # 1. Gather raw jobs from ALL sources IN PARALLEL (Career Pages + Indeed + Naukri simultaneously)
         raw_jobs_by_source = self._fetch_all_sources_parallel(filters_to_use)
         self.update_live_scan_status(True, "Google India", "14/28")
-        
+
         all_raw_jobs = []
         source_counts = {}
         for source_name, jobs_list in raw_jobs_by_source.items():
@@ -281,7 +282,7 @@ class BackgroundSearchWorker:
         print(f"[BackgroundSearchWorker] Raw jobs fetched simultaneously: {raw_total} across sources: {source_counts}")
 
         # 2. Apply JobDeduplicator across all merged sources
-        deduped_raw_jobs = self.deduplicator.deduplicate(all_raw_jobs)
+        deduped_raw_jobs, dedup_metrics = self.deduplicator.deduplicate(all_raw_jobs)
         dedup_stats = {
             "total_before": raw_total,
             "total_after": len(deduped_raw_jobs),
@@ -322,10 +323,10 @@ class BackgroundSearchWorker:
                 "was_expanded": expansion_res.get("was_expanded", False)
             }
         }
-        
+
         if not custom_filters:
             save_json(JOBS_CURATED_FILE, curated_output)
-            
+
             store_data = load_json(JOBS_STORE_FILE, {"jobs": []})
             combined = store_data.get("jobs", []) + curated_jobs
             deduped_store_jobs, _ = self.deduplicator.deduplicate(combined)
@@ -393,7 +394,7 @@ class BackgroundSearchWorker:
             ram_before = self.concurrency_mgr.get_current_ram_percent()
             batch_size = self.concurrency_mgr.get_next_batch_size()
             batch_start = time.time()
-            
+
             # Load real scanned jobs from jobs_store.json
             jobs_file = os.path.join(os.path.dirname(__file__), "jobs_store.json")
             career_jobs = []
@@ -462,7 +463,7 @@ class BackgroundSearchWorker:
                 job_skills = set(job.get("skills", []))
                 matched = list(user_skills.intersection(job_skills))
                 missing = list(job_skills.difference(user_skills))
-                
+
                 score = min(98, max(45, 50 + len(matched) * 12))
                 job["match"] = {
                     "score": score,
@@ -477,7 +478,7 @@ class BackgroundSearchWorker:
     def _apply_filters(self, jobs, filters):
         is_manual = filters.get("is_manual_search", False) if isinstance(filters, dict) else False
         hierarchical = self.config.get("hierarchical_filters") or filters.get("hierarchical_filters") or {}
-        
+
         # Manual search (both Normal and Advanced modes) does NOT apply global_filters.
         # Only background search cycles apply global_filters hard-AND checks.
         if is_manual:

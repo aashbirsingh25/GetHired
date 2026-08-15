@@ -72,24 +72,19 @@ class BrowserScanner:
         ats_type = (company.get("ats") or "").lower()
         if "myworkdayjobs.com" in url or ats_type == "workday":
             workday_jobs = self._extract_workday_jobs(company, target_url=url)
-            if workday_jobs:
-                return workday_jobs, None, "workday_api", None
+            return workday_jobs, None, "workday_api", None
         elif "greenhouse.io" in url or ats_type == "greenhouse":
             gh_jobs = self._extract_greenhouse_jobs(company, target_url=url)
-            if gh_jobs:
-                return gh_jobs, None, "greenhouse_api", None
+            return gh_jobs, None, "greenhouse_api", None
         elif "lever.co" in url or ats_type == "lever":
             lever_jobs = self._extract_lever_jobs(company, target_url=url)
-            if lever_jobs:
-                return lever_jobs, None, "lever_api", None
+            return lever_jobs, None, "lever_api", None
         elif "ashbyhq.com" in url or ats_type == "ashby":
             ashby_jobs = self._extract_ashby_jobs(company, target_url=url)
-            if ashby_jobs:
-                return ashby_jobs, None, "ashby_api", None
+            return ashby_jobs, None, "ashby_api", None
         elif "smartrecruiters.com" in url or ats_type == "smartrecruiters":
             sr_jobs = self._extract_smartrecruiters_jobs(company, target_url=url)
-            if sr_jobs:
-                return sr_jobs, None, "smartrecruiters_api", None
+            return sr_jobs, None, "smartrecruiters_api", None
 
         self.start()
 
@@ -187,7 +182,7 @@ class BrowserScanner:
 
             title = title_el.get_text(strip=True) if title_el else None
             location = loc_el.get_text(strip=True) if loc_el else "India"
-            
+
             href = None
             if link_el and link_el.has_attr("href"):
                 href = link_el["href"]
@@ -198,7 +193,7 @@ class BrowserScanner:
                 resolved_url = self._fix_url(href, company["career_url"]) if href else company["career_url"]
                 final_url, needs_review = self._validate_job_url(resolved_url, company["career_url"])
                 job_id = self._generate_job_id(company["id"], title, final_url)
-                
+
                 cand_job = {
                     "id": job_id,
                     "company": company["name"],
@@ -214,7 +209,7 @@ class BrowserScanner:
                     "needs_manual_link_review": needs_review,
                     "match": None
                 }
-                
+
                 is_valid, _ = check_job_posting_validity(cand_job)
                 if is_valid:
                     jobs.append(cand_job)
@@ -291,7 +286,7 @@ class BrowserScanner:
         links = soup.find_all("a", href=True)
         job_keywords = re.compile(r"\b(engineer|developer|intern|manager|analyst|designer|consultant|associate|specialist|lead|architect|sde|swe)\b", re.I)
         page_url = getattr(page, "url", company.get("career_url", "")) if page else company.get("career_url", "")
-        
+
         seen_titles = set()
         for a in links:
             text = a.get_text(strip=True)
@@ -350,7 +345,7 @@ class BrowserScanner:
             raw_loc = (location or "").lower()
             raw_title = (title or "").lower()
             combined = f"{raw_loc} {raw_title}"
-            
+
             non_india_countries = [
                 "china", "nigeria", "milan", "ita", "italy", "seattle", "berlin", "tokyo", "toyko",
                 "melbourne", "sydney", "london", "suzhou", "lagos", "dublin", "irl", "deu", "aus",
@@ -362,10 +357,10 @@ class BrowserScanner:
                 "noida", "pune", "mumbai", "delhi", "chennai", "kolkata", "ahmedabad", "kochi",
                 "mh, ind", "ka, ind", "ts, ind", "dl, ind"
             ]
-            
+
             has_non_india = any(re.search(r"\b" + re.escape(c) + r"\b", combined) or c in combined for c in non_india_countries)
             has_india = any(re.search(r"\b" + re.escape(ik) + r"\b", combined) or ik in combined for ik in india_keywords)
-            
+
             if has_non_india and not has_india:
                 return False
         return True
@@ -420,7 +415,6 @@ class BrowserScanner:
             "Accept": "application/json"
         }
 
-        
         now_iso = datetime.now().isoformat()
         jobs = []
 
@@ -438,6 +432,20 @@ class BrowserScanner:
                         loc = jp.get("locationsText") or "India"
                         ext_path = jp.get("externalPath", "")
                         full_url = f"https://{host}/en-US/{site}{ext_path}"
+
+                        detail_url = f"https://{host}/wday/cxs/{tenant}/{site}/job{ext_path}"
+                        desc = f"Workday job posting: {title} ({loc})"
+                        try:
+                            detail_r = requests.get(detail_url, headers=headers, timeout=4)
+                            if detail_r.status_code == 200:
+                                detail_data = detail_r.json()
+                                job_desc_html = detail_data.get("jobDescription", "")
+                                if job_desc_html:
+                                    from bs4 import BeautifulSoup
+                                    desc = BeautifulSoup(job_desc_html, "html.parser").get_text(separator=" ")
+                        except Exception:
+                            pass
+
                         job_id = self._generate_job_id(company["id"], title, full_url)
                         cand_job = {
                             "id": job_id,
@@ -445,7 +453,7 @@ class BrowserScanner:
                             "title": title,
                             "location": loc,
                             "url": full_url,
-                            "description": f"Workday job posting: {title} ({loc})",
+                            "description": desc,
                             "posted_date": jp.get("postedOn"),
                             "extraction_method": "workday_api",
                             "scan_timestamp": now_iso,
@@ -536,23 +544,40 @@ class BrowserScanner:
     def _extract_greenhouse_jobs(self, company: dict, target_url: str = None) -> list:
         url = target_url or company.get("career_url", "")
         import requests
-        m = re.search(r"(?:greenhouse\.io|boards\.greenhouse\.io)/embed/job_board\?for=([^&]+)", url)
-        if not m:
-            m = re.search(r"(?:greenhouse\.io|boards\.greenhouse\.io)/([^/?#]+)", url)
-        if not m:
-            return []
-        board_token = m.group(1)
+
+        clean_url = url.rstrip("/")
+        m = re.search(r"for=([^&]+)", clean_url)
+        if m:
+            board_token = m.group(1)
+        else:
+            from urllib.parse import urlparse
+            path = urlparse(clean_url).path
+            prefixes = {"v0", "postings", "careers", "embed", "c", "boards", "job_board", "job-board", "job"}
+            segments = [s for s in path.split("/") if s and s not in prefixes]
+            if segments:
+                board_token = segments[0]
+            else:
+                return []
+
         api_url = f"https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true"
         now_iso = datetime.now().isoformat()
         jobs = []
         try:
-            r = requests.get(api_url, timeout=6)
+            r = requests.get(api_url, timeout=8)
             if r.status_code == 200:
                 data = r.json()
                 for item in data.get("jobs", []):
                     title = item.get("title", "")
                     loc = (item.get("location") or {}).get("name") or "India"
                     full_url = item.get("absolute_url") or url
+
+                    desc_html = item.get("content", "")
+                    if desc_html:
+                        from bs4 import BeautifulSoup
+                        desc = BeautifulSoup(desc_html, "html.parser").get_text(separator=" ")
+                    else:
+                        desc = f"Greenhouse posting: {title}"
+
                     job_id = self._generate_job_id(company["id"], title, full_url)
                     cand_job = {
                         "id": job_id,
@@ -560,7 +585,7 @@ class BrowserScanner:
                         "title": title,
                         "location": loc,
                         "url": full_url,
-                        "description": f"Greenhouse posting: {title}",
+                        "description": desc,
                         "posted_date": item.get("updated_at"),
                         "extraction_method": "greenhouse_api",
                         "scan_timestamp": now_iso,
@@ -572,22 +597,29 @@ class BrowserScanner:
                     is_valid, _ = check_job_posting_validity(cand_job)
                     if is_valid:
                         jobs.append(cand_job)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[BrowserScanner] Greenhouse API extraction error for {company['name']}: {e}")
         return jobs
 
     def _extract_lever_jobs(self, company: dict, target_url: str = None) -> list:
         url = target_url or company.get("career_url", "")
         import requests
-        m = re.search(r"jobs\.lever\.co/([^/?#]+)", url)
-        if not m:
+
+        clean_url = url.rstrip("/")
+        from urllib.parse import urlparse
+        path = urlparse(clean_url).path
+        prefixes = {"v0", "postings", "careers", "embed", "c", "boards", "job_board", "job-board", "job"}
+        segments = [s for s in path.split("/") if s and s not in prefixes]
+        if segments:
+            site = segments[0]
+        else:
             return []
-        site = m.group(1)
+
         api_url = f"https://api.lever.co/v0/postings/{site}?mode=json"
         now_iso = datetime.now().isoformat()
         jobs = []
         try:
-            r = requests.get(api_url, timeout=6)
+            r = requests.get(api_url, timeout=8)
             if r.status_code == 200:
                 data = r.json()
                 if isinstance(data, list):
@@ -596,6 +628,26 @@ class BrowserScanner:
                         cats = item.get("categories", {})
                         loc = cats.get("location") or "India"
                         full_url = item.get("hostedUrl") or url
+
+                        desc_text = item.get("descriptionPlain") or ""
+                        if not desc_text and item.get("description"):
+                            from bs4 import BeautifulSoup
+                            desc_text = BeautifulSoup(item.get("description"), "html.parser").get_text(separator=" ")
+
+                        lists = item.get("lists", [])
+                        if isinstance(lists, list):
+                            for lst in lists:
+                                lst_title = lst.get("text", "")
+                                lst_content = lst.get("content", "")
+                                if isinstance(lst_content, list):
+                                    lst_content = "\n".join(lst_content)
+                                if lst_title or lst_content:
+                                    desc_text += f"\n\n{lst_title}:\n{lst_content}"
+
+                        desc_text = str(desc_text).strip()
+                        if not desc_text:
+                            desc_text = f"Lever posting: {title}"
+
                         job_id = self._generate_job_id(company["id"], title, full_url)
                         cand_job = {
                             "id": job_id,
@@ -603,7 +655,7 @@ class BrowserScanner:
                             "title": title,
                             "location": loc,
                             "url": full_url,
-                            "description": f"Lever posting: {title}",
+                            "description": desc_text,
                             "posted_date": None,
                             "extraction_method": "lever_api",
                             "scan_timestamp": now_iso,
@@ -615,28 +667,43 @@ class BrowserScanner:
                         is_valid, _ = check_job_posting_validity(cand_job)
                         if is_valid:
                             jobs.append(cand_job)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[BrowserScanner] Lever API extraction error for {company['name']}: {e}")
         return jobs
 
     def _extract_ashby_jobs(self, company: dict, target_url: str = None) -> list:
         url = target_url or company.get("career_url", "")
         import requests
-        m = re.search(r"jobs\.ashbyhq\.com/([^/?#]+)", url)
-        if not m:
+
+        clean_url = url.rstrip("/")
+        from urllib.parse import urlparse
+        path = urlparse(clean_url).path
+        prefixes = {"v0", "postings", "careers", "embed", "c", "boards", "job_board", "job-board", "job"}
+        segments = [s for s in path.split("/") if s and s not in prefixes]
+        if segments:
+            board = segments[0]
+        else:
             return []
-        board = m.group(1)
+
         api_url = f"https://api.ashbyhq.com/posting-api/job-board/{board}"
         now_iso = datetime.now().isoformat()
         jobs = []
         try:
-            r = requests.get(api_url, timeout=6)
+            r = requests.get(api_url, timeout=8)
             if r.status_code == 200:
                 data = r.json()
                 for item in data.get("jobs", []):
                     title = item.get("title", "")
                     loc = item.get("locationName") or "India"
                     full_url = item.get("jobUrl") or url
+
+                    desc_html = item.get("descriptionHtml") or item.get("description") or ""
+                    if desc_html:
+                        from bs4 import BeautifulSoup
+                        desc = BeautifulSoup(desc_html, "html.parser").get_text(separator=" ")
+                    else:
+                        desc = f"Ashby posting: {title}"
+
                     job_id = self._generate_job_id(company["id"], title, full_url)
                     cand_job = {
                         "id": job_id,
@@ -644,7 +711,7 @@ class BrowserScanner:
                         "title": title,
                         "location": loc,
                         "url": full_url,
-                        "description": f"Ashby posting: {title}",
+                        "description": desc,
                         "posted_date": item.get("publishedAt"),
                         "extraction_method": "ashby_api",
                         "scan_timestamp": now_iso,
@@ -656,22 +723,29 @@ class BrowserScanner:
                     is_valid, _ = check_job_posting_validity(cand_job)
                     if is_valid:
                         jobs.append(cand_job)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[BrowserScanner] Ashby API extraction error for {company['name']}: {e}")
         return jobs
 
     def _extract_smartrecruiters_jobs(self, company: dict, target_url: str = None) -> list:
         url = target_url or company.get("career_url", "")
         import requests
-        m = re.search(r"jobs\.smartrecruiters\.com/([^/?#]+)", url)
-        if not m:
+
+        clean_url = url.rstrip("/")
+        from urllib.parse import urlparse
+        path = urlparse(clean_url).path
+        prefixes = {"v0", "postings", "careers", "embed", "c", "boards", "job_board", "job-board", "job"}
+        segments = [s for s in path.split("/") if s and s not in prefixes]
+        if segments:
+            comp_id = segments[0]
+        else:
             return []
-        comp_id = m.group(1)
+
         api_url = f"https://api.smartrecruiters.com/v1/companies/{comp_id}/postings"
         now_iso = datetime.now().isoformat()
         jobs = []
         try:
-            r = requests.get(api_url, timeout=6)
+            r = requests.get(api_url, timeout=8)
             if r.status_code == 200:
                 data = r.json()
                 for item in data.get("content", []):
@@ -679,6 +753,31 @@ class BrowserScanner:
                     loc_info = item.get("location", {})
                     loc = loc_info.get("city") or loc_info.get("country") or "India"
                     full_url = f"https://jobs.smartrecruiters.com/{comp_id}/{item.get('id')}"
+
+                    post_id = item.get("id")
+                    detail_url = f"https://api.smartrecruiters.com/v1/companies/{comp_id}/postings/{post_id}"
+                    desc_text = ""
+                    try:
+                        detail_r = requests.get(detail_url, timeout=4)
+                        if detail_r.status_code == 200:
+                            detail_data = detail_r.json()
+                            job_ad = detail_data.get("jobAd", {})
+                            sections = job_ad.get("sections", {})
+                            parts = []
+                            for sec_name in ["companyDescription", "jobDescription", "qualifications", "additionalInformation"]:
+                                sec = sections.get(sec_name, {})
+                                if isinstance(sec, dict) and sec.get("text"):
+                                    parts.append(sec.get("text"))
+                            desc_text = "\n\n".join(parts)
+                    except Exception:
+                        pass
+
+                    if desc_text:
+                        from bs4 import BeautifulSoup
+                        desc = BeautifulSoup(desc_text, "html.parser").get_text(separator=" ")
+                    else:
+                        desc = f"SmartRecruiters posting: {title}"
+
                     job_id = self._generate_job_id(company["id"], title, full_url)
                     cand_job = {
                         "id": job_id,
@@ -686,7 +785,7 @@ class BrowserScanner:
                         "title": title,
                         "location": loc,
                         "url": full_url,
-                        "description": f"SmartRecruiters posting: {title}",
+                        "description": desc,
                         "posted_date": item.get("releasedDate"),
                         "extraction_method": "smartrecruiters_api",
                         "scan_timestamp": now_iso,
@@ -698,8 +797,8 @@ class BrowserScanner:
                     is_valid, _ = check_job_posting_validity(cand_job)
                     if is_valid:
                         jobs.append(cand_job)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[BrowserScanner] SmartRecruiters API extraction error for {company['name']}: {e}")
         return jobs
 
 
