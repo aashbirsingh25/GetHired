@@ -70,11 +70,15 @@ def score_with_hybrid_semantic(
         if skill_confidence == "unknown":
             final_score = min(65, final_score)
 
-        # Apply Hard Seniority Cap (60%) when candidate experience <= 2 years
+        # Apply Hard Seniority Caps when candidate experience <= 2 years
         cand_exp = resume_exp_years if resume_exp_years is not None else 0
+        is_exec_senior_job = local_res.get("is_exec_senior_job", False)
         is_senior_job = local_res.get("is_senior_job", False)
-        if cand_exp <= 2 and is_senior_job:
-            final_score = min(60, final_score)
+        if cand_exp <= 2:
+            if is_exec_senior_job:
+                final_score = min(35, final_score)
+            elif is_senior_job:
+                final_score = min(60, final_score)
 
         score_method = "hybrid_semantic"
         reasoning = (

@@ -310,7 +310,8 @@ class HybridJobScorer:
         try:
             semantic_start = time.time()
             semantic_result = score_with_hybrid_semantic(
-                self.resume_skills, job_title, job_desc, self.vector_store, self.embedding_service
+                self.resume_skills, job_title, job_desc, self.vector_store, self.embedding_service,
+                resume_raw_text=self.resume_raw_text, resume_exp_years=self.resume_exp_years
             )
             duration = round(time.time() - semantic_start, 2)
 
@@ -350,7 +351,10 @@ class HybridJobScorer:
 
         # Tier 6: Pure local keyword fallback
         local_start = time.time()
-        local_result = score_locally(self.resume_skills, job_title, job_desc)
+        local_result = score_locally(
+            self.resume_skills, job_title, job_desc,
+            resume_raw_text=self.resume_raw_text, resume_exp_years=self.resume_exp_years
+        )
         duration = round(time.time() - local_start, 2)
 
         local_result["scored_at"] = now_iso
