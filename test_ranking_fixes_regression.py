@@ -197,5 +197,32 @@ class TestRankingFixesRegression(unittest.TestCase):
         self.assertFalse(res["is_senior_job"])
         self.assertGreater(res["score"], 65)
 
+    # ----------------------------------------------------
+    # E. PRODUCTION TRAP REGRESSION TESTS
+    # ----------------------------------------------------
+    def test_reporting_lines_do_not_trigger_executive_seniority_cap(self):
+        """Job title 'Software Engineer' mentioning Director/VP/Staff in body should NOT be capped at 35."""
+        res = score_locally(
+            resume_skills=["Python", "FastAPI"],
+            job_title="Software Engineer",
+            job_description="We are looking for a Software Engineer with Python and FastAPI skills. You will report to the Director of Engineering and collaborate with Staff Engineers.",
+            resume_exp_years=2
+        )
+        self.assertFalse(res["is_exec_senior_job"])
+        self.assertGreaterEqual(res["score"], 75)
+
+    def test_location_priority_not_fooled_by_description_mentions(self):
+        """Job in Seattle listing Bangalore in description body should NOT be assigned Tier 0 location priority."""
+        from priority_sorter import PrioritySorter
+        sorter = PrioritySorter()
+        job_seattle = {
+            "title": "Software Engineer",
+            "location": "Seattle, WA",
+            "company": "GlobalCorp",
+            "description": "We have engineering hubs in London, Seattle, and Bangalore."
+        }
+        loc_idx = sorter._get_location_priority_idx(job_seattle)
+        self.assertGreater(loc_idx, 0)
+
 if __name__ == "__main__":
     unittest.main()

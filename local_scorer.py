@@ -57,7 +57,7 @@ def classify_role(title: str, description: str) -> Tuple[int, str]:
         "TECHNICAL SUPPORT", "APPLICATION SUPPORT", "PRODUCT SUPPORT", "CUSTOMER SUPPORT",
         "SUPPORT ENGINEER", "SUPPORT EXECUTIVE", "SUPPORT SPECIALIST", "SUPPORT LEAD",
         "ESCALATION MANAGER", "CUSTOMER SERVICE", "SERVICE DESK", "DESK SUPPORT",
-        "PRODUCTION SUPPORT", "IT SUPPORT"
+        "PRODUCTION SUPPORT", "IT SUPPORT", "HELPDESK", "IT HELPDESK"
     ]
     if any(sp in title_upper for sp in support_phrases):
         return 45, "support"
@@ -90,8 +90,10 @@ def classify_role(title: str, description: str) -> Tuple[int, str]:
     # 2. Non-Technical Roles (Recruiting, Marketing, Sales, Legal, Finance)
     non_tech_phrases = [
         "MARKETING", "SALES", "RECRUITER", "RECRUITING", "HR", "HUMAN RESOURCES",
+        "TALENT ACQUISITION", "SOURCER", "SOURCING", "PEOPLE OPERATIONS", "PEOPLE OPS", "STAFFING",
         "OPERATIONS", "CONTRACTS", "PROGRAM MANAGER", "PROJECT MANAGER", "ACCOUNT MANAGER",
-        "ACCOUNT EXECUTIVE", "BUSINESS DEVELOPMENT", "LEGAL", "FINANCE", "ACCOUNTANT", "CONTENT"
+        "ACCOUNT EXECUTIVE", "BUSINESS DEVELOPMENT", "LEGAL", "FINANCE", "ACCOUNTANT", "CONTENT",
+        "PROCUREMENT", "PURCHASING"
     ]
     is_non_tech = any(re.search(r"\b" + re.escape(nt) + r"\b", title_upper) for nt in non_tech_phrases)
     is_dev_role = any(re.search(r"\b" + re.escape(dev) + r"\b", title_upper) for dev in ["SOFTWARE ENGINEER", "SOFTWARE DEVELOPER", "PYTHON DEVELOPER", "FULLSTACK", "BACKEND DEVELOPER", "FRONTEND DEVELOPER"])
@@ -237,20 +239,34 @@ def score_locally(
     # 3. Experience & Seniority Compatibility Component
     cand_exp = resume_exp_years if resume_exp_years is not None else 0
 
-    norm_senior_text = re.sub(r"[^A-Z0-9\+]", " ", combined_text)
+    desc_upper = (job_description or "").upper()
+    norm_title_senior = re.sub(r"[^A-Z0-9\+]", " ", title_upper)
+    norm_desc_senior = re.sub(r"[^A-Z0-9\+]", " ", desc_upper)
 
-    exec_senior_patterns = [
+    exec_senior_title_patterns = [
         r"\bPRINCIPAL\b", r"\bSTAFF\b", r"\bDIRECTOR\b", r"\bPARTNER\b", r"\bFELLOW\b",
-        r"\bVP\b", r"\bVICE\s+PRESIDENT\b", r"\bCTO\b", r"\bCHIEF\s+(?:TECHNOLOGY|TECHNICAL|ARCHITECT|OFFICER)\b",
-        r"\b10\+\s*YEARS\b", r"\b12\+\s*YEARS\b", r"\b15\+\s*YEARS\b"
+        r"\bVP\b", r"\bVICE\s+PRESIDENT\b", r"\bCTO\b", r"\bCHIEF\s+(?:TECHNOLOGY|TECHNICAL|ARCHITECT|OFFICER)\b"
     ]
-    is_exec_senior_job = any(re.search(pat, norm_senior_text) for pat in exec_senior_patterns)
+    exec_senior_desc_patterns = [
+        r"\b10\+\s*YEARS\b", r"\b12\+\s*YEARS\b", r"\b15\+\s*YEARS\b",
+        r"\bREQUIRES?\s+(?:AT\s+LEAST\s+)?(?:10|12|15)\+?\s*YEARS\b"
+    ]
+    is_exec_senior_job = (
+        any(re.search(pat, norm_title_senior) for pat in exec_senior_title_patterns) or
+        any(re.search(pat, norm_desc_senior) for pat in exec_senior_desc_patterns)
+    )
 
-    senior_patterns = [
-        r"\bSENIOR\b", r"\bLEAD\b", r"\bARCHITECT\b", r"\bMANAGER\b",
-        r"\b5\+\s*YEARS\b", r"\b8\+\s*YEARS\b"
+    senior_title_patterns = [
+        r"\bSENIOR\b", r"\bSR\b", r"\bLEAD\b", r"\bARCHITECT\b", r"\bMANAGER\b"
     ]
-    is_senior_job = is_exec_senior_job or any(re.search(pat, norm_senior_text) for pat in senior_patterns)
+    senior_desc_patterns = [
+        r"\b5\+\s*YEARS\b", r"\b6\+\s*YEARS\b", r"\b7\+\s*YEARS\b", r"\b8\+\s*YEARS\b",
+        r"\bREQUIRES?\s+(?:AT\s+LEAST\s+)?(?:5|6|7|8)\+?\s*YEARS\b"
+    ]
+    is_senior_job = is_exec_senior_job or (
+        any(re.search(pat, norm_title_senior) for pat in senior_title_patterns) or
+        any(re.search(pat, norm_desc_senior) for pat in senior_desc_patterns)
+    )
 
     entry_patterns = [r"\bINTERN\b", r"\bFRESHER\b", r"\bENTRY\s*LEVEL\b", r"\bGRADUATE\b", r"\b0-1\s*YEAR\b", r"\b0-2\s*YEARS\b"]
     is_entry_job = any(re.search(pat, combined_text) for pat in entry_patterns)

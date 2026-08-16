@@ -62,7 +62,10 @@ class PrioritySorter:
         company_lower = (job.get("company") or "").lower()
         desc_lower = (job.get("description") or "").lower()
         skills = [s.lower() for s in (job.get("skills") or [])]
-        combined = f"{title_lower} {loc_lower} {company_lower} {desc_lower} {' '.join(skills)}"
+
+        loc_target_text = f"{loc_lower} {title_lower}".strip()
+        has_specific_location = bool(loc_lower and loc_lower not in ["n/a", "none", "", "unspecified"])
+        fallback_combined = f"{loc_target_text} {company_lower} {desc_lower} {' '.join(skills)}" if not has_specific_location else loc_target_text
 
         for idx, tier in enumerate(self.location_priority):
             if isinstance(tier, dict):
@@ -72,17 +75,17 @@ class PrioritySorter:
                     for target in vals:
                         if target and isinstance(target, str):
                             t_lower = target.lower().strip()
-                            if t_lower and (t_lower in combined or t_lower in loc_lower or t_lower in title_lower):
+                            if t_lower and (t_lower in loc_target_text or (not has_specific_location and t_lower in fallback_combined)):
                                 return idx
             elif isinstance(tier, list):
                 for target in tier:
                     if target and isinstance(target, str):
                         t_lower = target.lower().strip()
-                        if t_lower and (t_lower in combined or t_lower in loc_lower):
+                        if t_lower and (t_lower in loc_target_text or (not has_specific_location and t_lower in fallback_combined)):
                             return idx
             elif isinstance(tier, str):
                 t_lower = tier.lower().strip()
-                if t_lower and (t_lower in combined or t_lower in loc_lower):
+                if t_lower and (t_lower in loc_target_text or (not has_specific_location and t_lower in fallback_combined)):
                     return idx
 
         return len(self.location_priority)

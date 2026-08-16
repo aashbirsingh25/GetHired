@@ -557,7 +557,13 @@ class BrowserScanner:
             if segments:
                 board_token = segments[0]
             else:
-                return []
+                board_token = ""
+
+        if board_token in ["jobs", "careers", "job", "career", "board", "boards", "embed", "c", ""] or not board_token:
+            board_token = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip()
+
+        if not board_token:
+            return []
 
         api_url = f"https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true"
         now_iso = datetime.now().isoformat()
@@ -613,6 +619,12 @@ class BrowserScanner:
         if segments:
             site = segments[0]
         else:
+            site = ""
+
+        if site in ["jobs", "careers", "job", "career", "board", "boards", "embed", "c", ""] or not site:
+            site = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip()
+
+        if not site:
             return []
 
         api_url = f"https://api.lever.co/v0/postings/{site}?mode=json"
@@ -683,8 +695,11 @@ class BrowserScanner:
         if segments:
             board = segments[0]
         else:
+            board = ""
+        if board in ["jobs", "careers", "job", "career", "board", "boards", "embed", "c", ""] or not board:
+            board = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip()
+        if not board:
             return []
-
         api_url = f"https://api.ashbyhq.com/posting-api/job-board/{board}"
         now_iso = datetime.now().isoformat()
         jobs = []
@@ -739,6 +754,10 @@ class BrowserScanner:
         if segments:
             comp_id = segments[0]
         else:
+            comp_id = ""
+        if comp_id in ["jobs", "careers", "job", "career", "board", "boards", "embed", "c", ""] or not comp_id:
+            comp_id = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip()
+        if not comp_id:
             return []
 
         api_url = f"https://api.smartrecruiters.com/v1/companies/{comp_id}/postings"
