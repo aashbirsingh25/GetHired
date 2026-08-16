@@ -71,20 +71,20 @@ class BrowserScanner:
         # Direct ATS REST API Extractors (bypass SPA DOM empty state)
         ats_type = (company.get("ats") or "").lower()
         if "myworkdayjobs.com" in url or ats_type == "workday":
-            workday_jobs = self._extract_workday_jobs(company, target_url=url)
-            return workday_jobs, None, "workday_api", None
+            workday_jobs, err = self._extract_workday_jobs(company, target_url=url, return_error=True)
+            return workday_jobs, None, "workday_api", err
         elif "greenhouse.io" in url or ats_type == "greenhouse":
-            gh_jobs = self._extract_greenhouse_jobs(company, target_url=url)
-            return gh_jobs, None, "greenhouse_api", None
+            gh_jobs, err = self._extract_greenhouse_jobs(company, target_url=url, return_error=True)
+            return gh_jobs, None, "greenhouse_api", err
         elif "lever.co" in url or ats_type == "lever":
-            lever_jobs = self._extract_lever_jobs(company, target_url=url)
-            return lever_jobs, None, "lever_api", None
+            lever_jobs, err = self._extract_lever_jobs(company, target_url=url, return_error=True)
+            return lever_jobs, None, "lever_api", err
         elif "ashbyhq.com" in url or ats_type == "ashby":
-            ashby_jobs = self._extract_ashby_jobs(company, target_url=url)
-            return ashby_jobs, None, "ashby_api", None
+            ashby_jobs, err = self._extract_ashby_jobs(company, target_url=url, return_error=True)
+            return ashby_jobs, None, "ashby_api", err
         elif "smartrecruiters.com" in url or ats_type == "smartrecruiters":
-            sr_jobs = self._extract_smartrecruiters_jobs(company, target_url=url)
-            return sr_jobs, None, "smartrecruiters_api", None
+            sr_jobs, err = self._extract_smartrecruiters_jobs(company, target_url=url, return_error=True)
+            return sr_jobs, None, "smartrecruiters_api", err
 
         self.start()
 
@@ -397,12 +397,12 @@ class BrowserScanner:
         from urllib.parse import urljoin
         return urljoin(base_url, href_str)
 
-    def _extract_workday_jobs(self, company: dict, target_url: str = None) -> list:
+    def _extract_workday_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
         url = target_url or company.get("career_url", "")
         import requests
         m = re.search(r"https://([^/]+\.myworkdayjobs\.com)(?:/(?:[a-z]{2}-[A-Z]{2}/)?([^/?#]+))?", url)
         if not m:
-            return []
+            return ([], "Workday API: URL pattern did not match myworkdayjobs.com") if return_error else []
 
         host = m.group(1)
         site = m.group(2) or ("Workday" if "workday" in host else "Careers")
@@ -417,6 +417,7 @@ class BrowserScanner:
 
         now_iso = datetime.now().isoformat()
         jobs = []
+        error_msg = None
 
         try:
             for offset in [0, 20, 40]:
@@ -466,11 +467,14 @@ class BrowserScanner:
                         if is_valid:
                             jobs.append(cand_job)
                 else:
+                    error_msg = f"Workday API HTTP {r.status_code}"
                     break
-            return jobs[:50]
         except Exception as e:
-            print(f"[BrowserScanner] Workday API extraction error for {company['name']}: {e}")
-        return []
+            error_msg = f"Workday API extraction error: {e}"
+
+        if return_error:
+            return jobs, error_msg
+        return jobs
 
     def _extract_json_ld_jobs(self, soup: BeautifulSoup, company: dict, timestamp: str) -> list:
         """
@@ -541,7 +545,7 @@ class BrowserScanner:
                 continue
         return jobs
 
-    def _extract_greenhouse_jobs(self, company: dict, target_url: str = None) -> list:
+    def _extract_greenhouse_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
         url = target_url or company.get("career_url", "")
         import requests
 
@@ -563,14 +567,25 @@ class BrowserScanner:
             board_token = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip()
 
         if not board_token:
-            return []
+            return ([], "Greenhouse API: Could not resolve board token") if return_error else []
 
         api_url = f"https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true"
         now_iso = datetime.now().isoformat()
         jobs = []
+        error_msg = None
+
         try:
-            r = requests.get(api_url, timeout=8)
-            if r.status_code == 200:
+            r = None
+            for attempt in range(2):
+                try:
+                    r = requests.get(api_url, timeout=8)
+                    break
+                except requests.exceptions.RequestException as req_err:
+                    if attempt == 1:
+                        raise req_err
+                    time.sleep(0.5)
+
+            if r and r.status_code == 200:
                 data = r.json()
                 for item in data.get("jobs", []):
                     title = item.get("title", "")
@@ -603,11 +618,58 @@ class BrowserScanner:
                     is_valid, _ = check_job_posting_validity(cand_job)
                     if is_valid:
                         jobs.append(cand_job)
+            elif r and r.status_code == 404:
+                # Token auto-discovery fallback
+                disc = self._discover_ats_token(url)
+                disc_token = disc.get("greenhouse")
+                if disc_token and disc_token != board_token:
+                    disc_url = f"https://boards-api.greenhouse.io/v1/boards/{disc_token}/jobs?content=true"
+                    r_disc = requests.get(disc_url, timeout=8)
+                    if r_disc.status_code == 200:
+                        data = r_disc.json()
+                        for item in data.get("jobs", []):
+                            title = item.get("title", "")
+                            loc = (item.get("location") or {}).get("name") or "India"
+                            full_url = item.get("absolute_url") or url
+                            desc_html = item.get("content", "")
+                            if desc_html:
+                                from bs4 import BeautifulSoup
+                                desc = BeautifulSoup(desc_html, "html.parser").get_text(separator=" ")
+                            else:
+                                desc = f"Greenhouse posting: {title}"
+                            job_id = self._generate_job_id(company["id"], title, full_url)
+                            cand_job = {
+                                "id": job_id,
+                                "company": company["name"],
+                                "title": title,
+                                "location": loc,
+                                "url": full_url,
+                                "description": desc,
+                                "posted_date": item.get("updated_at"),
+                                "extraction_method": "greenhouse_api",
+                                "scan_timestamp": now_iso,
+                                "first_seen_at": now_iso,
+                                "closed": False,
+                                "needs_manual_link_review": False,
+                                "match": None
+                            }
+                            is_valid, _ = check_job_posting_validity(cand_job)
+                            if is_valid:
+                                jobs.append(cand_job)
+                        return (jobs, None) if return_error else jobs
+                error_msg = f"Greenhouse API HTTP 404 for board token '{board_token}'"
+            elif r:
+                error_msg = f"Greenhouse API HTTP {r.status_code}"
+            else:
+                error_msg = "Greenhouse API request failed"
         except Exception as e:
-            print(f"[BrowserScanner] Greenhouse API extraction error for {company['name']}: {e}")
+            error_msg = f"Greenhouse API extraction error: {e}"
+
+        if return_error:
+            return jobs, error_msg
         return jobs
 
-    def _extract_lever_jobs(self, company: dict, target_url: str = None) -> list:
+    def _extract_lever_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
         url = target_url or company.get("career_url", "")
         import requests
 
@@ -625,11 +687,13 @@ class BrowserScanner:
             site = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip()
 
         if not site:
-            return []
+            return ([], "Lever API: Could not resolve site token") if return_error else []
 
         api_url = f"https://api.lever.co/v0/postings/{site}?mode=json"
         now_iso = datetime.now().isoformat()
         jobs = []
+        error_msg = None
+
         try:
             r = requests.get(api_url, timeout=8)
             if r.status_code == 200:
@@ -679,11 +743,52 @@ class BrowserScanner:
                         is_valid, _ = check_job_posting_validity(cand_job)
                         if is_valid:
                             jobs.append(cand_job)
+            elif r.status_code == 404:
+                disc = self._discover_ats_token(url)
+                disc_site = disc.get("lever")
+                if disc_site and disc_site != site:
+                    disc_api_url = f"https://api.lever.co/v0/postings/{disc_site}?mode=json"
+                    r_disc = requests.get(disc_api_url, timeout=8)
+                    if r_disc.status_code == 200:
+                        data = r_disc.json()
+                        if isinstance(data, list):
+                            for item in data:
+                                title = item.get("text", "")
+                                cats = item.get("categories", {})
+                                loc = cats.get("location") or "India"
+                                full_url = item.get("hostedUrl") or url
+                                desc_text = item.get("descriptionPlain") or f"Lever posting: {title}"
+                                job_id = self._generate_job_id(company["id"], title, full_url)
+                                cand_job = {
+                                    "id": job_id,
+                                    "company": company["name"],
+                                    "title": title,
+                                    "location": loc,
+                                    "url": full_url,
+                                    "description": desc_text,
+                                    "posted_date": None,
+                                    "extraction_method": "lever_api",
+                                    "scan_timestamp": now_iso,
+                                    "first_seen_at": now_iso,
+                                    "closed": False,
+                                    "needs_manual_link_review": False,
+                                    "match": None
+                                }
+                                is_valid, _ = check_job_posting_validity(cand_job)
+                                if is_valid:
+                                    jobs.append(cand_job)
+                            return (jobs, None) if return_error else jobs
+                error_msg = f"Lever API HTTP 404 for site '{site}'"
+            else:
+                error_msg = f"Lever API HTTP {r.status_code}"
         except Exception as e:
-            print(f"[BrowserScanner] Lever API extraction error for {company['name']}: {e}")
+            error_msg = f"Lever API extraction error: {e}"
+
+        if return_error:
+            return jobs, error_msg
         return jobs
 
-    def _extract_ashby_jobs(self, company: dict, target_url: str = None) -> list:
+    def _extract_ashby_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
         url = target_url or company.get("career_url", "")
         import requests
 
@@ -699,10 +804,12 @@ class BrowserScanner:
         if board in ["jobs", "careers", "job", "career", "board", "boards", "embed", "c", ""] or not board:
             board = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip()
         if not board:
-            return []
+            return ([], "Ashby API: Could not resolve board token") if return_error else []
         api_url = f"https://api.ashbyhq.com/posting-api/job-board/{board}"
         now_iso = datetime.now().isoformat()
         jobs = []
+        error_msg = None
+
         try:
             r = requests.get(api_url, timeout=8)
             if r.status_code == 200:
@@ -738,11 +845,50 @@ class BrowserScanner:
                     is_valid, _ = check_job_posting_validity(cand_job)
                     if is_valid:
                         jobs.append(cand_job)
+            elif r.status_code == 404:
+                disc = self._discover_ats_token(url)
+                disc_board = disc.get("ashby")
+                if disc_board and disc_board != board:
+                    disc_api_url = f"https://api.ashbyhq.com/posting-api/job-board/{disc_board}"
+                    r_disc = requests.get(disc_api_url, timeout=8)
+                    if r_disc.status_code == 200:
+                        data = r_disc.json()
+                        for item in data.get("jobs", []):
+                            title = item.get("title", "")
+                            loc = item.get("locationName") or "India"
+                            full_url = item.get("jobUrl") or url
+                            desc_html = item.get("descriptionHtml") or item.get("description") or f"Ashby posting: {title}"
+                            job_id = self._generate_job_id(company["id"], title, full_url)
+                            cand_job = {
+                                "id": job_id,
+                                "company": company["name"],
+                                "title": title,
+                                "location": loc,
+                                "url": full_url,
+                                "description": desc_html,
+                                "posted_date": item.get("publishedAt"),
+                                "extraction_method": "ashby_api",
+                                "scan_timestamp": now_iso,
+                                "first_seen_at": now_iso,
+                                "closed": False,
+                                "needs_manual_link_review": False,
+                                "match": None
+                            }
+                            is_valid, _ = check_job_posting_validity(cand_job)
+                            if is_valid:
+                                jobs.append(cand_job)
+                        return (jobs, None) if return_error else jobs
+                error_msg = f"Ashby API HTTP 404 for board '{board}'"
+            else:
+                error_msg = f"Ashby API HTTP {r.status_code}"
         except Exception as e:
-            print(f"[BrowserScanner] Ashby API extraction error for {company['name']}: {e}")
+            error_msg = f"Ashby API extraction error: {e}"
+
+        if return_error:
+            return jobs, error_msg
         return jobs
 
-    def _extract_smartrecruiters_jobs(self, company: dict, target_url: str = None) -> list:
+    def _extract_smartrecruiters_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
         url = target_url or company.get("career_url", "")
         import requests
 
@@ -758,11 +904,13 @@ class BrowserScanner:
         if comp_id in ["jobs", "careers", "job", "career", "board", "boards", "embed", "c", ""] or not comp_id:
             comp_id = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip()
         if not comp_id:
-            return []
+            return ([], "SmartRecruiters API: Could not resolve company ID") if return_error else []
 
         api_url = f"https://api.smartrecruiters.com/v1/companies/{comp_id}/postings"
         now_iso = datetime.now().isoformat()
         jobs = []
+        error_msg = None
+
         try:
             r = requests.get(api_url, timeout=8)
             if r.status_code == 200:
@@ -816,8 +964,13 @@ class BrowserScanner:
                     is_valid, _ = check_job_posting_validity(cand_job)
                     if is_valid:
                         jobs.append(cand_job)
+            elif r.status_code == 404:
+                error_msg = f"SmartRecruiters API HTTP 404 for company '{comp_id}'"
+            else:
+                error_msg = f"SmartRecruiters API HTTP {r.status_code}"
         except Exception as e:
-            print(f"[BrowserScanner] SmartRecruiters API extraction error for {company['name']}: {e}")
+            error_msg = f"SmartRecruiters API extraction error: {e}"
+
+        if return_error:
+            return jobs, error_msg
         return jobs
-
-
