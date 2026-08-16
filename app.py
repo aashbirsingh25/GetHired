@@ -359,7 +359,12 @@ def apply_direct(job_id):
             "notice": "GET is read/redirect only. Use POST to record application."
         }), 200
 
-    target_url = job.get("url") or "https://www.google.com/search?q=" + (job.get("company", "") + " " + job.get("title", "")).replace(" ", "+")
+    target_url = job.get("url") or job.get("canonical_url")
+    if not target_url or not str(target_url).startswith("http"):
+        comp_id = (job.get("company") or "").lower().replace(" ", "-")
+        companies = load_json(COMPANIES_FILE, [])
+        comp_obj = next((c for c in companies if isinstance(c, dict) and (c.get("id") == comp_id or c.get("name", "").lower() == (job.get("company") or "").lower())), None)
+        target_url = (comp_obj.get("career_url") if comp_obj else None) or "https://careers.google.com"
     mark_job_viewed(job_id)
 
     try:

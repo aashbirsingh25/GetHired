@@ -397,8 +397,16 @@ class BrowserScanner:
         from urllib.parse import urljoin
         return urljoin(base_url, href_str)
 
-    def _extract_workday_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
-        url = target_url or company.get("career_url", "")
+    def _extract_workday_jobs(self, company: Any, target_url: Any = None, return_error: bool = False):
+        if isinstance(company, str):
+            url = company
+            company = {"id": "company", "name": "Company", "career_url": url}
+        elif isinstance(target_url, bool):
+            return_error = target_url
+            target_url = None
+            url = company.get("career_url", "") if isinstance(company, dict) else ""
+        else:
+            url = target_url or (company.get("career_url", "") if isinstance(company, dict) else "")
         import requests
         m = re.search(r"https://([^/]+\.myworkdayjobs\.com)(?:/(?:[a-z]{2}-[A-Z]{2}/)?([^/?#]+))?", url)
         if not m:
@@ -545,18 +553,47 @@ class BrowserScanner:
                 continue
         return jobs
 
-    def _extract_greenhouse_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
-        url = target_url or company.get("career_url", "")
+    def _discover_ats_token(self, url: str) -> dict:
+        if not url or not url.startswith("http"):
+            return {}
+        import requests
+        try:
+            r = requests.get(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}, timeout=6, allow_redirects=True)
+            if r.status_code == 200:
+                gh = re.search(r'boards\.greenhouse\.io/embed/job_board\?for=([a-zA-Z0-9_-]+)', r.text) or re.search(r'boards\.greenhouse\.io/([a-zA-Z0-9_-]+)', r.text)
+                lev = re.search(r'jobs\.lever\.co/([a-zA-Z0-9_-]+)', r.text)
+                ash = re.search(r'ashbyhq\.com/([a-zA-Z0-9_-]+)', r.text)
+                sr = re.search(r'smartrecruiters\.com/([a-zA-Z0-9_-]+)', r.text)
+                return {
+                    'greenhouse': gh.group(1) if gh else None,
+                    'lever': lev.group(1) if lev else None,
+                    'ashby': ash.group(1) if ash else None,
+                    'smartrecruiters': sr.group(1) if sr else None
+                }
+        except Exception:
+            pass
+        return {}
+
+    def _extract_greenhouse_jobs(self, company: Any, target_url: Any = None, return_error: bool = False):
+        if isinstance(company, str):
+            url = company
+            company = {"id": "company", "name": "Company", "career_url": url}
+        elif isinstance(target_url, bool):
+            return_error = target_url
+            target_url = None
+            url = company.get("career_url", "") if isinstance(company, dict) else ""
+        else:
+            url = target_url or (company.get("career_url", "") if isinstance(company, dict) else "")
         import requests
 
-        clean_url = url.rstrip("/")
+        clean_url = str(url).rstrip("/")
         m = re.search(r"for=([^&]+)", clean_url)
         if m:
             board_token = m.group(1)
         else:
             from urllib.parse import urlparse
             path = urlparse(clean_url).path
-            prefixes = {"v0", "postings", "careers", "embed", "c", "boards", "job_board", "job-board", "job"}
+            prefixes = {"v0", "postings", "careers", "embed", "c", "boards", "job_board", "job-board", "job", "jobs"}
             segments = [s for s in path.split("/") if s and s not in prefixes]
             if segments:
                 board_token = segments[0]
@@ -564,7 +601,7 @@ class BrowserScanner:
                 board_token = ""
 
         if board_token in ["jobs", "careers", "job", "career", "board", "boards", "embed", "c", ""] or not board_token:
-            board_token = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip()
+            board_token = company.get("id", "").lower().replace("-india", "").replace("_india", "").strip() if isinstance(company, dict) else ""
 
         if not board_token:
             return ([], "Greenhouse API: Could not resolve board token") if return_error else []
@@ -585,7 +622,7 @@ class BrowserScanner:
                         raise req_err
                     time.sleep(0.5)
 
-            if r and r.status_code == 200:
+            if r is not None and r.status_code == 200:
                 data = r.json()
                 for item in data.get("jobs", []):
                     title = item.get("title", "")
@@ -618,7 +655,7 @@ class BrowserScanner:
                     is_valid, _ = check_job_posting_validity(cand_job)
                     if is_valid:
                         jobs.append(cand_job)
-            elif r and r.status_code == 404:
+            elif r is not None and r.status_code == 404:
                 # Token auto-discovery fallback
                 disc = self._discover_ats_token(url)
                 disc_token = disc.get("greenhouse")
@@ -658,7 +695,7 @@ class BrowserScanner:
                                 jobs.append(cand_job)
                         return (jobs, None) if return_error else jobs
                 error_msg = f"Greenhouse API HTTP 404 for board token '{board_token}'"
-            elif r:
+            elif r is not None:
                 error_msg = f"Greenhouse API HTTP {r.status_code}"
             else:
                 error_msg = "Greenhouse API request failed"
@@ -696,7 +733,7 @@ class BrowserScanner:
 
         try:
             r = requests.get(api_url, timeout=8)
-            if r.status_code == 200:
+            if r is not None and r.status_code == 200:
                 data = r.json()
                 if isinstance(data, list):
                     for item in data:
@@ -743,13 +780,13 @@ class BrowserScanner:
                         is_valid, _ = check_job_posting_validity(cand_job)
                         if is_valid:
                             jobs.append(cand_job)
-            elif r.status_code == 404:
+            elif r is not None and r.status_code == 404:
                 disc = self._discover_ats_token(url)
                 disc_site = disc.get("lever")
                 if disc_site and disc_site != site:
                     disc_api_url = f"https://api.lever.co/v0/postings/{disc_site}?mode=json"
                     r_disc = requests.get(disc_api_url, timeout=8)
-                    if r_disc.status_code == 200:
+                    if r_disc is not None and r_disc.status_code == 200:
                         data = r_disc.json()
                         if isinstance(data, list):
                             for item in data:
@@ -779,7 +816,7 @@ class BrowserScanner:
                                     jobs.append(cand_job)
                             return (jobs, None) if return_error else jobs
                 error_msg = f"Lever API HTTP 404 for site '{site}'"
-            else:
+            elif r is not None:
                 error_msg = f"Lever API HTTP {r.status_code}"
         except Exception as e:
             error_msg = f"Lever API extraction error: {e}"
@@ -812,7 +849,7 @@ class BrowserScanner:
 
         try:
             r = requests.get(api_url, timeout=8)
-            if r.status_code == 200:
+            if r is not None and r.status_code == 200:
                 data = r.json()
                 for item in data.get("jobs", []):
                     title = item.get("title", "")
@@ -845,13 +882,13 @@ class BrowserScanner:
                     is_valid, _ = check_job_posting_validity(cand_job)
                     if is_valid:
                         jobs.append(cand_job)
-            elif r.status_code == 404:
+            elif r is not None and r.status_code == 404:
                 disc = self._discover_ats_token(url)
                 disc_board = disc.get("ashby")
                 if disc_board and disc_board != board:
                     disc_api_url = f"https://api.ashbyhq.com/posting-api/job-board/{disc_board}"
                     r_disc = requests.get(disc_api_url, timeout=8)
-                    if r_disc.status_code == 200:
+                    if r_disc is not None and r_disc.status_code == 200:
                         data = r_disc.json()
                         for item in data.get("jobs", []):
                             title = item.get("title", "")
@@ -879,7 +916,7 @@ class BrowserScanner:
                                 jobs.append(cand_job)
                         return (jobs, None) if return_error else jobs
                 error_msg = f"Ashby API HTTP 404 for board '{board}'"
-            else:
+            elif r is not None:
                 error_msg = f"Ashby API HTTP {r.status_code}"
         except Exception as e:
             error_msg = f"Ashby API extraction error: {e}"
@@ -913,7 +950,7 @@ class BrowserScanner:
 
         try:
             r = requests.get(api_url, timeout=8)
-            if r.status_code == 200:
+            if r is not None and r.status_code == 200:
                 data = r.json()
                 for item in data.get("content", []):
                     title = item.get("name", "")
