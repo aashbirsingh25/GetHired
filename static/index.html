@@ -1978,11 +1978,14 @@
 
     async function triggerRealTimeSearch() {
       const btn = document.getElementById('btn-realtime-search');
-      btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span> Running...`;
+      if (btn) {
+        btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span> Running...`;
+        btn.disabled = true;
+      }
 
-      const roleVal = document.getElementById('search-input-role').value;
-      const locVal = document.getElementById('search-input-location').value;
-      const timeVal = parseFloat(document.getElementById('search-input-timeframe').value);
+      const roleVal = document.getElementById('search-input-role')?.value;
+      const locVal = document.getElementById('search-input-location')?.value;
+      const timeVal = parseFloat(document.getElementById('search-input-timeframe')?.value || 24);
 
       const isAdvanced = document.getElementById('advanced-search-toggle')?.checked || false;
 
@@ -2005,18 +2008,61 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        const data = await res.json();
+        const initData = await res.json();
 
-        const titleEl = document.getElementById('search-results-title');
-        titleEl.classList.remove('hidden');
-        titleEl.innerText = `Search Results (${data.total_jobs || 0} found in ${data.search_duration || '0s'})`;
+        let taskId = initData.task_id;
+        if (!taskId && initData.status === "running") {
+          const statusRes = await fetch('/api/background-search/status');
+          const statusData = await statusRes.json();
+          taskId = statusData.task_id;
+        }
 
-        const grid = document.getElementById('search-results-grid');
-        renderJobGrid(data.jobs || [], grid);
+        if (taskId) {
+          let completed = false;
+          let attempts = 0;
+          while (!completed && attempts < 40) {
+            attempts++;
+            await new Promise(r => setTimeout(r, 500));
+            const pollRes = await fetch(`/api/jobs/search/status/${encodeURIComponent(taskId)}`);
+            if (pollRes.ok) {
+              const pollData = await pollRes.json();
+              if (pollData.status === 'completed') {
+                completed = true;
+                const result = pollData.result || {};
+                const titleEl = document.getElementById('search-results-title');
+                if (titleEl) {
+                  titleEl.classList.remove('hidden');
+                  titleEl.innerText = `Search Results (${result.total_jobs || 0} found)`;
+                }
+                const grid = document.getElementById('search-results-grid');
+                if (grid) {
+                  renderJobGrid(result.jobs || [], grid);
+                }
+                break;
+              } else if (pollData.status === 'failed') {
+                console.error("Search task failed:", pollData.error);
+                break;
+              }
+            }
+          }
+        } else if (initData.jobs) {
+          const titleEl = document.getElementById('search-results-title');
+          if (titleEl) {
+            titleEl.classList.remove('hidden');
+            titleEl.innerText = `Search Results (${initData.total_jobs || 0} found)`;
+          }
+          const grid = document.getElementById('search-results-grid');
+          if (grid) {
+            renderJobGrid(initData.jobs || [], grid);
+          }
+        }
       } catch (err) {
         console.error("Search error:", err);
       } finally {
-        btn.innerHTML = `<span class="material-symbols-outlined text-xl">search</span><span>Run Search</span>`;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span class="material-symbols-outlined text-xl">search</span><span>Run Search</span>`;
+        }
       }
     }
 
