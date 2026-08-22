@@ -230,4 +230,11 @@ Product/UX:
     min_match_score (current 55 calibrated on local-tier scores only)
 [ ] Merge fix/pending-scoring-bug -> master after user sign-off (includes
     re-audit stance toward debug-branch changes; 2 regressions found so far)
-[ ] Never-deployed: Oracle Cloud deployment (original vision) - far future
+[ ] Parallelize ScanCoordinator.run_scan (currently sequential, ~3
+    companies/min): two lanes - wide parallel for ATS-API companies,
+    narrow (5-8) for browser-based; per-domain politeness (1 req at a
+    time per company); reuse AdaptiveConcurrencyManager. USER CONFIRMED,
+    target 20-30 parallel on Oracle.
+[ ] Oracle Cloud deployment (moved up from far-future - user committed):
+    Always Free A1 (4 OCPU/24GB); expect more bot-blocks from datacenter
+    IP -> Apify becomes more important; keys via env vars on the VM.
