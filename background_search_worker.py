@@ -8,6 +8,8 @@ from datetime import datetime, timedelta, timezone
 from fetchers.indeed_fetcher import fetch_indeed_jobs
 from fetchers.naukri_fetcher import fetch_naukri_jobs
 from fetchers.cutshort_fetcher import fetch_cutshort_jobs
+from fetchers.remoteok_fetcher import fetch_remoteok_jobs
+from fetchers.remotive_fetcher import fetch_remotive_jobs
 from job_deduplicator import JobDeduplicator
 from recency_filter import expand_search_if_sparse
 from adaptive_concurrency_manager import AdaptiveConcurrencyManager
@@ -386,6 +388,8 @@ class BackgroundSearchWorker:
             "indeed": [],
             "naukri": [],
             "cutshort": [],
+            "remoteok": [],
+            "remotive": [],
             "linkedin": []
         }
 
@@ -436,16 +440,32 @@ class BackgroundSearchWorker:
                 print(f"[BackgroundSearchWorker] Cutshort error: {e}")
                 results["cutshort"] = []
 
+        def fetch_remoteok():
+            try:
+                results["remoteok"] = fetch_remoteok_jobs(role=role, location=location, max_results=25)
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] RemoteOK error: {e}")
+                results["remoteok"] = []
+
+        def fetch_remotive():
+            try:
+                results["remotive"] = fetch_remotive_jobs(role=role, location=location, max_results=25)
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] Remotive error: {e}")
+                results["remotive"] = []
+
         # Run all source types concurrently using ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=4) as executor:
-            f1 = executor.submit(fetch_career_pages)
-            f2 = executor.submit(fetch_indeed)
-            f3 = executor.submit(fetch_naukri)
-            f4 = executor.submit(fetch_cutshort)
-            f1.result()
-            f2.result()
-            f3.result()
-            f4.result()
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            futures = [
+                executor.submit(fetch_career_pages),
+                executor.submit(fetch_indeed),
+                executor.submit(fetch_naukri),
+                executor.submit(fetch_cutshort),
+                executor.submit(fetch_remoteok),
+                executor.submit(fetch_remotive),
+            ]
+            for f in futures:
+                f.result()
 
         return results
 
