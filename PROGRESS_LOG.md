@@ -65,3 +65,26 @@ start of every session before picking a task.
 - No merge to master. Awaiting live verification: upload/change a resume in
   the running app and confirm jobs get real scores (not permanent PENDING),
   and that the "N still scoring" indicator behaves.
+
+## 2026-08-22 — Fake test data polluted live verification (branch: fix/pending-scoring-bug)
+
+User's live check of the PENDING fix showed 2 dummy jobs ("Python Dev/Co A",
+"Flask Dev/Co B") both opening careers.google.com. Investigation found:
+- test_phase3_stability test_04 had written fixture jobs into the REAL
+  jobs_store.json; restore failed because the file didn't exist pre-test on
+  this machine, so tearDown had nothing to restore. resume_store.json was
+  similarly overwritten with a fake test resume ("Sample text", Python/Flask)
+  — the user's real resume, if uploaded, was lost and must be re-uploaded.
+- app.py apply-direct had a hardcoded careers.google.com fallback URL;
+  index.html had a flipkartcareers.com fallback. Both removed (422 + toast).
+- A stale Flask server (from before the fix commits) was still running on
+  port 5050 — killed and restarted with current code. NOTE: app runs on 5050.
+
+Verified this session: 12/12 phase3 tests pass with real store intact after;
+live server GET /api/jobs = 0 jobs/0 pending on clean store; POST
+apply-direct on URL-less job = HTTP 422, no fake URL, no application record.
+Polluted data backed up to scratch/pollution_backup_20260822/.
+
+Status: done (commit 973b1a2). PENDING-fix live verification still owed by
+user, now against real data: re-upload real resume, run a scan, check scores.
+The fake-job generator remains disabled (verified: zero callers).
