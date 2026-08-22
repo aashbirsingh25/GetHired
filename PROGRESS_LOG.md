@@ -211,8 +211,6 @@ Sources & keys:
     seed from Cutshort/Internshala company names)
 
 Engine:
-[ ] Active/dormant company scan tiering (explicitly deferred in original
-    build; required at 1000-company scale) - USER CONFIRMED BUILD
 [ ] Audit threshold auto-adjustment (threshold_optimizer, trial_periods)
     once real usage data exists
 [ ] Audit feedback learning loop + auto-revert (needs user ratings first)
@@ -230,11 +228,15 @@ Product/UX:
     min_match_score (current 55 calibrated on local-tier scores only)
 [ ] Merge fix/pending-scoring-bug -> master after user sign-off (includes
     re-audit stance toward debug-branch changes; 2 regressions found so far)
-[ ] Parallelize ScanCoordinator.run_scan (currently sequential, ~3
-    companies/min): two lanes - wide parallel for ATS-API companies,
-    narrow (5-8) for browser-based; per-domain politeness (1 req at a
-    time per company); reuse AdaptiveConcurrencyManager. USER CONFIRMED,
-    target 20-30 parallel on Oracle.
+[x] DONE 2026-08-23 02:35: Parallelize ScanCoordinator.run_scan - two-lane
+    (API parallel 12 workers / browser sequential), locks, ATS learning.
+    Measured: full cycle 26min vs 55min; dormancy cuts more after cycle 3.
+[x] DONE 2026-08-23 02:35: Active/dormant tiering (scan_scheduler.py),
+    9/9 tests, live streak tracking on 210 companies.
+[ ] Remove junk test companies from companies.json (BulkTestCorp1-5 etc -
+    old AI session pollution; audit full 212 list)
+[ ] 46 jobs in store unscored after cycle (added mid-scoring-pass edge);
+    they score next cycle - consider follow-up if it grows
 [ ] Oracle Cloud deployment (moved up from far-future - user committed):
     Always Free A1 (4 OCPU/24GB); expect more bot-blocks from datacenter
     IP -> Apify becomes more important; keys via env vars on the VM.
