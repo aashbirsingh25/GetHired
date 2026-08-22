@@ -1,4 +1,15 @@
 import os
+
+# macOS fix: torch (via sentence-transformers) and faiss each bundle their own
+# copy of the OpenMP runtime (libomp.dylib). Using both in one process
+# segfaults the app (observed: deterministic SIGSEGV on resume upload, the
+# first code path exercising both, 6/6 repro runs). Forcing single-threaded
+# OpenMP avoids the duplicate-runtime race (verified 8/8 clean runs, incl.
+# threaded). KMP_DUPLICATE_LIB_OK was tried first and did NOT help (3/3 still
+# crashed). Must be set before torch/faiss are imported. Perf cost is
+# negligible for this app's tiny embedding batches.
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+
 import json
 import csv
 import io
