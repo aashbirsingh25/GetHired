@@ -255,6 +255,7 @@ def get_jobs():
         "next_search": status.get("next_search_time") or datetime.now().isoformat(),
         "total_jobs": len(jobs_list),
         "pending_count": len(pending_jobs),
+        "filter_breakdown": pipeline_res.get("filter_breakdown"),
         "pipeline_metrics": pipeline_res["metrics"],
         "jobs": jobs_list
     })

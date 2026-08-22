@@ -964,12 +964,14 @@
       );
     }
 
-    function showToast(msg) {
+    function showToast(msg, isError = false) {
       const toast = document.createElement('div');
       toast.className = 'fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-full text-xs font-bold shadow-2xl flex items-center gap-2 border border-slate-700 animate-fadeIn';
-      toast.innerHTML = `<span class="material-symbols-outlined text-sm text-emerald-400">check_circle</span><span>${escapeHTML(msg)}</span>`;
+      const icon = isError ? 'error' : 'check_circle';
+      const color = isError ? 'text-rose-400' : 'text-emerald-400';
+      toast.innerHTML = `<span class="material-symbols-outlined text-sm ${color}">${icon}</span><span>${escapeHTML(msg)}</span>`;
       document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
+      setTimeout(() => toast.remove(), isError ? 6000 : 3000);
     }
 
     async function loadNotificationConfig() {
@@ -1211,6 +1213,8 @@
         const res = await fetch(`/api/jobs?sort=${sortVal}`);
         const data = await res.json();
         globalJobs = data.jobs || [];
+        globalFilterBreakdown = data.filter_breakdown || null;
+        globalPendingCount = data.pending_count || 0;
 
         if (data.last_search) {
           const syncAgo = computeRelativeTime(data.last_search);
@@ -1255,13 +1259,40 @@
       loadJobsFeed();
     }
 
+    let globalFilterBreakdown = null;
+    let globalPendingCount = 0;
+
+    function buildEmptyFeedExplanation() {
+      const b = globalFilterBreakdown;
+      if (!b || !b.total_in_store) {
+        return `<p class="font-body-md text-on-surface-variant text-xs">No jobs collected yet — run a search or wait for the next background scan.</p>`;
+      }
+      const reasons = [
+        [b.dropped_stale, 'posted too long ago'],
+        [b.dropped_role_mismatch, "didn't match your target roles"],
+        [b.dropped_location, 'outside your locations'],
+        [b.dropped_experience, 'require more experience than your profile'],
+        [b.dropped_seniority_keywords, 'senior/lead level roles'],
+        [b.dropped_below_min_score, 'below your minimum match score'],
+        [b.already_applied, 'already applied'],
+        [b.awaiting_scoring, 'still being scored'],
+      ].filter(([n]) => n > 0);
+      const rows = reasons.map(([n, why]) =>
+        `<div class="flex justify-between gap-6 text-xs"><span class="text-on-surface-variant">${why}</span><span class="font-bold text-on-background">${n}</span></div>`
+      ).join('');
+      return `
+        <p class="font-body-md text-on-surface-variant text-xs">The app checked <b>${b.total_in_store}</b> collected jobs — none passed your filters. Where they went:</p>
+        <div class="max-w-xs mx-auto space-y-1.5 text-left glass-well rounded-2xl p-4">${rows}</div>
+        <p class="font-body-md text-on-surface-variant text-[11px]">This is honest filtering, not a bug — loosen filters in Search & Criteria to see more.</p>`;
+    }
+
     function renderJobGrid(jobs, container) {
       if (!jobs || jobs.length === 0) {
         container.innerHTML = `
           <div class="col-span-full glass-card rounded-3xl p-12 text-center space-y-4">
             <span class="material-symbols-outlined text-5xl text-outline">search_off</span>
-            <h3 class="font-title-md text-on-background">No Jobs Found</h3>
-            <p class="font-body-md text-on-surface-variant text-xs">Try running a real-time search or adjusting your search criteria.</p>
+            <h3 class="font-title-md text-on-background">No Jobs Match Right Now</h3>
+            ${buildEmptyFeedExplanation()}
             <button onclick="switchPage('search')" class="btn-primary bg-primary text-white px-6 py-2 rounded-full font-bold text-xs btn-micro-active">Go to Search & Criteria</button>
           </div>
         `;
@@ -2773,17 +2804,35 @@
     async function handleResumeUpload(e) {
       e.preventDefault();
       const fileInput = document.getElementById('resume-file-input');
-      if (!fileInput.files.length) return;
+      if (!fileInput.files.length) {
+        showToast("Choose a resume file first", true);
+        return;
+      }
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalLabel = submitBtn ? submitBtn.innerText : '';
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = 'Uploading…'; }
 
       const formData = new FormData();
       formData.append('file', fileInput.files[0]);
 
       try {
-        await fetch('/api/resume', { method: 'POST', body: formData });
-        alert("Resume parsed and jobs rescored!");
+        const res = await fetch('/api/resume', { method: 'POST', body: formData });
+        let data = {};
+        try { data = await res.json(); } catch (_) {}
+        if (!res.ok) {
+          const detail = data.error || `server error (HTTP ${res.status})`;
+          showToast(`Resume upload failed: ${detail}`, true);
+          return;
+        }
+        const skillCount = (data.skills || []).length;
+        showToast(`Resume parsed — ${skillCount} skills found. Jobs are being rescored.`);
         loadSettingsPage();
       } catch (err) {
         console.error(err);
+        showToast("Resume upload failed: could not reach the app. Is it running?", true);
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = originalLabel; }
       }
     }
 

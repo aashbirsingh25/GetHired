@@ -282,9 +282,28 @@ def execute_authoritative_pipeline(
     else:
         feed_jobs.sort(key=lambda j: (j.get("match") or {}).get("score", 0), reverse=True)
 
+    # Transparency: how many jobs each stage removed (for the UI's empty/feed
+    # explanation — "never a black box").
+    applied_excluded = (len(score_filtered) - len(feed_jobs)) if applied_job_ids else 0
+    filter_breakdown = {
+        "total_in_store": len(raw_jobs or []),
+        "duplicates_merged": len(raw_jobs or []) - len(deduped_jobs),
+        "dropped_invalid": len(deduped_jobs) - len(valid_jobs),
+        "dropped_stale": len(valid_jobs) - len(recency_jobs),
+        "dropped_role_mismatch": len(recency_jobs) - len(role_filtered),
+        "dropped_location": len(role_filtered) - len(loc_filtered),
+        "dropped_experience": len(loc_filtered) - len(exp_filtered),
+        "dropped_seniority_keywords": len(exp_filtered) - len(exclusion_filtered),
+        "awaiting_scoring": len(pending_jobs),
+        "dropped_below_min_score": len(scored_jobs) - len(pending_jobs) - len(score_filtered),
+        "already_applied": applied_excluded,
+        "shown": len(feed_jobs),
+    }
+
     return {
         "jobs": feed_jobs,
         "pending_jobs": pending_jobs,
+        "filter_breakdown": filter_breakdown,
         "metrics": {
             "raw": len(raw_jobs),
             "deduped": len(deduped_jobs),
