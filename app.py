@@ -108,7 +108,6 @@ def background_scanner_loop():
     coordinator = ScanCoordinator()
     try:
         coordinator.run_scan()
-        _rescore_after_scan()
     except Exception as e:
         print(f"Error in background scan: {e}")
 
@@ -117,21 +116,8 @@ def background_scanner_loop():
         print("Triggering scheduled background scan...")
         try:
             coordinator.run_scan()
-            _rescore_after_scan()
         except Exception as e:
             print(f"Error in scheduled background scan: {e}")
-
-def _rescore_after_scan():
-    """Score newly scanned jobs against the active resume.
-
-    Scans write jobs with match=None; without this, nothing ever scores them
-    (_async_rescore_jobs was only triggered by resume upload), so the feed
-    stays empty and pending forever.
-    """
-    resume_data = load_json(RESUME_FILE, {})
-    if resume_data.get("has_resume"):
-        print("[PostScan] Triggering rescore of unscored jobs...")
-        _async_rescore_jobs(resume_data)
 
 @app.route("/api/companies", methods=["GET"])
 def get_companies():
@@ -683,7 +669,6 @@ def rescan_company(company_id):
     def run_rescan():
         coordinator = ScanCoordinator()
         coordinator.run_scan(target_company_id=company_id)
-        _rescore_after_scan()
 
     thread = threading.Thread(target=run_rescan, daemon=True)
     thread.start()
