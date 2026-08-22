@@ -252,3 +252,16 @@ Insight from breakdown: role filter is the feed's bottleneck (616/737) -
 worth revisiting target_role list with user (many are analyst/ops roles
 that would never pass anyway, but 616 suggests titles like 'SDE'/'Member
 of Technical Staff' may be slipping through the cracks - review matching).
+
+## 2026-08-23 (03:45) — First applicable job in feed; store races fixed for real
+
+Chain of fixes: (1) target_role expanded (SDE/MTS/SRE/Developer synonyms) -
+role drops 616->594; (2) board jobs were never persisted (search cycle
+saved only curated survivors) - now store-first, filter-at-read; (3) the
+REAL store race: ScanCoordinator's snapshot saves deleted other writers'
+jobs AND fresh scores - both save sites now do match-preserving merges.
+Verified live with concurrent scan: 777/777 scored, 40/40 board jobs in
+store+scored, feed = Tech Intern @ Springer Capital 82% (cutshort!) -
+the user's first genuinely applicable job. Scan-race deeper fix: DONE
+(remove from backlog). Microsoft titles have location text glued on
+(scraper bug, backlog). 46-unscored mystery: same race, resolved.
