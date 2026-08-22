@@ -57,6 +57,46 @@ def _matches_role_title(target_role: str, title: str) -> bool:
     pattern = r"(?:^|[\s,/\(\)\[\]\b])" + escaped + r"(?:$|[\s,/\(\)\[\]\b])"
     return bool(re.search(pattern, t_clean))
 
+# Patterns that state a required-experience amount. Deliberately narrow:
+# bare "N years" (no range/plus/minimum context) is NOT matched, to avoid
+# false positives like "launched 9 years ago" in company blurbs.
+_EXP_RANGE_RE = re.compile(
+    r"(\d{1,2})\s*(?:-|–|to)\s*(\d{1,2})\s*\+?\s*(?:years?|yrs?)", re.I)
+_EXP_PLUS_RE = re.compile(r"(\d{1,2})\s*\+\s*(?:years?|yrs?)", re.I)
+_EXP_MIN_RE = re.compile(
+    r"(?:minimum(?:\s+of)?|at\s+least)\s+(\d{1,2})\s*(?:years?|yrs?)", re.I)
+
+def _extract_min_experience_years(job: Dict[str, Any]) -> Any:
+    """Return the minimum years of experience a job demands, or None if unstated."""
+    text = f"{job.get('title') or ''} {job.get('experience_required') or ''} {(job.get('description') or '')[:4000]}"
+    mins = []
+    for m in _EXP_RANGE_RE.finditer(text):
+        mins.append(int(m.group(1)))
+    for m in _EXP_PLUS_RE.finditer(text):
+        mins.append(int(m.group(1)))
+    for m in _EXP_MIN_RE.finditer(text):
+        mins.append(int(m.group(1)))
+    return min(mins) if mins else None
+
+def _max_user_experience_years(filters: Dict[str, Any]) -> Any:
+    """Parse the user's experience ceiling from target_experience strings
+    like '0-2 years', 'Fresher', '0 years'. Returns None if unconfigured."""
+    raw = filters.get("target_experience") or []
+    if isinstance(raw, str):
+        raw = [raw]
+    maxes = []
+    for item in raw:
+        if not isinstance(item, str):
+            continue
+        s = item.lower()
+        if "fresher" in s or "entry" in s:
+            maxes.append(0)
+        for m in re.finditer(r"(\d{1,2})\s*(?:-|–|to)\s*(\d{1,2})", s):
+            maxes.append(int(m.group(2)))
+        for m in re.finditer(r"^(\d{1,2})\s*years?", s.strip()):
+            maxes.append(int(m.group(1)))
+    return max(maxes) if maxes else None
+
 def _matches_location(target_loc: str, location: str, description: str = "") -> bool:
     if not target_loc:
         return True
@@ -144,7 +184,19 @@ def execute_authoritative_pipeline(
             loc_filtered.append(job)
 
     # 6. EXPERIENCE FILTER
-    exp_filtered = loc_filtered
+    # Drop jobs whose stated minimum experience exceeds the user's ceiling
+    # (e.g. a '3-5 years' role for a 0-2 years candidate). Jobs that don't
+    # state a requirement pass through — absence of data is not a mismatch.
+    user_max_years = _max_user_experience_years(filters)
+    if user_max_years is None:
+        exp_filtered = loc_filtered
+    else:
+        exp_filtered = []
+        for job in loc_filtered:
+            job_min_years = _extract_min_experience_years(job)
+            if job_min_years is not None and job_min_years > user_max_years:
+                continue
+            exp_filtered.append(job)
 
     # 7. EXCLUSION FILTER
     raw_excludes = filters.get("exclude_keywords")
