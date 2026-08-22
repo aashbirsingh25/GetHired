@@ -167,3 +167,18 @@ implementing (Apify public-listings only, never user's account) + update
 product-context.md boundary text. Multi-account key rotation on one
 provider: refused (ToS abuse); multi-provider rotation: fine, per original
 design.
+
+## 2026-08-23 (01:10) — END-TO-END PIPELINE VERIFIED WORKING
+
+First complete run in project history: scan (212 companies, 680 jobs) ->
+auto-rescore (680/680 scored, merge-fix held, nothing clobbered) -> filtered
+feed. Feed shows 1 job (PhonePe SRE Rust, 81%, posted Aug 7) — verified
+CORRECT, not a bug: traced all 680 through every pipeline stage; the other
+candidates fail 30-day recency (old postings) or seniority/location/score
+filters honestly. Score distribution sane (median ~35, relevant SWE jobs
+56-81). PENDING bug fix confirmed working with real data: 0 pending stuck,
+0 PENDING in feed.
+User verification of feed in morning + decide merge to master. Product
+knobs to discuss: 30-day recency window, min_match_score 55, company list
+composition (many non-tech-heavy companies), 3 new boards activate on
+restart.
