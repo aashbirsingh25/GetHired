@@ -153,3 +153,17 @@ existing Apify integration; USER ACTION: create free apify.com account, put
 token in config.json apify.api_token (spend caps already coded: $1.5/day,
 $5/mo = free tier). Glassdoor: skipped (bot-protected, redirects to career
 pages we already scan). LinkedIn: manual only, hard boundary, user reminded.
+
+## 2026-08-23 (01:05) — RemoteOK + Remotive fetchers added
+
+Free public APIs, no keys. India-eligibility filter (these boards are
+global/US-heavy). Verified via full _fetch_all_sources_parallel: remoteok 7,
+remotive 8, cutshort 25. Active at next restart.
+QUEUED for next session: Adzuna (needs free key - user), YC Work at a
+Startup + Instahyre + Wellfound (probe first), Naukri/Glassdoor via Apify
+(blocked on user's Apify token). LinkedIn: user asked to relax the rule;
+REQUIRES explicit daytime confirmation "update the LinkedIn rule" before
+implementing (Apify public-listings only, never user's account) + update
+product-context.md boundary text. Multi-account key rotation on one
+provider: refused (ToS abuse); multi-provider rotation: fine, per original
+design.
