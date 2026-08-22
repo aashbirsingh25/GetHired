@@ -141,3 +141,15 @@ pending scan completion.
 Runtime files (companies.json, pattern_store.json, trial_periods.json) are
 git-tracked and churn during scans — left uncommitted, consider gitignoring
 later.
+
+## 2026-08-23 (01:00) — Job board sources: Cutshort added; Naukri/Indeed/Glassdoor verdicts
+
+Cutshort fetcher built + wired (commit above), verified standalone: 25
+jobs/location via embedded __NEXT_DATA__ JSON, no key needed. Activates on
+next server restart (NOT restarted - overnight scan running, 700 jobs so far).
+Naukri: RSS dead (400), API wants captcha (406), site Akamai-blocks headless
+browsers. Indeed: publisher API closed to new signups. Path for both =
+existing Apify integration; USER ACTION: create free apify.com account, put
+token in config.json apify.api_token (spend caps already coded: $1.5/day,
+$5/mo = free tier). Glassdoor: skipped (bot-protected, redirects to career
+pages we already scan). LinkedIn: manual only, hard boundary, user reminded.
