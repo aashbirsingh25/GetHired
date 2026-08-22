@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 
 from fetchers.indeed_fetcher import fetch_indeed_jobs
 from fetchers.naukri_fetcher import fetch_naukri_jobs
+from fetchers.cutshort_fetcher import fetch_cutshort_jobs
 from job_deduplicator import JobDeduplicator
 from recency_filter import expand_search_if_sparse
 from adaptive_concurrency_manager import AdaptiveConcurrencyManager
@@ -384,6 +385,7 @@ class BackgroundSearchWorker:
             "career_pages": [],
             "indeed": [],
             "naukri": [],
+            "cutshort": [],
             "linkedin": []
         }
 
@@ -427,14 +429,23 @@ class BackgroundSearchWorker:
                 print(f"[BackgroundSearchWorker] Naukri error: {e}")
                 results["naukri"] = []
 
-        # Run all 3 source types concurrently using ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=3) as executor:
+        def fetch_cutshort():
+            try:
+                results["cutshort"] = fetch_cutshort_jobs(role=role, location=location, max_results=25)
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] Cutshort error: {e}")
+                results["cutshort"] = []
+
+        # Run all source types concurrently using ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=4) as executor:
             f1 = executor.submit(fetch_career_pages)
             f2 = executor.submit(fetch_indeed)
             f3 = executor.submit(fetch_naukri)
+            f4 = executor.submit(fetch_cutshort)
             f1.result()
             f2.result()
             f3.result()
+            f4.result()
 
         return results
 
