@@ -1479,11 +1479,14 @@
         fetch(`/api/jobs/${encodeURIComponent(jobId)}/mark-viewed`, { method: 'POST' }).catch(() => {});
         const res = await fetch(`/api/job/${encodeURIComponent(jobId)}/apply-direct`, { method: 'POST' });
         const data = await res.json();
-        const targetUrl = data.application_url || "https://www.flipkartcareers.com/";
-        window.open(targetUrl, '_blank');
+        if (!res.ok || !data.application_url) {
+          showToast("No application link available for this job");
+          return;
+        }
+        window.open(data.application_url, '_blank');
       } catch (err) {
         console.error("Apply error:", err);
-        window.open("https://www.flipkartcareers.com/", '_blank');
+        showToast("Could not open application link");
       }
     }
 

@@ -367,7 +367,15 @@ def apply_direct(job_id):
         comp_id = (job.get("company") or "").lower().replace(" ", "-")
         companies = load_json(COMPANIES_FILE, [])
         comp_obj = next((c for c in companies if isinstance(c, dict) and (c.get("id") == comp_id or c.get("name", "").lower() == (job.get("company") or "").lower())), None)
-        target_url = (comp_obj.get("career_url") if comp_obj else None) or "https://careers.google.com"
+        target_url = comp_obj.get("career_url") if comp_obj else None
+    if not target_url or not str(target_url).startswith("http"):
+        # No real application URL known for this job. Never substitute a
+        # fake/placeholder URL (see product-context.md hard boundaries).
+        return jsonify({
+            "error": "No application URL available for this job",
+            "job_id": job_id,
+            "application_url": None
+        }), 422
     mark_job_viewed(job_id)
 
     try:

@@ -21,17 +21,26 @@ class TestPhase3Stability(unittest.TestCase):
             "config.json", "companies.json", "filters.json", "metrics.json"
         ]
         self.backups = {}
+        self.missing_before = []
         for fn in self.backup_files:
             fp = os.path.join(BASE_DIR, fn)
             if os.path.exists(fp):
                 with open(fp, "r", encoding="utf-8") as f:
                     self.backups[fn] = f.read()
+            else:
+                self.missing_before.append(fn)
 
     def tearDown(self):
         for fn, content in self.backups.items():
             fp = os.path.join(BASE_DIR, fn)
             with open(fp, "w", encoding="utf-8") as f:
                 f.write(content)
+        # Files that did not exist before the test must not survive it —
+        # otherwise test fixtures leak into the real production store.
+        for fn in self.missing_before:
+            fp = os.path.join(BASE_DIR, fn)
+            if os.path.exists(fp):
+                os.remove(fp)
 
     def test_01_null_match_safety_in_test_config(self):
         from app import app
@@ -89,26 +98,36 @@ class TestPhase3Stability(unittest.TestCase):
             self.assertEqual(p["match"]["match_grade"], "PENDING")
 
     def test_04_rescore_status_tracking(self):
+        import tempfile
         from unittest.mock import MagicMock, patch
-        from app import _async_rescore_jobs, RESUME_FILE, JOBS_FILE, load_json, save_json
-        save_json(JOBS_FILE, {
-            "jobs": [
-                {"id": "j1", "title": "Python Dev", "company": "Co A", "location": "Gurugram"},
-                {"id": "j2", "title": "Flask Dev", "company": "Co B", "location": "Delhi"}
-            ]
-        })
-        sample_resume = {
-            "has_resume": True,
-            "skills": ["Python", "Flask"],
-            "version_hash": "test_v123",
-            "raw_text": "Sample text"
-        }
-        mock_scorer_instance = MagicMock()
-        mock_scorer_instance.score_job.return_value = {"score": 80, "match_grade": "STRONG_MATCH"}
-        with patch("app.HybridJobScorer", return_value=mock_scorer_instance):
-            _async_rescore_jobs(sample_resume)
+        import app as app_module
+        from app import _async_rescore_jobs, load_json, save_json
 
-        r_store = load_json(RESUME_FILE, {})
+        # Never write test fixtures to the real data stores — redirect the
+        # module-level file paths to a temp directory for this test.
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp_jobs = os.path.join(tmpdir, "jobs_store.json")
+            tmp_resume = os.path.join(tmpdir, "resume_store.json")
+            with patch.object(app_module, "JOBS_FILE", tmp_jobs), \
+                 patch.object(app_module, "RESUME_FILE", tmp_resume):
+                save_json(tmp_jobs, {
+                    "jobs": [
+                        {"id": "j1", "title": "Python Dev", "company": "Co A", "location": "Gurugram"},
+                        {"id": "j2", "title": "Flask Dev", "company": "Co B", "location": "Delhi"}
+                    ]
+                })
+                sample_resume = {
+                    "has_resume": True,
+                    "skills": ["Python", "Flask"],
+                    "version_hash": "test_v123",
+                    "raw_text": "Sample text"
+                }
+                mock_scorer_instance = MagicMock()
+                mock_scorer_instance.score_job.return_value = {"score": 80, "match_grade": "STRONG_MATCH"}
+                with patch("app.HybridJobScorer", return_value=mock_scorer_instance):
+                    _async_rescore_jobs(sample_resume)
+
+                r_store = load_json(tmp_resume, {})
         self.assertIn("rescore_status", r_store)
         st = r_store["rescore_status"]
         self.assertEqual(st["status"], "completed")
