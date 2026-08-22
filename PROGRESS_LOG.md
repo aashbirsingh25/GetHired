@@ -101,3 +101,19 @@ sentence-transformers are broken — on THIS Mac both import fine (those
 notes were from the Windows laptop). Naukri's HTTP 400 is a separate issue.
 Status: done. User still owed: re-upload resume via UI, run scan, verify
 real scores.
+
+## 2026-08-22 (night) — "Unresponsive upload button" was a server segfault
+
+User reported upload button doing nothing. Actual cause chain: the upload
+request crashed the entire Flask process (SIGSEGV) mid-request, so the
+browser got no response — looked like a dead button. Root cause: torch
+(sentence-transformers) + faiss each bundle libomp.dylib on macOS; using
+both in one process segfaults. Deterministic repro built (6/6 crashes).
+KMP_DUPLICATE_LIB_OK did NOT fix it (3/3 crashes). OMP_NUM_THREADS=1 set
+at top of app.py DID (8/8 clean incl. threaded). Also explains the earlier
+"Unexpected EOF" pdfplumber error (truncated state after a crashed
+process) and servers repeatedly found dead.
+Verified live: real resume uploaded via POST /api/resume -> HTTP 200,
+server alive, resume_store.json has 17 skills, hash 221a39b573dcb9a1,
+rescore completed. Resume upload is DONE — user must still run a scan and
+verify real job scores.
