@@ -194,3 +194,40 @@ SESSION. Then: Adzuna/YC/Instahyre/Wellfound probes, Apify+friend-key pool
 (multi-provider rotation OK, self-created duplicate accounts refused),
 LinkedIn awaiting explicit daytime confirmation, UI direction awaiting
 user's list, merge-to-master sign-off pending user trust in feed.
+
+## MASTER BACKLOG (keep this section updated; user will ask "what's left")
+
+Sources & keys:
+[ ] Internshala fetcher (FIRST - fresher/internship core need, probed open)
+[ ] Wire user's 12 Gemini + 1 Groq keys into LLMRouter multi-key rotation
+    (VERIFY LLMRouter actually supports key pools; SAFETY: keys must go in a
+    gitignored file, NOT tracked config.json - it goes to public GitHub)
+[ ] Apify token(s) from user + friends -> Naukri/bot-protected companies
+[ ] Adzuna free key (user signup) + fetcher
+[ ] Probe & build: YC Work at a Startup, Instahyre, Wellfound
+[ ] LinkedIn via Apify public listings - ONLY after explicit daytime user
+    confirmation + product-context.md boundary rewrite
+[ ] Expand company list toward fresher-hiring companies (target 1000;
+    seed from Cutshort/Internshala company names)
+
+Engine:
+[ ] Active/dormant company scan tiering (explicitly deferred in original
+    build; required at 1000-company scale) - USER CONFIRMED BUILD
+[ ] Audit threshold auto-adjustment (threshold_optimizer, trial_periods)
+    once real usage data exists
+[ ] Audit feedback learning loop + auto-revert (needs user ratings first)
+[ ] Audit Insights dashboard data accuracy
+[ ] Wire vision_fallback_parser into live scan loop (known unbuilt)
+[ ] Scan-vs-rescore write race: deeper fix (scanner holds stale store copy
+    for its whole run; merge-fix on rescorer side only)
+[ ] sentence-transformers/feedparser Section 5 notes are Windows-laptop
+    stale; both work on this Mac - update product-context.md Section 5
+
+Product/UX:
+[ ] UI: collect user's complaint list -> targeted fixes vs redesign (8B:
+    present 2-3 directions, one page at a time)
+[ ] Rescoring everything through LLM tier once keys land; THEN recalibrate
+    min_match_score (current 55 calibrated on local-tier scores only)
+[ ] Merge fix/pending-scoring-bug -> master after user sign-off (includes
+    re-audit stance toward debug-branch changes; 2 regressions found so far)
+[ ] Never-deployed: Oracle Cloud deployment (original vision) - far future
