@@ -182,3 +182,15 @@ User verification of feed in morning + decide merge to master. Product
 knobs to discuss: 30-day recency window, min_match_score 55, company list
 composition (many non-tech-heavy companies), 3 new boards activate on
 restart.
+
+## 2026-08-23 (01:25) — Fresher-only filters set; session close
+
+User has 0 yrs experience: ceiling set to 0, internship/trainee roles added
+to targets, seniority exclusions extended. Verified live (ceiling parses 0,
+endpoint enforces). Store audit: ZERO software internships among 680 jobs -
+company list produces senior-heavy roles. Internshala probed: HTTP 200,
+150 internship markers in plain HTML, no bot protection - BUILD FIRST NEXT
+SESSION. Then: Adzuna/YC/Instahyre/Wellfound probes, Apify+friend-key pool
+(multi-provider rotation OK, self-created duplicate accounts refused),
+LinkedIn awaiting explicit daytime confirmation, UI direction awaiting
+user's list, merge-to-master sign-off pending user trust in feed.
