@@ -234,6 +234,8 @@ def get_jobs():
         jid = job.get("id")
         job["user_application"] = app_map.get(jid)
 
+    pending_jobs = pipeline_res.get("pending_jobs", [])
+
     status = bg_worker.get_status()
 
     return jsonify({
@@ -241,6 +243,7 @@ def get_jobs():
         "last_search": status.get("last_search_time") or datetime.now().isoformat(),
         "next_search": status.get("next_search_time") or datetime.now().isoformat(),
         "total_jobs": len(jobs_list),
+        "pending_count": len(pending_jobs),
         "pipeline_metrics": pipeline_res["metrics"],
         "jobs": jobs_list
     })

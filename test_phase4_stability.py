@@ -89,15 +89,22 @@ class TestPhase4Stability(unittest.TestCase):
         self.assertEqual(res["status"], "not_found")
 
     def test_06_scoring_pipeline_unscored_and_pending(self):
-        """Verify pipeline preserves unscored pending jobs when min_match_score > 0."""
+        """Unscored (PENDING) jobs are held out of the ranked feed (not shown at
+        score 0) and surfaced via pending_jobs; scored jobs pass min_match_score."""
         raw_jobs = [
             {"id": "j1", "title": "Software Engineer", "company": "Co A", "location": "Gurugram", "match": None},
-            {"id": "j2", "title": "Full Stack Engineer", "company": "Co B", "location": "Gurugram", "match": {"score": 85}}
+            {"id": "j2", "title": "Full Stack Engineer", "company": "Co B", "location": "Gurugram",
+             "match": {"score": 85, "resume_version_hash": "vX"}}
         ]
-        out = execute_authoritative_pipeline(raw_jobs, custom_filters={"min_match_score": 70})
-        titles = [j["title"] for j in out["jobs"]]
-        self.assertIn("Software Engineer", titles)
-        self.assertIn("Full Stack Engineer", titles)
+        out = execute_authoritative_pipeline(
+            raw_jobs, custom_filters={"min_match_score": 70},
+            resume_data={"has_resume": True, "version_hash": "vX"}
+        )
+        feed_titles = [j["title"] for j in out["jobs"]]
+        pending_titles = [j["title"] for j in out["pending_jobs"]]
+        self.assertNotIn("Software Engineer", feed_titles)
+        self.assertIn("Software Engineer", pending_titles)
+        self.assertIn("Full Stack Engineer", feed_titles)
 
     def test_07_api_contract_verification(self):
         """Verify essential HTTP API response status codes and schemas."""

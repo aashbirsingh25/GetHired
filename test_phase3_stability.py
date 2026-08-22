@@ -73,12 +73,20 @@ class TestPhase3Stability(unittest.TestCase):
         res = execute_authoritative_pipeline(raw_jobs=raw_jobs, custom_filters={"min_match_score": 0}, resume_data={"has_resume": True, "version_hash": "v99"})
         duration = time.time() - t0
         self.assertLess(duration, 0.5, "execute_authoritative_pipeline must not execute synchronous heavy scoring")
-        jobs = res["jobs"]
-        self.assertEqual(len(jobs), 3)
-        job_map = {j["title"]: j for j in jobs}
-        self.assertEqual(job_map["Software Engineer"]["match"]["score"], 0)
-        self.assertEqual(job_map["Software Engineer"]["match"]["match_grade"], "PENDING")
-        self.assertEqual(job_map["Backend Dev"]["match"]["score"], 85)
+        # Non-blocking design preserved: no synchronous scoring is done here.
+        # j3 has a real cached score -> ranked feed. j1 (no match) and j2
+        # (invalid match) are unscored -> held out of feed as PENDING (option a).
+        feed = res["jobs"]
+        pending = res["pending_jobs"]
+        feed_map = {j["title"]: j for j in feed}
+        pending_titles = [j["title"] for j in pending]
+        self.assertEqual(feed_map["Backend Dev"]["match"]["score"], 85)
+        self.assertNotIn("Software Engineer", feed_map)
+        self.assertNotIn("Developer", feed_map)
+        self.assertIn("Software Engineer", pending_titles)
+        self.assertIn("Developer", pending_titles)
+        for p in pending:
+            self.assertEqual(p["match"]["match_grade"], "PENDING")
 
     def test_04_rescore_status_tracking(self):
         from unittest.mock import MagicMock, patch
@@ -191,18 +199,52 @@ class TestPhase3Stability(unittest.TestCase):
         self.assertEqual(st1["task_id"], "task_001")
         self.assertEqual(st2["task_id"], "task_002")
 
-    def test_10_pending_matches_preserved_in_feed(self):
+    def test_10_pending_jobs_held_out_of_feed_not_bypassing_min_score(self):
         from pipeline import execute_authoritative_pipeline
         raw_jobs = [
             {"id": "j1", "title": "Software Engineer", "company": "Co A", "location": "Gurugram", "match": None},
-            {"id": "j2", "title": "Full Stack Engineer", "company": "Co B", "location": "Gurugram", "match": {"score": 85}}
+            {"id": "j2", "title": "Full Stack Engineer", "company": "Co B", "location": "Gurugram",
+             "match": {"score": 85, "resume_version_hash": "vX"}}
         ]
-        res = execute_authoritative_pipeline(raw_jobs=raw_jobs, custom_filters={"min_match_score": 60})
-        jobs = res["jobs"]
-        # j1 has PENDING match, j2 has score 85 -> both must be retained!
-        titles = [j["title"] for j in jobs]
-        self.assertIn("Software Engineer", titles)
-        self.assertIn("Full Stack Engineer", titles)
+        res = execute_authoritative_pipeline(
+            raw_jobs=raw_jobs, custom_filters={"min_match_score": 60},
+            resume_data={"has_resume": True, "version_hash": "vX"}
+        )
+        feed_titles = [j["title"] for j in res["jobs"]]
+        pending_titles = [j["title"] for j in res["pending_jobs"]]
+        # j2 (scored 85 >= 60) belongs in the ranked feed.
+        self.assertIn("Full Stack Engineer", feed_titles)
+        # j1 (unscored/PENDING) must NOT be in the feed and must NOT bypass
+        # min_match_score; it is surfaced separately for the "still scoring" indicator.
+        self.assertNotIn("Software Engineer", feed_titles)
+        self.assertIn("Software Engineer", pending_titles)
+        self.assertEqual(res["metrics"]["pending"], 1)
+
+    def test_10b_stale_resume_hash_marks_job_pending(self):
+        from pipeline import execute_authoritative_pipeline
+        raw_jobs = [
+            # Cached score, but from an OLD resume version.
+            {"id": "j1", "title": "Software Engineer", "company": "Co A", "location": "Gurugram",
+             "match": {"score": 90, "match_grade": "STRONG_MATCH", "resume_version_hash": "old_hash"}},
+            # Cached score matching the CURRENT resume version.
+            {"id": "j2", "title": "Backend Engineer", "company": "Co B", "location": "Gurugram",
+             "match": {"score": 80, "match_grade": "STRONG_MATCH", "resume_version_hash": "new_hash"}}
+        ]
+        res = execute_authoritative_pipeline(
+            raw_jobs=raw_jobs,
+            custom_filters={"min_match_score": 0},
+            resume_data={"has_resume": True, "version_hash": "new_hash"}
+        )
+        # Dedup canonicalizes ids, so match on title.
+        feed_titles = [j["title"] for j in res["jobs"]]
+        pending_titles = [j["title"] for j in res["pending_jobs"]]
+        # Stale-hash job (old_hash != new_hash) must be treated as PENDING.
+        self.assertIn("Software Engineer", pending_titles)
+        self.assertNotIn("Software Engineer", feed_titles)
+        # Current-hash job stays in feed with its real score.
+        self.assertIn("Backend Engineer", feed_titles)
+        feed_map = {j["title"]: j for j in res["jobs"]}
+        self.assertEqual(feed_map["Backend Engineer"]["match"]["score"], 80)
 
     def test_11_score_consensus_clamping(self):
         from score_consensus_checker import extract_numeric_score

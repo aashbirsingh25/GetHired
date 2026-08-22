@@ -159,16 +159,34 @@ def execute_authoritative_pipeline(
         exclusion_filtered.append(job)
 
     # 8. CURRENT RESUME SCORING (Non-blocking: uses cached matches; background rescorer updates store)
+    # A job is PENDING if it has no valid cached match, OR its cached match was
+    # computed against a different resume version than the one currently active.
+    # PENDING jobs are NOT scored synchronously here (that would block page load
+    # and defeat the async rescorer); they are held out of the ranked feed in
+    # step 9 and surfaced separately so the UI can show "N jobs still scoring".
+    # PENDING only applies when there is an active resume to score against.
+    # With no resume, a missing match is not "awaiting scoring" (there is
+    # nothing to score), so such jobs flow through the feed unchanged.
+    has_active_resume = bool((resume_data or {}).get("has_resume")) or bool((resume_data or {}).get("version_hash"))
+    current_resume_hash = (resume_data or {}).get("version_hash")
     scored_jobs = []
     for job in exclusion_filtered:
         match_obj = job.get("match")
-        if not match_obj or not isinstance(match_obj, dict):
+        has_valid_match = isinstance(match_obj, dict) and match_obj.get("match_grade") != "PENDING"
+        is_stale = (
+            has_valid_match
+            and current_resume_hash is not None
+            and match_obj.get("resume_version_hash") is not None
+            and match_obj.get("resume_version_hash") != current_resume_hash
+        )
+        if has_active_resume and (not has_valid_match or is_stale):
             job_copy = dict(job)
             job_copy["match"] = {
                 "score": 0,
                 "match_grade": "PENDING",
                 "confidence": "pending",
-                "reasoning": "Pending background resume scoring",
+                "reasoning": "Awaiting background resume scoring" if not is_stale
+                             else "Awaiting rescore against updated resume",
                 "matched_skills": [],
                 "missing_skills": []
             }
@@ -178,18 +196,28 @@ def execute_authoritative_pipeline(
 
 
     # 9. MINIMUM MATCH SCORE
+    # PENDING jobs are separated out of the ranked feed entirely (option a):
+    # they must NOT bypass min_match_score and must NOT pollute the feed at
+    # score 0. They are returned separately as pending_jobs for a transparency
+    # indicator; the background rescorer will give them real scores shortly,
+    # after which they flow through the normal filter on the next load.
     min_score = filters.get("min_match_score", 0)
     score_filtered = []
+    pending_jobs = []
     for job in scored_jobs:
         match_obj = job.get("match") or {}
         is_pending = isinstance(match_obj, dict) and match_obj.get("match_grade") == "PENDING"
+        if is_pending:
+            pending_jobs.append(job)
+            continue
         score = match_obj.get("score", 50) if isinstance(match_obj, dict) else 50
-        if is_pending or score >= min_score:
+        if score >= min_score:
             score_filtered.append(job)
 
     # 10. EXCLUDE APPLIED JOBS (Phase 9: Applied jobs must not pollute feed)
     if applied_job_ids:
         feed_jobs = [j for j in score_filtered if j.get("id") not in applied_job_ids]
+        pending_jobs = [j for j in pending_jobs if j.get("id") not in applied_job_ids]
     else:
         feed_jobs = score_filtered
 
@@ -204,11 +232,13 @@ def execute_authoritative_pipeline(
 
     return {
         "jobs": feed_jobs,
+        "pending_jobs": pending_jobs,
         "metrics": {
             "raw": len(raw_jobs),
             "deduped": len(deduped_jobs),
             "valid": len(valid_jobs),
             "filtered": len(feed_jobs),
+            "pending": len(pending_jobs),
             "dedup_stats": dedup_metrics
         }
     }
