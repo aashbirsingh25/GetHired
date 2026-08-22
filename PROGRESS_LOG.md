@@ -88,3 +88,16 @@ Polluted data backed up to scratch/pollution_backup_20260822/.
 Status: done (commit 973b1a2). PENDING-fix live verification still owed by
 user, now against real data: re-upload real resume, run a scan, check scores.
 The fake-job generator remains disabled (verified: zero callers).
+
+## 2026-08-22 (later) — Resume upload 500: missing pdfplumber/python-docx
+
+User's resume upload silently failed (UI showed nothing; server log showed
+POST /api/resume 500, ModuleNotFoundError: pdfplumber). resume_parser.py
+needs pdfplumber + python-docx; neither was in requirements.txt. Installed
+both into .venv, added to requirements.txt (commit follows), restarted
+server. Verified parse_resume on the real PDF: 3869 chars, 17 skills.
+NOTE: product-context.md Section 5 claims feedparser and
+sentence-transformers are broken — on THIS Mac both import fine (those
+notes were from the Windows laptop). Naukri's HTTP 400 is a separate issue.
+Status: done. User still owed: re-upload resume via UI, run scan, verify
+real scores.
