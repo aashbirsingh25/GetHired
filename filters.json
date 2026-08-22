@@ -6,7 +6,11 @@
     "Principal",
     "Director",
     "Architect",
-    "Staff"
+    "Staff",
+    "Sr",
+    "Experienced",
+    "II",
+    "III"
   ],
   "global_filters": {
     "Skills & Tech Stack": [],
@@ -47,9 +51,7 @@
   "target_experience": [
     "0 years",
     "Fresher",
-    "Entry-level",
-    "0-1 years",
-    "0-2 years"
+    "Entry-level"
   ],
   "target_location": [
     {
@@ -87,6 +89,12 @@
     "Backend Engineer",
     "Frontend Engineer",
     "Full Stack Engineer",
-    "Microsoft Developer"
+    "Microsoft Developer",
+    "Internship",
+    "Apprentice",
+    "Apprenticeship",
+    "Trainee",
+    "Graduate Engineer",
+    "SDE Intern"
   ]
 }
