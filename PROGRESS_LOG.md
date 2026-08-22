@@ -240,3 +240,15 @@ Product/UX:
 [ ] Oracle Cloud deployment (moved up from far-future - user committed):
     Always Free A1 (4 OCPU/24GB); expect more bot-blocks from datacenter
     IP -> Apify becomes more important; keys via env vars on the VM.
+
+## 2026-08-23 (03:35) — UI lane A done (objective feedback fixes)
+
+Upload error surfacing (was silent!), toast error variant, transparent
+empty-feed breakdown (pipeline filter_breakdown -> /api/jobs -> UI).
+Verified in real headless browser: renders '737 collected... 616 role
+mismatch' empty state on own page load. UI lanes B (visual tweaks) / C
+(redesign) still awaiting user's list/decision.
+Insight from breakdown: role filter is the feed's bottleneck (616/737) -
+worth revisiting target_role list with user (many are analyst/ops roles
+that would never pass anyway, but 616 suggests titles like 'SDE'/'Member
+of Technical Staff' may be slipping through the cracks - review matching).
