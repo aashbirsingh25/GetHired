@@ -117,3 +117,27 @@ Verified live: real resume uploaded via POST /api/resume -> HTTP 200,
 server alive, resume_store.json has 17 skills, hash 221a39b573dcb9a1,
 rescore completed. Resume upload is DONE — user must still run a scan and
 verify real job scores.
+
+## 2026-08-23 (00:20) — Real scanner restored; "no jobs found" root-caused
+
+"No jobs" had 3 stacked causes, all fixed (commit on fix/pending-scoring-bug):
+1. debug branch removed master's startup thread for background_scanner_loop
+   → the REAL scanner (ScanCoordinator/BrowserScanner) never ran at all.
+   fetch_career_pages only re-reads jobs_store.json (circular no-op "scan").
+   ** This is a second serious regression from the ChatGPT debug branch that
+   product-context.md Section 2 did NOT catch — its browser_scanner.py
+   review was code-level, missing that the caller was disconnected.
+   Re-audit that branch before merging to master. **
+2. /api/company/<id>/rescan: indentation bug (debug branch) = NameError.
+3. Scanned jobs stay match=None forever (rescorer only ran on resume
+   upload). Now scans trigger rescore on completion; rescorer merges scores
+   by id into fresh store (was clobbered by concurrent scan writes - lost
+   568 scores once).
+Also: playwright chromium installed (~95MB, one-time), needed by scanner.
+Verified live: Razorpay rescan = 25 real jobs via greenhouse_api; startup
+scan reached 568 jobs @ 16/212 companies before restart; rescorer 568/568.
+Full scan ~1h; auto-rescore fires at end. User verification of scored feed
+pending scan completion.
+Runtime files (companies.json, pattern_store.json, trial_periods.json) are
+git-tracked and churn during scans — left uncommitted, consider gitignoring
+later.
