@@ -276,7 +276,23 @@ class ScanCoordinator:
                             job_copy["match"] = existing_match
                         existing_jobs[jid] = job_copy
 
-                jobs_store["jobs"] = list(existing_jobs.values())
+                # Merge-safe store save: merge OUR view into a freshly loaded
+                # store instead of overwriting it. Rules: keep jobs other
+                # writers added; keep our job data for jobs we scanned; but
+                # never replace a fresh match with a missing one (the
+                # rescorer may have scored a job after our snapshot).
+                fresh = load_json(JOBS_FILE, {"jobs": []})
+                merged_by_id = {j["id"]: j for j in fresh.get("jobs", []) if j.get("id")}
+                for jid, job in existing_jobs.items():
+                    fresh_job = merged_by_id.get(jid)
+                    if fresh_job is not None:
+                        fresh_match = fresh_job.get("match")
+                        if isinstance(fresh_match, dict) and not isinstance(job.get("match"), dict):
+                            job = dict(job)
+                            job["match"] = fresh_match
+                            existing_jobs[jid] = job  # keep our view current too
+                    merged_by_id[jid] = job
+                jobs_store["jobs"] = list(merged_by_id.values())
                 save_json(JOBS_FILE, jobs_store)
                 save_json(METRICS_FILE, metrics_store)
                 companies_data["companies"] = list(comp_map.values())
@@ -328,12 +344,20 @@ class ScanCoordinator:
             except Exception as e:
                 print(f"Error scoring jobs: {e}")
 
-        # Final save: merge into a freshly loaded store by job id rather than
-        # overwriting with our snapshot (another writer may have run meanwhile).
+        # Final save: merge into a freshly loaded store by job id, never
+        # replacing a fresh match with a missing one (same rules as the
+        # incremental saves above).
         fresh_store = load_json(JOBS_FILE, {"jobs": []})
-        fresh_jobs = {j["id"]: j for j in fresh_store.get("jobs", [])}
-        fresh_jobs.update(existing_jobs)
-        fresh_store["jobs"] = list(fresh_jobs.values())
+        final_by_id = {j["id"]: j for j in fresh_store.get("jobs", []) if j.get("id")}
+        for jid, job in existing_jobs.items():
+            fresh_job = final_by_id.get(jid)
+            if fresh_job is not None:
+                fresh_match = fresh_job.get("match")
+                if isinstance(fresh_match, dict) and not isinstance(job.get("match"), dict):
+                    job = dict(job)
+                    job["match"] = fresh_match
+            final_by_id[jid] = job
+        fresh_store["jobs"] = list(final_by_id.values())
         save_json(JOBS_FILE, fresh_store)
         save_json(METRICS_FILE, metrics_store)
         companies_data["companies"] = list(comp_map.values())

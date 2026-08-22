@@ -292,6 +292,36 @@ class BackgroundSearchWorker:
             "duplicates_merged": raw_total - len(deduped_raw_jobs)
         }
 
+        # 2b. Persist ALL deduped jobs to the store immediately (store-first,
+        # filter-at-read: the authoritative pipeline filters at /api/jobs).
+        # Previously only curated survivors were saved, so job-board jobs
+        # (cutshort/remoteok/remotive) that arrived unscored were discarded
+        # before they ever got a chance to be scored. Career-page jobs never
+        # had this problem because ScanCoordinator stores them raw.
+        try:
+            store_data = load_json(JOBS_STORE_FILE, {"jobs": []})
+            by_id = {j.get("id"): j for j in store_data.get("jobs", [])}
+            added = 0
+            for job in deduped_raw_jobs:
+                jid = job.get("id")
+                if not jid:
+                    continue
+                if jid in by_id:
+                    # keep any existing match; refresh other fields
+                    existing_match = by_id[jid].get("match")
+                    merged = dict(job)
+                    if existing_match and not merged.get("match"):
+                        merged["match"] = existing_match
+                    by_id[jid] = merged
+                else:
+                    by_id[jid] = job
+                    added += 1
+            store_data["jobs"] = list(by_id.values())
+            save_json(JOBS_STORE_FILE, store_data)
+            print(f"[BackgroundSearchWorker] Store-first persist: {added} new jobs added to store ({len(by_id)} total).")
+        except Exception as persist_err:
+            print(f"[BackgroundSearchWorker] Store-first persist error: {persist_err}")
+
         # 3. Score jobs with HybridJobScorer / 6-Tier Chain
         resume_data = load_json(RESUME_FILE, {})
         scored_jobs = self._score_jobs(deduped_raw_jobs, resume_data)
