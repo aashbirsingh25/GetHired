@@ -108,6 +108,7 @@ def background_scanner_loop():
     coordinator = ScanCoordinator()
     try:
         coordinator.run_scan()
+        _rescore_after_scan()
     except Exception as e:
         print(f"Error in background scan: {e}")
 
@@ -116,8 +117,21 @@ def background_scanner_loop():
         print("Triggering scheduled background scan...")
         try:
             coordinator.run_scan()
+            _rescore_after_scan()
         except Exception as e:
             print(f"Error in scheduled background scan: {e}")
+
+def _rescore_after_scan():
+    """Score newly scanned jobs against the active resume.
+
+    Scans write jobs with match=None; without this, nothing ever scores them
+    (_async_rescore_jobs was only triggered by resume upload), so the feed
+    stays empty and pending forever.
+    """
+    resume_data = load_json(RESUME_FILE, {})
+    if resume_data.get("has_resume"):
+        print("[PostScan] Triggering rescore of unscored jobs...")
+        _async_rescore_jobs(resume_data)
 
 @app.route("/api/companies", methods=["GET"])
 def get_companies():
@@ -668,7 +682,8 @@ def rescan_company(company_id):
 
     def run_rescan():
         coordinator = ScanCoordinator()
-    coordinator.run_scan(target_company_id=company_id)
+        coordinator.run_scan(target_company_id=company_id)
+        _rescore_after_scan()
 
     thread = threading.Thread(target=run_rescan, daemon=True)
     thread.start()
@@ -769,8 +784,19 @@ def _async_rescore_jobs(resume_data):
             print(f"[AppRescore] Obsolete rescore thread for hash {version_hash} aborted before final write.")
             return
 
-        jobs_data["jobs"] = jobs_list
-        save_json(JOBS_FILE, jobs_data)
+        # Merge scores into a FRESHLY loaded store rather than overwriting it
+        # with our stale in-memory copy: a scan may have added/updated jobs
+        # while we were scoring (observed live: a running scan and this
+        # rescorer clobbering each other's writes, losing all 568 scores).
+        scored_by_id = {j.get("id"): j.get("match") for j in jobs_list if j.get("id")}
+        fresh_data = load_json(JOBS_FILE, {"jobs": []})
+        fresh_jobs = fresh_data.get("jobs", [])
+        for fj in fresh_jobs:
+            fid = fj.get("id")
+            if fid in scored_by_id and not isinstance(fj.get("match"), dict):
+                fj["match"] = scored_by_id[fid]
+        fresh_data["jobs"] = fresh_jobs
+        save_json(JOBS_FILE, fresh_data)
 
         rescore_status["status"] = "completed"
         rescore_status["scored_jobs"] = scored_count
@@ -1487,6 +1513,14 @@ def check_duplicate_application(job_id):
     return jsonify({"is_duplicate": False})
 
 if __name__ == "__main__":
+    # Restored from master: the debug/gethired-stability branch removed this
+    # thread start, leaving the real career-page scanner (ScanCoordinator /
+    # BrowserScanner) defined but never invoked — so the app could never
+    # discover jobs. (fetch_career_pages in background_search_worker only
+    # re-reads jobs_store.json; this thread is what actually fills it.)
+    scan_thread = threading.Thread(target=background_scanner_loop, daemon=True)
+    scan_thread.start()
+
     port = int(os.environ.get("PORT", 5050))
     print(f"Starting GetHired Flask server on http://127.0.0.1:{port}...")
     app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
