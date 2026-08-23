@@ -467,3 +467,22 @@ NEXT AUTONOMY STEPS: (a) wire fresher_zero_streak into partition_companies
 so dormancy demotes non-fresher companies, (b) let discovery also run the
 LLM page-learner on candidates whose ATS is unknown, (c) surface
 company-health on the Insights page.
+
+## 2026-08-23 (23:50) — HYBRID: worker acts, orchestrator teaches weekly
+
+User directive: autonomous worker is less precise; make it hybrid with a
+weekly orchestrator review, and NEVER drop a company that might post a
+fresher role tomorrow. Implemented:
+- company_watchlist.json: verified-real-but-not-fresher-today companies are
+  PARKED and re-probed every cycle (recheck runs first, before new
+  discovery). Promotion is automatic the moment a fresher role appears.
+- discovery_rules.json: the teaching channel the worker obeys each cycle
+  (blocklist, force_watch, min_fresher_to_admit, dated notes).
+- WEEKLY_REVIEW.md: auto-generated 7-day rollup incl. a 'near-misses'
+  section aimed at the worker's riskiest calls.
+- Weekend review ritual written into orchestrator-mode.md steering.
+Verified over 3 cycles: 2 companies parked not dropped, recheck counters
+incrementing, review file correct.
+REMINDER FOR NEXT SESSION: user's stated main motive is job opportunities
+ASAP -> Apify keys (10, still unpasted) unlocking Naukri/TCS/Infosys remain
+the highest-value item, above further company-list growth.
