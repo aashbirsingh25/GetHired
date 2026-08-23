@@ -27,6 +27,13 @@ DEFAULTS = {
     "dormant_after_failures": 3,   # consecutive zero-yield scans
     "dormant_after_days": 7,       # and no success within this window
     "dormant_every_n_cycles": 4,   # dormant companies scan every 4th cycle
+    # Fresher-aware tiering (quality-first, deliberately conservative):
+    # a company that posts jobs but never fresher jobs is scanned less often,
+    # but NEVER removed and never skipped for more than a day, because it can
+    # post a fresher role at any time.
+    "fresher_tiering_enabled": True,
+    "fresher_zero_streak_for_slowdown": 12,   # ~3 days of 6-hourly cycles
+    "fresher_slow_every_n_cycles": 2,         # still scanned every 2nd cycle
 }
 
 
@@ -71,14 +78,30 @@ def partition_companies(
     every_n = max(1, int(cfg["dormant_every_n_cycles"]))
     scan_dormant_this_cycle = (cycle_number % every_n == 0)
 
+    fresher_on = bool(cfg.get("fresher_tiering_enabled", True))
+    fresher_streak_limit = int(cfg.get("fresher_zero_streak_for_slowdown", 12))
+    fresher_every_n = max(1, int(cfg.get("fresher_slow_every_n_cycles", 2)))
+    scan_fresher_slow_this_cycle = (cycle_number % fresher_every_n == 0)
+
     to_scan, skipped = [], []
     comp_metrics = (metrics_store or {}).get("companies", {})
     for c in companies:
-        tier = classify_company(comp_metrics.get(c.get("id")), cfg)
-        if tier == "active" or scan_dormant_this_cycle:
-            to_scan.append(c)
-        else:
+        m = comp_metrics.get(c.get("id")) or {}
+        tier = classify_company(m, cfg)
+        if tier == "dormant" and not scan_dormant_this_cycle:
             skipped.append(c)
+            continue
+        # Fresher-aware slowdown: company yields jobs, but none fresher-eligible
+        # for a long stretch. Scanned at half rate - never dropped, and never
+        # skipped two cycles in a row, so a newly posted fresher role is caught
+        # within hours.
+        if (fresher_on and tier == "active"
+                and int(m.get("fresher_zero_streak", 0)) >= fresher_streak_limit
+                and int(m.get("jobs_extracted", 0)) > 0
+                and not scan_fresher_slow_this_cycle):
+            skipped.append(c)
+            continue
+        to_scan.append(c)
     return to_scan, skipped
 
 

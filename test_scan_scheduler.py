@@ -75,3 +75,40 @@ class TestScanScheduler(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFresherTiering(unittest.TestCase):
+    """Fresher-aware slowdown must never drop a company and never skip it twice
+    in a row (it can post a fresher role any day)."""
+
+    def _companies(self):
+        return [{"id": "posts_fresher"}, {"id": "no_fresher"}]
+
+    def _metrics(self):
+        return {"companies": {
+            "posts_fresher": {"zero_yield_streak": 0, "jobs_extracted": 50, "fresher_zero_streak": 0},
+            "no_fresher": {"zero_yield_streak": 0, "jobs_extracted": 200, "fresher_zero_streak": 30},
+        }}
+
+    def test_fresher_dry_company_is_slowed_not_dropped(self):
+        odd, _ = partition_companies(self._companies(), self._metrics(), {}, 1)
+        even, _ = partition_companies(self._companies(), self._metrics(), {}, 2)
+        odd_ids = [c["id"] for c in odd]
+        even_ids = [c["id"] for c in even]
+        # skipped on odd cycles, scanned on even ones -> at most one cycle gap
+        self.assertNotIn("no_fresher", odd_ids)
+        self.assertIn("no_fresher", even_ids)
+        # a company that does post fresher roles is never slowed
+        self.assertIn("posts_fresher", odd_ids)
+        self.assertIn("posts_fresher", even_ids)
+
+    def test_fresher_tiering_can_be_disabled(self):
+        cfg = {"scan_tiering": {"fresher_tiering_enabled": False}}
+        got, _ = partition_companies(self._companies(), self._metrics(), cfg, 1)
+        self.assertEqual(len(got), 2)
+
+    def test_short_fresher_streak_not_slowed(self):
+        metrics = self._metrics()
+        metrics["companies"]["no_fresher"]["fresher_zero_streak"] = 3
+        got, _ = partition_companies(self._companies(), metrics, {}, 1)
+        self.assertIn("no_fresher", [c["id"] for c in got])

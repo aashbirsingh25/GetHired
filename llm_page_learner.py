@@ -88,6 +88,11 @@ def learn_page_structure(html: str, url: str, company_name: str, llm_router) -> 
 
     prompt = PROMPT.format(url=url, company=company_name, snippet=snippet)
 
+    # Yield to user-facing scoring when the pool is low (page learning is
+    # background work; the company will be retried on a later scan).
+    if hasattr(llm_router, "has_headroom") and not llm_router.has_headroom(0.25):
+        return None
+
     provider, api_key, key_idx = llm_router.get_best_available_key()
     if not provider or not api_key:
         return None

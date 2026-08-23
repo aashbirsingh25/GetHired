@@ -175,6 +175,37 @@ class LLMRouter:
             keys[key_index]["quota_remaining"] = 0
             self._save()
 
+    def has_headroom(self, min_fraction: float = 0.30, provider: str = "gemini") -> bool:
+        """True when the key pool still has at least `min_fraction` of its
+        daily quota left.
+
+        Used to give USER-FACING work (job scoring) priority over background
+        work (company discovery, page learning): background callers check this
+        first and skip the cycle when the pool is running low, so scoring never
+        starves. Observed live: concurrent refinement + discovery caused 429s.
+        """
+        try:
+            self.config = self._load()
+            keys = [k for k in self.config.get("llm", {}).get("keys", [])
+                    if k.get("provider") == provider
+                    and not str(k.get("api_key", "")).startswith("YOUR_")]
+            if not keys:
+                return False
+            total_remaining = sum(max(0, int(k.get("quota_remaining", 0) or 0)) for k in keys)
+            total_capacity = sum(max(1, int(k.get("quota_remaining", 0) or 0)) + int(k.get("used_today", 0) or 0)
+                                 for k in keys)
+            if total_capacity <= 0:
+                return False
+            # also require at least one key not currently cooling down
+            now = time.time()
+            usable = any(self.cooldowns.get(idx, 0) <= now
+                         for idx, k in enumerate(self.config.get("llm", {}).get("keys", []))
+                         if k.get("provider") == provider
+                         and not str(k.get("api_key", "")).startswith("YOUR_"))
+            return usable and (total_remaining / total_capacity) >= min_fraction
+        except Exception:
+            return False
+
     def on_rate_limit(self, provider: str, key_index: int, cooldown_seconds: int = 120):
         """Transient failure (429/timeout/5xx): rest the key, don't kill it.
 

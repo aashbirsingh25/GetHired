@@ -212,6 +212,12 @@ def mine_candidates_from_jobs(known_names: set, limit: int = 40) -> List[str]:
 def propose_candidates_via_llm(category: str, known_names: set, llm_router, limit: int = 30) -> List[str]:
     """Ask the LLM for company names in a category. Names only - every one is
     verified live afterwards, so a hallucinated name simply fails the gate."""
+    # Background work yields to user-facing scoring: skip this cycle if the
+    # key pool is running low (mined candidates still get probed - no LLM needed).
+    if hasattr(llm_router, "has_headroom") and not llm_router.has_headroom(0.30):
+        print("[CompanyDiscovery] skipping LLM proposal this cycle - reserving quota for job scoring")
+        return []
+
     provider, api_key, key_idx = llm_router.get_best_available_key()
     if not provider or not api_key:
         return []
