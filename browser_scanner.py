@@ -33,10 +33,14 @@ def compute_parse_confidence_score(company: dict, jobs: list, method: str, histo
     return max(0.00, min(1.00, round(base_score, 2)))
 
 class BrowserScanner:
-    def __init__(self, headless=True):
+    def __init__(self, headless=True, enable_llm_learning=True):
         self.headless = headless
         self._playwright = None
         self._browser = None
+        # LLM page-structure learning (last-resort fallback for arbitrary
+        # career pages). One call per company; result persisted as a pattern.
+        self.enable_llm_learning = enable_llm_learning
+        self._llm_router = None
 
     def start(self):
         if not self._playwright:
@@ -100,6 +104,7 @@ class BrowserScanner:
         jobs = []
         learned_pattern = None
         method = "heuristic"
+        llm_learned_method = False
 
         try:
             try:
@@ -154,6 +159,31 @@ class BrowserScanner:
                         jobs, learned_pattern = self._extract_with_heuristics(iframe_soup, page, company, now_iso)
                     except Exception:
                         pass
+
+            # 4. LAST RESORT: ask an LLM to read the page and learn its
+            # structure, then apply the selectors it returns. One call per
+            # company - the learned pattern is persisted by ScanCoordinator
+            # and reused deterministically on later scans.
+            if not jobs and self.enable_llm_learning:
+                try:
+                    from llm_page_learner import learn_page_structure
+                    if self._llm_router is None:
+                        from llm_router import LLMRouter
+                        self._llm_router = LLMRouter()
+                    current_html = page.content()
+                    learned = learn_page_structure(
+                        current_html, page.url, company.get("name", ""), self._llm_router)
+                    if learned:
+                        llm_soup = BeautifulSoup(current_html, "html.parser")
+                        llm_jobs = self._extract_with_pattern(llm_soup, company, learned, now_iso)
+                        print(f"[LLMPageLearner] {company.get('name')}: selector "
+                              f"'{learned['job_card_selector'][:40]}' -> {len(llm_jobs)} jobs")
+                        if llm_jobs:
+                            jobs = llm_jobs
+                            learned_pattern = learned
+                            llm_learned_method = True
+                except Exception as llm_err:
+                    print(f"[LLMPageLearner] {company.get('name')} failed: {str(llm_err)[:110]}")
         finally:
             try:
                 context.close()
@@ -161,6 +191,8 @@ class BrowserScanner:
                 pass
 
         if len(jobs) >= 1:
+            if llm_learned_method:
+                method = "llm_learned"
             return jobs, learned_pattern, method, error_msg
         else:
             return [], None, "heuristic", error_msg or "Zero jobs extracted from page using heuristic extraction"

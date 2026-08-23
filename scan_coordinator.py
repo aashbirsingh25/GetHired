@@ -213,7 +213,7 @@ class ScanCoordinator:
 
             # All shared-state bookkeeping under one lock.
             with state_lock:
-                if is_success and learned_pattern and method == "heuristic":
+                if is_success and learned_pattern and method in ("heuristic", "llm_learned"):
                     self.pattern_store.save_pattern(
                         cid,
                         learned_pattern.get("job_card_selector", ""),
