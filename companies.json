@@ -2195,8 +2195,8 @@
     {
       "id": "tower-research-capital-india",
       "name": "Tower Research Capital India",
-      "career_url": "https://www.tower-research.com/careers",
-      "ats": "custom",
+      "career_url": "https://boards.greenhouse.io/towerresearchcapital",
+      "ats": "greenhouse",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
       "success_rate": 0,
@@ -2260,8 +2260,8 @@
     {
       "id": "worldquant-india",
       "name": "WorldQuant India",
-      "career_url": "https://www.worldquant.com/careers",
-      "ats": "custom",
+      "career_url": "https://boards.greenhouse.io/worldquant",
+      "ats": "greenhouse",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
       "success_rate": 0,
