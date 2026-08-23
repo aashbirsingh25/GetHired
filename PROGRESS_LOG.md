@@ -265,3 +265,25 @@ store+scored, feed = Tech Intern @ Springer Capital 82% (cutshort!) -
 the user's first genuinely applicable job. Scan-race deeper fix: DONE
 (remove from backlog). Microsoft titles have location text glued on
 (scraper bug, backlog). 46-unscored mystery: same race, resolved.
+
+## 2026-08-23 (afternoon) — Company expansion session 1: 202 -> 260 verified
+
+Method: live ATS API probing (scratch/ats_probe.py - greenhouse/lever/
+ashby/smartrecruiters/workday), strict India-eligibility (generic remote
+excluded), per-batch test scans through BrowserScanner. 7 batches run.
+Honest exclusions: verified-real-but-not-India-hiring (Palantir, Brex,
+Affirm, Instacart, Reddit, Canonical, HRT...) and 7 earlier adds culled
+on strict re-audit. Junk BulkTestCorp1-10 removed.
+LEARNED: (a) Workday GCC tenants unlock the biggest India employers -
+pattern tenant/wdN/site, more tenants to hunt: AMD, Expedia, Honeywell,
+Caterpillar, Boeing, TI (careers.ti.com is custom-wrapped workday);
+(b) Indian startups (Chalo, Jar, MPL, Spinny, GreyOrange...) mostly on
+Keka/Darwinbox/custom - need browser-lane verification pass or new
+extractors; (c) consulting GDCs (Deloitte USI, EY GDS, PwC SDC, KPMG
+GS) use SuccessFactors/Avature/Oracle HCM - NOT scannable by our
+extractors yet; adding them now = dead rows. Backlog: SuccessFactors
+extractor unlocks that whole category + Siemens/Bosch-class GCCs.
+Path to ~1000: more greenhouse/lever batches (~100-200 realistic),
+Workday tenant hunt (~50-100), Keka/Darwinbox extractor (~100+ Indian
+startups), SuccessFactors extractor (~100+ GCC/GDC). Probe script is
+reusable; continue next session.
