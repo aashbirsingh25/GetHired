@@ -287,3 +287,19 @@ Path to ~1000: more greenhouse/lever batches (~100-200 realistic),
 Workday tenant hunt (~50-100), Keka/Darwinbox extractor (~100+ Indian
 startups), SuccessFactors extractor (~100+ GCC/GDC). Probe script is
 reusable; continue next session.
+
+## 2026-08-23 (16:20) — Company expansion session 2: 260 -> 270
+
+Rounds A+B: 106 more probes, 10 verified adds (4 devtools/infra via
+greenhouse, 6 Workday GCCs incl. Medtronic/Stryker/CVS/HP), 2 upgrades
+(Meesho, Groww). Hit rate collapsed to ~15% - the public-ATS-API pool
+for India-hiring companies is nearly exhausted at ~270.
+Remaining path to 1000 (in yield order):
+1. Keka/Darwinbox/Zoho Recruit extractors -> unlocks 100+ Indian
+   startups already identified as misses (Chalo, MPL, Spinny, Testbook,
+   Classplus, OYO, Rebel Foods, PayU...)
+2. SuccessFactors extractor -> unlocks consulting GDCs (Deloitte USI,
+   EY GDS, PwC SDC, KPMG GS) + Siemens/Bosch/SAP-class GCCs (100+)
+3. Workday tenant hunt w/ web search per company (~50+: AMD, Expedia,
+   Optum, Lowe's, GE trio, Nike, airlines...)
+4. Oracle HCM/Taleo/iCIMS extractors -> banks & legacy enterprises
