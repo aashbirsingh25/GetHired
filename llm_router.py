@@ -196,13 +196,21 @@ class LLMRouter:
                                  for k in keys)
             if total_capacity <= 0:
                 return False
-            # also require at least one key not currently cooling down
+            # Daily quota is rarely the real constraint - PER-MINUTE limits are.
+            # Observed live: 265/18000 daily calls used, yet background work
+            # still got 429s because the scoring pass was saturating RPM. So
+            # also require that a majority of keys are NOT cooling down before
+            # letting background work in.
             now = time.time()
-            usable = any(self.cooldowns.get(idx, 0) <= now
-                         for idx, k in enumerate(self.config.get("llm", {}).get("keys", []))
-                         if k.get("provider") == provider
-                         and not str(k.get("api_key", "")).startswith("YOUR_"))
-            return usable and (total_remaining / total_capacity) >= min_fraction
+            provider_keys = [(idx, k) for idx, k in enumerate(self.config.get("llm", {}).get("keys", []))
+                             if k.get("provider") == provider
+                             and not str(k.get("api_key", "")).startswith("YOUR_")]
+            if not provider_keys:
+                return False
+            free = sum(1 for idx, _ in provider_keys if self.cooldowns.get(idx, 0) <= now)
+            if free == 0 or (free / len(provider_keys)) < 0.5:
+                return False
+            return (total_remaining / total_capacity) >= min_fraction
         except Exception:
             return False
 
