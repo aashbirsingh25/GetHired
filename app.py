@@ -10,6 +10,20 @@ import os
 # negligible for this app's tiny embedding batches.
 os.environ.setdefault("OMP_NUM_THREADS", "1")
 
+# Load API keys from the gitignored .env file (GEMINI_API_KEYS, GROQ_API_KEY
+# etc.) so LLMRouter finds them. Must happen before llm_router import.
+_ENV_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+if os.path.exists(_ENV_FILE):
+    try:
+        with open(_ENV_FILE, "r", encoding="utf-8") as _f:
+            for _line in _f:
+                _line = _line.strip()
+                if _line and not _line.startswith("#") and "=" in _line:
+                    _k, _, _v = _line.partition("=")
+                    os.environ.setdefault(_k.strip(), _v.strip())
+    except Exception as _env_err:
+        print(f"[AppStartup] Warning: could not read .env: {_env_err}")
+
 import json
 import csv
 import io
@@ -770,6 +784,54 @@ def _async_rescore_jobs(resume_data):
             print(f"[AppRescore] Obsolete rescore thread for hash {version_hash} aborted before final write.")
             return
 
+        # QUALITY REFINEMENT PASS (user's quality-first directive): the cheap
+        # pass above filters the pile; every feed CANDIDATE (local score >=
+        # refine threshold) is now rescored through the paid LLM tier for
+        # real semantic matching + reasoning. This spends O(feed candidates)
+        # LLM calls, not O(store size). Router still handles key rotation,
+        # quota accounting, and Gemini->Groq->local degradation on failure.
+        refine_threshold = 50
+        candidates = [j for j in jobs_list
+                      if isinstance(j.get("match"), dict)
+                      and j["match"].get("tier") not in (1, 2)
+                      and (j["match"].get("score") or 0) >= refine_threshold]
+        refined = 0
+        if candidates:
+            print(f"[AppRescore] Quality refinement: {len(candidates)} feed candidates -> paid LLM tier...")
+
+            def _persist_refined(batch):
+                # merge refined paid-tier scores into the live store now, so
+                # progress survives restarts and the feed improves as we go
+                by_id = {j.get("id"): j.get("match") for j in batch if j.get("id")}
+                fd = load_json(JOBS_FILE, {"jobs": []})
+                for fj in fd.get("jobs", []):
+                    m = by_id.get(fj.get("id"))
+                    if isinstance(m, dict) and m.get("tier") in (1, 2):
+                        fj["match"] = m
+                save_json(JOBS_FILE, fd)
+
+            pending_persist = []
+            for job in candidates:
+                if active_rescore_hash != version_hash:
+                    _persist_refined(pending_persist)
+                    return
+                try:
+                    new_match = scorer.score_job(job, force_tier="paid_llm")
+                    if isinstance(new_match, dict):
+                        job["match"] = new_match
+                        refined += 1
+                        if new_match.get("tier") in (1, 2):
+                            pending_persist.append(job)
+                except Exception as ref_err:
+                    print(f"[AppRescore] Refinement error on {job.get('id')}: {ref_err}")
+                time.sleep(0.5)  # pace: stay within the key pool's aggregate RPM
+                if len(pending_persist) >= 25:
+                    _persist_refined(pending_persist)
+                    pending_persist = []
+                    print(f"[AppRescore] Refinement progress: {refined}/{len(candidates)}")
+            _persist_refined(pending_persist)
+            print(f"[AppRescore] Quality refinement complete: {refined}/{len(candidates)} rescored via LLM.")
+
         # Merge scores into a FRESHLY loaded store rather than overwriting it
         # with our stale in-memory copy: a scan may have added/updated jobs
         # while we were scoring (observed live: a running scan and this
@@ -779,8 +841,16 @@ def _async_rescore_jobs(resume_data):
         fresh_jobs = fresh_data.get("jobs", [])
         for fj in fresh_jobs:
             fid = fj.get("id")
-            if fid in scored_by_id and not isinstance(fj.get("match"), dict):
-                fj["match"] = scored_by_id[fid]
+            ours = scored_by_id.get(fid)
+            if not isinstance(ours, dict):
+                continue
+            theirs = fj.get("match")
+            # take our score when the store has none, or when ours came from
+            # a better (paid LLM) tier than what the store holds
+            ours_paid = ours.get("tier") in (1, 2)
+            theirs_paid = isinstance(theirs, dict) and theirs.get("tier") in (1, 2)
+            if not isinstance(theirs, dict) or (ours_paid and not theirs_paid):
+                fj["match"] = ours
         fresh_data["jobs"] = fresh_jobs
         save_json(JOBS_FILE, fresh_data)
 

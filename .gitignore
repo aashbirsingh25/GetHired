@@ -77,3 +77,5 @@ jobs_curated.json
 Thumbs.db
 .vscode/
 .idea/
+# API keys - never commit
+.env

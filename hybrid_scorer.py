@@ -126,20 +126,27 @@ class HybridJobScorer:
         }
 
 
-    def score_job(self, job: Dict[str, Any]) -> Dict[str, Any]:
+    def score_job(self, job: Dict[str, Any], force_tier: str = None) -> Dict[str, Any]:
         job_id = job.get("id", "unknown")
         job_title = job.get("title", "")
         job_desc = job.get("description", "")
         company = job.get("company", "")
 
-        # Check existing match cache
+        # Check existing match cache. A forced paid-tier request bypasses a
+        # cached cheap-tier result (that is the whole point of refinement),
+        # but reuses a cached paid-tier result.
         existing_match = job.get("match")
         if existing_match and existing_match.get("resume_version_hash") == self.resume_hash:
-            return existing_match
+            if not force_tier or existing_match.get("tier") in (1, 2):
+                return existing_match
 
         # 1. Determine routing target based on Phase 11 matrix
         routing = self._determine_routing_target(company, job_title, job_desc)
         target_tier = routing["target_tier"]
+        if force_tier:
+            target_tier = force_tier
+            routing["target_tier"] = force_tier
+            routing["reason"] = f"Forced to {force_tier} (quality refinement pass)"
 
         # Embed job description & query top 5 FAISS resume chunks
         job_emb = self.embedding_service.get_embedding(job_title + "\n" + job_desc)
@@ -253,7 +260,18 @@ class HybridJobScorer:
                     return result
 
                 except Exception as e:
-                    self.llm_router.on_quota_error(provider, key_idx)
+                    err_text = str(e).lower()
+                    # Dead key (invalid/revoked): remove from rotation.
+                    # Transient (429 rate limit, quota message, 5xx, timeout):
+                    # cool the key down and move to the next one.
+                    if "api key not valid" in err_text or "api_key_invalid" in err_text \
+                            or "401" in err_text or "permission" in err_text or "403" in err_text:
+                        self.llm_router.on_quota_error(provider, key_idx)
+                    elif "429" in err_text or "quota" in err_text or "rate" in err_text \
+                            or "exhaust" in err_text or "resource" in err_text:
+                        self.llm_router.on_rate_limit(provider, key_idx, cooldown_seconds=300)
+                    else:
+                        self.llm_router.on_rate_limit(provider, key_idx, cooldown_seconds=60)
                     log_scoring_event({
                         "timestamp": now_iso,
                         "job_id": job_id,

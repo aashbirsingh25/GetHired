@@ -27,6 +27,9 @@ class LLMRouter:
         self.filepath = filepath
         self.config = self._load()
         self.request_timestamps = {}
+        # key_index -> unix time until which the key is cooling down after a
+        # rate-limit/transient error (in-memory; resets on process restart)
+        self.cooldowns = {}
 
     def _load(self):
         load_dotenv()
@@ -127,10 +130,15 @@ class LLMRouter:
                     quota = item.get("quota_remaining", 0)
 
                     if quota > 0 and key_val and not key_val.startswith("YOUR_"):
+                        # Skip keys cooling down after rate-limit errors
+                        if self.cooldowns.get(idx, 0) > now:
+                            continue
                         # Check RPM ceiling if configured for key or provider
                         rpm_limit = item.get("rpm_limit")
                         if rpm_limit is None and provider == "groq":
                             rpm_limit = 30
+                        if rpm_limit is None and provider == "gemini":
+                            rpm_limit = 8  # free-tier Gemini keys are ~10 RPM; stay under
 
                         if rpm_limit is not None:
                             # Prune timestamps older than 60 seconds
@@ -166,6 +174,14 @@ class LLMRouter:
         if 0 <= key_index < len(keys):
             keys[key_index]["quota_remaining"] = 0
             self._save()
+
+    def on_rate_limit(self, provider: str, key_index: int, cooldown_seconds: int = 120):
+        """Transient failure (429/timeout/5xx): rest the key, don't kill it.
+
+        Permanently zeroing quota on any exception (the old behavior) wiped
+        the whole key pool within minutes of a burst - observed live with
+        12 fresh keys all zeroed at ~6 calls each."""
+        self.cooldowns[key_index] = time.time() + cooldown_seconds
 
     def get_quota_status(self):
         self.config = self._load()
