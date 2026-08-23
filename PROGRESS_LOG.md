@@ -378,3 +378,23 @@ be reached via their own website's embedded listings instead. Stopping per
 "2 attempts then report" rule. Zoho Recruit deferred (same catch-all
 problem, 3 companies only). PIVOT to LLM page-learner: platform-agnostic,
 the real answer to "robust for all career pages".
+
+## 2026-08-23 (23:00) — LLM page-learner + jobs-URL discovery built
+
+Learner: compressed DOM -> LLM -> CSS selectors, applied by the existing
+parser, validated by store_integrity_checker, persisted to pattern_store
+(one LLM call per company, ever). Shares scoring key pool. Refuses to
+invent structure (confidence gate).
+Verified honest diagnoses on real dead companies: Google India career_url
+= nav-only page; Amazon India = login gateway; Flipkart = marketing page;
+Smallcase = 404; Zerodha = genuinely no openings; Darwinbox = landing page.
+=> ROOT CAUSE of the 119 zero-yield companies is WRONG career_urls, not
+weak parsing.
+URL discovery: learner returns jobs_url hints and the scanner follows
+them. Flipkart -> discovered flipkart.turbohire.co (TurboHire = new
+platform). Extraction from JS-heavy hint pages still 0.
+NEXT (in order): (1) TurboHire extractor + re-run discovery sweep to
+collect more platform destinations; (2) sweep all 119 zero-yield companies
+with the learner, persist discovered jobs_urls back into companies.json;
+(3) re-verify BrowserStack/Postman/Hasura greenhouse tokens (now 0 jobs);
+(4) vision fallback for pages that defeat text parsing.
