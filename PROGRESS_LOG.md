@@ -499,3 +499,20 @@ Removed from .env so the app does not burn cycles on dead keys.
 BLOCKED until real tokens arrive: Naukri, TCS, Infosys (WAF-blocked to us),
 Glassdoor. Each friend must copy their OWN token from
 apify.com -> Settings -> API & Integrations -> Personal API token.
+
+## 2026-08-24 (00:45) — Closed both open tasks (LinkedIn targets + dead boards)
+
+Called out by user for task-switching without finishing. Both now closed:
+A) LinkedIn fresher-recruiter target queries (Apify workaround, since the
+   user's Apify account is DISABLED - likely multi-account anti-abuse).
+   12 rotating queries reach TCS/Infosys/Wipro/Cognizant/Capgemini etc.
+   Verified: 57 LinkedIn jobs/cycle, 19 new persisted, 101 in store.
+B) Dead greenhouse boards: BrowserStack migrated to Workday (0->51 jobs);
+   Postman's URL had been clobbered by my own earlier URL-discovery sweep
+   (marketing page overwrote the board URL) -> restored, 113 jobs; Hasura
+   is no longer on greenhouse and now correctly falls through to the
+   learner (429 that attempt - retries on next scan).
+C) Bonus fix found via Hasura: stale-ATS fallthrough. Declared-ATS failure
+   no longer aborts a scan; heuristics + learner now run.
+LESSON RECORDED: URL discovery must never overwrite a working ATS board URL
+with a non-ATS page - add a guard if that sweep is automated later.
