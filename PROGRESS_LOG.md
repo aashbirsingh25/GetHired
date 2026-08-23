@@ -602,3 +602,16 @@ linkedin (222-query sweep), cutshort, remoteok, remotive, adzuna, jooble
 Store: 11.6k jobs.
 Remaining queue: threshold recalibration (refinement still running), more
 sweep batches (~85 dead), probe more Oracle HCM tenants (JPMorgan pattern).
+
+## 2026-08-24 (03:05) — Detector re-run; tenant guessing definitively ruled out
+
+Probed 34 bank/insurer Oracle-HCM tenant guesses x2 sites -> 0 hits.
+Combined with earlier Workday/Darwinbox/Zoho results: enterprise ATS tenant
+hostnames are NOT guessable. Only the detector (follow the company's own
+career URL, match platform signatures) works. Detector re-run over 149
+custom companies found 3 (JPMorgan oraclehcm already done, Ola + Ola
+Electric turbohire).
+Ola converted; its TurboHire portal legitimately has 0 open jobs today.
+RECURRING TRAP (twice now): truncated URLs - the LLM hint truncated
+/sites/CX_1 and my detector truncated a UUID at 120 chars. Always extract
+full identifiers from the live page before storing.
