@@ -589,3 +589,16 @@ Adzuna/Jooble fetchers when user supplies keys.
   validate before storing.
 Remaining queue: Adzuna+Jooble fetchers, threshold recalibration, more sweep
 batches (~85 dead), probe more Oracle HCM tenants.
+
+## 2026-08-24 (02:55) — Adzuna + Jooble live (12 sources total)
+
+Adzuna: 39/40 sampled jobs fresher-titled, 60/cycle, 3 rotating queries.
+Jooble: STRICT budget - free key documented at 500 requests TOTAL, so 1 call
+per cycle + lifetime counter (jooble_usage.json) hard-stopping at 400.
+Verified 20 jobs/call; some query slices legitimately return 0.
+Source lineup (12): 275 career pages, internshala, shine, freshersworld,
+linkedin (222-query sweep), cutshort, remoteok, remotive, adzuna, jooble
+(+ indeed/naukri stubs parked pending Apify).
+Store: 11.6k jobs.
+Remaining queue: threshold recalibration (refinement still running), more
+sweep batches (~85 dead), probe more Oracle HCM tenants (JPMorgan pattern).
