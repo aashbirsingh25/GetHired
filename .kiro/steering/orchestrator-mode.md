@@ -49,7 +49,10 @@ at a time, with exact copy-pasteable commands. Never a wall of instructions.
   service for GetHired. This is a personal external project.
 - NEVER merge to master without Aashbir's explicit sign-off.
 - NEVER re-enable `_generate_career_jobs` or any fake/synthetic data path.
-- NEVER add automated LinkedIn access.
+- LinkedIn (narrowed 2026-08-23, explicit user decision): public
+  logged-out listing fetching is allowed; the user's account/credentials
+  must NEVER be used for automation (no auto-apply, no messaging, no
+  connections).
 - NEVER report something as verified unless I ran it this session and saw the
   real output. "The code should do X" gets labeled unverified, explicitly.
 
