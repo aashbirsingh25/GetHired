@@ -340,3 +340,15 @@ Zluri 7, Chalo 2), 4 empty-but-valid. Hit rate lower than hoped - many
 Indian startups use Darwinbox/Zoho Recruit/custom instead. NEXT: same
 XHR-observation trick for Darwinbox (darwinbox.in tenants) and Zoho
 Recruit, then SuccessFactors for GDCs.
+
+## 2026-08-23 (19:30) — Darwinbox/Zoho Recruit: NOT pattern-discoverable
+
+Attempted same trick as Keka. Both platforms serve a catch-all 200 for ANY
+subdomain (verified with nonsense tenant control test), and real portals
+render nothing at guessed paths - Darwinbox portals use per-company custom
+paths/IDs, Zoho Recruit needs per-tenant portal IDs. No bulk-discoverable
+pattern => not worth brute-forcing. Path if wanted later: read each
+company's careers link from its own website (needs per-company crawl).
+PIVOT: 166 of 275 companies are ats='custom' (slow browser lane, often 0
+jobs). Converting those to real ATS endpoints is higher yield than new
+platforms - measure which custom companies actually produce jobs first.
