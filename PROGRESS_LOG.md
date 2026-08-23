@@ -557,3 +557,18 @@ Next.js app renders only filters/chrome - no listings after 12s + scroll in
 a real browser; networkidle never settles (45s timeout). No job API observed.
 Verdict: needs either a logged-in session or a third-party scraper. Parked
 alongside Naukri/Indeed/Foundit/Instahyre.
+
+## 2026-08-24 (02:10) — Sweep batch 2 + RPM-aware quota guard
+
+Sweep (14 companies): Google India + IBM India URLs corrected to real job
+search pages (need learner on next scan). Hard blocks re-confirmed with
+evidence: TCS/Infosys Akamai, Uber Cloudflare Turnstile, Zomato/Netflix/
+Morgan Stanley protocol errors -> these are NOT parser problems; only a
+third-party scraper or a different route will reach them.
+INSIGHT: 429s were per-minute rate limits, not daily quota (265/18000 used).
+has_headroom now requires a majority of keys free of cooldowns, so
+background work (discovery, page learning) yields during RPM contention.
+Verified by simulation (7/12 cooling -> refuse, 3/12 -> allow).
+Queue remaining: threshold recalibration after refinement completes, wire
+company-health into Insights UI, more sweep batches (~90 dead left),
+Adzuna/Jooble fetchers when user supplies keys.
