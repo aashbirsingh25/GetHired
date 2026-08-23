@@ -303,3 +303,9 @@ Remaining path to 1000 (in yield order):
 3. Workday tenant hunt w/ web search per company (~50+: AMD, Expedia,
    Optum, Lowe's, GE trio, Nike, airlines...)
 4. Oracle HCM/Taleo/iCIMS extractors -> banks & legacy enterprises
+
+## 2026-08-23 (16:40) — Internshala fetcher live
+
+40 internships/location, wired as 7th source, verified through full
+cycle into store. Store now 9.4k jobs (270-company scan imported global
+postings; filters handle at read; scoring incremental).
