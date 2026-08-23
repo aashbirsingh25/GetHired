@@ -10,6 +10,7 @@ from fetchers.naukri_fetcher import fetch_naukri_jobs
 from fetchers.cutshort_fetcher import fetch_cutshort_jobs
 from fetchers.remoteok_fetcher import fetch_remoteok_jobs
 from fetchers.remotive_fetcher import fetch_remotive_jobs
+from fetchers.internshala_fetcher import fetch_internshala_jobs
 from job_deduplicator import JobDeduplicator
 from recency_filter import expand_search_if_sparse
 from adaptive_concurrency_manager import AdaptiveConcurrencyManager
@@ -420,6 +421,7 @@ class BackgroundSearchWorker:
             "cutshort": [],
             "remoteok": [],
             "remotive": [],
+            "internshala": [],
             "linkedin": []
         }
 
@@ -484,8 +486,15 @@ class BackgroundSearchWorker:
                 print(f"[BackgroundSearchWorker] Remotive error: {e}")
                 results["remotive"] = []
 
+        def fetch_internshala():
+            try:
+                results["internshala"] = fetch_internshala_jobs(role=role, location=location, max_results=40)
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] Internshala error: {e}")
+                results["internshala"] = []
+
         # Run all source types concurrently using ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=6) as executor:
+        with ThreadPoolExecutor(max_workers=7) as executor:
             futures = [
                 executor.submit(fetch_career_pages),
                 executor.submit(fetch_indeed),
@@ -493,6 +502,7 @@ class BackgroundSearchWorker:
                 executor.submit(fetch_cutshort),
                 executor.submit(fetch_remoteok),
                 executor.submit(fetch_remotive),
+                executor.submit(fetch_internshala),
             ]
             for f in futures:
                 f.result()
