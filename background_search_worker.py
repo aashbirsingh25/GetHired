@@ -11,6 +11,7 @@ from fetchers.cutshort_fetcher import fetch_cutshort_jobs
 from fetchers.remoteok_fetcher import fetch_remoteok_jobs
 from fetchers.remotive_fetcher import fetch_remotive_jobs
 from fetchers.internshala_fetcher import fetch_internshala_jobs
+from fetchers.shine_fetcher import fetch_shine_jobs
 from fetchers.linkedin_fetcher import fetch_linkedin_jobs, fetch_linkedin_fresher_targets
 from job_deduplicator import JobDeduplicator
 from recency_filter import expand_search_if_sparse
@@ -423,6 +424,7 @@ class BackgroundSearchWorker:
             "remoteok": [],
             "remotive": [],
             "internshala": [],
+            "shine": [],
             "linkedin": []
         }
 
@@ -494,6 +496,15 @@ class BackgroundSearchWorker:
                 print(f"[BackgroundSearchWorker] Internshala error: {e}")
                 results["internshala"] = []
 
+        def fetch_shine():
+            try:
+                import time as _t
+                seed = int(_t.time() // 21600)
+                results["shine"] = fetch_shine_jobs(max_results=60, paths_per_cycle=3, cycle_seed=seed)
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] Shine error: {e}")
+                results["shine"] = []
+
         def fetch_linkedin():
             try:
                 jobs = list(fetch_linkedin_jobs(role=role, location=location, max_results=30))
@@ -516,7 +527,7 @@ class BackgroundSearchWorker:
                 results["linkedin"] = []
 
         # Run all source types concurrently using ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=8) as executor:
+        with ThreadPoolExecutor(max_workers=9) as executor:
             futures = [
                 executor.submit(fetch_career_pages),
                 executor.submit(fetch_indeed),
@@ -525,6 +536,7 @@ class BackgroundSearchWorker:
                 executor.submit(fetch_remoteok),
                 executor.submit(fetch_remotive),
                 executor.submit(fetch_internshala),
+                executor.submit(fetch_shine),
                 executor.submit(fetch_linkedin),
             ]
             for f in futures:
