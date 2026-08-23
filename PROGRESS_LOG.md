@@ -309,3 +309,14 @@ Remaining path to 1000 (in yield order):
 40 internships/location, wired as 7th source, verified through full
 cycle into store. Store now 9.4k jobs (270-company scan imported global
 postings; filters handle at read; scoring incremental).
+
+## 2026-08-23 (17:45) — LLM scoring LIVE (12 Gemini + 1 Groq)
+
+Keys in .env (gitignored). Two-pass scoring: local pass filters 10.2k
+jobs, refinement pass LLM-scores all feed candidates (2061), persisting
+every 25. Fixed en route: missing google-generativeai dep, stale zero
+quota slot, key-killing error handler (now cooldowns), scanner merges
+downgrading refined scores. Refinement runs ~3.5h in background at paced
+RPM; feed gets honest scores progressively (LLM correctly rejects senior
+roles local tier overrated). Groq untested live (gemini never exhausted
+during verification) - watch first Groq fallback.
