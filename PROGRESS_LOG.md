@@ -352,3 +352,16 @@ company's careers link from its own website (needs per-company crawl).
 PIVOT: 166 of 275 companies are ats='custom' (slow browser lane, often 0
 jobs). Converting those to real ATS endpoints is higher yield than new
 platforms - measure which custom companies actually produce jobs first.
+
+## 2026-08-23 (19:40) — Custom-ATS conversion (higher yield than new companies)
+
+126/166 custom companies were scanning to ZERO every cycle. Built an ATS
+detector (follow career_url, match platform signatures). 25 detected;
+13 converted to supported APIs and verified scanning (Accenture 60,
+Freshworks 99, Qualys 59, Sarvam 58, Barclays 55, Vyapar 73...).
+KEY UNLOCK: detector found REAL Darwinbox/Zoho tenant hosts that pattern
+guessing couldn't (unacademy.darwinbox.in, pwhr.darwinbox.in,
+healthify.darwinbox.in, porter.darwinbox.in, leadsquaredhrms.darwinbox.in,
+myhr.darwinbox.in(PharmEasy), dbx.darwinbox.in, quadeye.zohorecruit.in,
+go-yubi.zohorecruit.in) -> build Darwinbox + Zoho extractors NEXT using
+these real tenants, then re-run detector over remaining 141 custom rows.
