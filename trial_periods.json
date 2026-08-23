@@ -338,7 +338,7 @@
       "adjusted_at": "2026-08-12T12:38:49.840490",
       "trial_period_end": "2026-08-15T12:38:49.840490",
       "outcomes_count": 0,
-      "status": "pending",
+      "status": "confirmed",
       "pre_adjustment_metrics": {
         "precision": 0.7,
         "recall": 0.9,
@@ -413,7 +413,7 @@
       "adjusted_at": "2026-08-12T12:49:11.249042",
       "trial_period_end": "2026-08-15T12:49:11.249042",
       "outcomes_count": 0,
-      "status": "pending",
+      "status": "confirmed",
       "pre_adjustment_metrics": {
         "precision": 0.7,
         "recall": 0.9,
@@ -488,7 +488,7 @@
       "adjusted_at": "2026-08-12T13:00:15.767569",
       "trial_period_end": "2026-08-15T13:00:15.767569",
       "outcomes_count": 0,
-      "status": "pending",
+      "status": "confirmed",
       "pre_adjustment_metrics": {
         "precision": 0.7,
         "recall": 0.9,
@@ -562,8 +562,8 @@
       "new_value": 0.86,
       "adjusted_at": "2026-08-12T13:52:37.061819",
       "trial_period_end": "2026-08-15T13:52:37.061819",
-      "outcomes_count": 0,
-      "status": "pending",
+      "outcomes_count": 1,
+      "status": "confirmed",
       "pre_adjustment_metrics": {
         "precision": 0.85,
         "recall": 0.85,
@@ -577,8 +577,8 @@
       "new_value": 0.89,
       "adjusted_at": "2026-08-14T01:08:34.151434",
       "trial_period_end": "2026-08-17T01:08:34.151434",
-      "outcomes_count": 0,
-      "status": "pending",
+      "outcomes_count": 1,
+      "status": "confirmed",
       "pre_adjustment_metrics": {
         "precision": 0.85,
         "recall": 0.85,
@@ -592,8 +592,8 @@
       "new_value": 0.92,
       "adjusted_at": "2026-08-14T12:48:40.240816",
       "trial_period_end": "2026-08-17T12:48:40.240816",
-      "outcomes_count": 0,
-      "status": "pending",
+      "outcomes_count": 1,
+      "status": "confirmed",
       "pre_adjustment_metrics": {
         "precision": 0.85,
         "recall": 0.85,
@@ -607,8 +607,8 @@
       "new_value": 0.95,
       "adjusted_at": "2026-08-14T18:33:53.270433",
       "trial_period_end": "2026-08-17T18:33:53.270433",
-      "outcomes_count": 0,
-      "status": "pending",
+      "outcomes_count": 1,
+      "status": "confirmed",
       "pre_adjustment_metrics": {
         "precision": 0.85,
         "recall": 0.85,

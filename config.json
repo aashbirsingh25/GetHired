@@ -4,8 +4,8 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 0,
-        "used_today": 0
+        "quota_remaining": 1470,
+        "used_today": 30
       },
       {
         "provider": "groq",
@@ -29,8 +29,68 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 1500,
-        "used_today": 0
+        "quota_remaining": 1468,
+        "used_today": 32
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1470,
+        "used_today": 30
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1478,
+        "used_today": 22
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1479,
+        "used_today": 21
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1479,
+        "used_today": 21
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1479,
+        "used_today": 21
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1479,
+        "used_today": 21
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1480,
+        "used_today": 20
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1479,
+        "used_today": 21
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1479,
+        "used_today": 21
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 1481,
+        "used_today": 19
       }
     ],
     "current_key_index": 0

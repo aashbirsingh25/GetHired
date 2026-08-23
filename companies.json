@@ -1103,8 +1103,8 @@
     {
       "id": "ola",
       "name": "Ola",
-      "career_url": "https://olacareers.turbohire.co/careerpage/e0c1eb37-eb7a-4ca4-bcc5-d59ce4ce9212",
-      "ats": "turbohire",
+      "career_url": "https://www.olacabs.com/careers",
+      "ats": "custom",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
       "success_rate": 0,
@@ -1116,8 +1116,8 @@
     {
       "id": "ola-electric",
       "name": "Ola Electric",
-      "career_url": "https://olacareers.turbohire.co/careerpage/e0c1eb37-eb7a-4ca4-bcc5-d59ce4ce9212",
-      "ats": "turbohire",
+      "career_url": "https://www.olaelectric.com/careers",
+      "ats": "custom",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
       "success_rate": 0,
@@ -3132,9 +3132,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2712,
+      "parsed_count": 2938,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T02:20:59.872470",
+      "last_parsed": "2026-08-24T02:25:32.445939",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3146,9 +3146,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1140,
+      "parsed_count": 1235,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T02:21:45.543770",
+      "last_parsed": "2026-08-24T02:26:56.066567",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3160,9 +3160,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 6096,
+      "parsed_count": 6604,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T02:21:01.928255",
+      "last_parsed": "2026-08-24T02:26:37.928408",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3174,9 +3174,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 8869,
+      "parsed_count": 9609,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T02:21:02.491342",
+      "last_parsed": "2026-08-24T02:27:16.340862",
       "monitoring_status": "Active Monitoring"
     },
     {
