@@ -85,6 +85,9 @@ class BrowserScanner:
         elif "smartrecruiters.com" in url or ats_type == "smartrecruiters":
             sr_jobs, err = self._extract_smartrecruiters_jobs(company, target_url=url, return_error=True)
             return sr_jobs, None, "smartrecruiters_api", err
+        elif ".keka.com" in url or ats_type == "keka":
+            keka_jobs, err = self._extract_keka_jobs(company, target_url=url, return_error=True)
+            return keka_jobs, None, "keka_api", err
 
         self.start()
 
@@ -705,6 +708,94 @@ class BrowserScanner:
         if return_error:
             return jobs, error_msg
         return jobs
+
+    def _extract_keka_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
+        """Extract jobs from a Keka-hosted careers portal.
+
+        Keka (widely used by Indian startups/SMEs) exposes a public JSON
+        endpoint on every tenant portal:
+          https://<tenant>.keka.com/careers/api/jobs/default/active
+        Discovered by observing the portal's own XHR calls; no key needed.
+        """
+        url = target_url or company.get("career_url", "")
+        import requests
+        from urllib.parse import urlparse
+
+        host = urlparse(url).netloc
+        tenant = ""
+        if host.endswith(".keka.com"):
+            tenant = host.split(".")[0]
+        if not tenant:
+            tenant = (company.get("id") or "").lower().replace("-india", "").strip()
+        if not tenant:
+            return ([], "Keka API: could not resolve tenant") if return_error else []
+
+        api_url = f"https://{tenant}.keka.com/careers/api/jobs/default/active"
+        portal_url = f"https://{tenant}.keka.com/careers/"
+        now_iso = datetime.now().isoformat()
+        jobs = []
+        error_msg = None
+
+        try:
+            r = requests.get(api_url, headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"}, timeout=10)
+            if r is not None and r.status_code == 200:
+                data = r.json()
+                items = data if isinstance(data, list) else (data.get("data") or [])
+                for item in items:
+                    if not isinstance(item, dict):
+                        continue
+                    title = (item.get("title") or "").strip()
+                    if not title:
+                        continue
+
+                    locs = item.get("jobLocations") or []
+                    loc_names = []
+                    for l in locs:
+                        if isinstance(l, dict):
+                            loc_names.append(l.get("city") or l.get("name") or l.get("locationName") or "")
+                        elif isinstance(l, str):
+                            loc_names.append(l)
+                    location = ", ".join([l for l in loc_names if l]) or "India"
+
+                    job_ref = item.get("id")
+                    full_url = f"{portal_url}{job_ref}/" if job_ref else portal_url
+
+                    desc = item.get("description") or item.get("excerpt") or ""
+                    if desc and "<" in desc:
+                        from bs4 import BeautifulSoup
+                        desc = BeautifulSoup(desc, "html.parser").get_text(separator=" ")
+                    skills = item.get("skillNames") or []
+                    exp = item.get("experience") or ""
+                    desc_text = " ".join(str(x) for x in [desc, f"Experience: {exp}" if exp else "",
+                                                          ("Skills: " + ", ".join(str(s) for s in skills)) if skills else ""]).strip()
+                    if not desc_text:
+                        desc_text = f"Keka posting: {title}"
+
+                    job_id = self._generate_job_id(company["id"], title, full_url)
+                    cand_job = {
+                        "id": job_id,
+                        "company": company["name"],
+                        "title": title,
+                        "location": location,
+                        "url": full_url,
+                        "description": desc_text,
+                        "posted_date": item.get("publishedOn"),
+                        "extraction_method": "keka_api",
+                        "scan_timestamp": now_iso,
+                        "first_seen_at": now_iso,
+                        "closed": False,
+                        "needs_manual_link_review": False,
+                        "match": None
+                    }
+                    is_valid, _ = check_job_posting_validity(cand_job)
+                    if is_valid:
+                        jobs.append(cand_job)
+            elif r is not None:
+                error_msg = f"Keka API returned HTTP {r.status_code}"
+        except Exception as e:
+            error_msg = f"Keka API extraction error: {e}"
+
+        return (jobs, error_msg) if return_error else jobs
 
     def _extract_lever_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
         url = target_url or company.get("career_url", "")

@@ -57,10 +57,10 @@ from scan_scheduler import partition_companies, update_yield_streak, next_cycle_
 # ATS types whose extraction is pure HTTP (requests) in
 # BrowserScanner.scan_company — they never launch the browser, so they are
 # safe to scan from worker threads in parallel.
-_API_ATS_TYPES = ("workday", "greenhouse", "lever", "ashby", "smartrecruiters")
+_API_ATS_TYPES = ("workday", "greenhouse", "lever", "ashby", "smartrecruiters", "keka")
 _API_URL_HINTS = (
     "myworkdayjobs.com", "greenhouse.io", "lever.co", "ashbyhq.com",
-    "smartrecruiters.com",
+    "smartrecruiters.com", ".keka.com",
 )
 
 def _is_api_scannable(company: dict) -> bool:
@@ -287,10 +287,20 @@ class ScanCoordinator:
                     fresh_job = merged_by_id.get(jid)
                     if fresh_job is not None:
                         fresh_match = fresh_job.get("match")
-                        if isinstance(fresh_match, dict) and not isinstance(job.get("match"), dict):
+                        our_match = job.get("match")
+                        fresh_is_dict = isinstance(fresh_match, dict)
+                        our_is_dict = isinstance(our_match, dict)
+                        # adopt the store's match when ours is missing, OR the
+                        # store's is from a better (paid LLM, tier 1/2) tier —
+                        # never downgrade a refined score with a stale cheap one
+                        fresh_better = fresh_is_dict and (
+                            not our_is_dict
+                            or (fresh_match.get("tier") in (1, 2) and our_match.get("tier") not in (1, 2))
+                        )
+                        if fresh_better:
                             job = dict(job)
                             job["match"] = fresh_match
-                            existing_jobs[jid] = job  # keep our view current too
+                            existing_jobs[jid] = job
                     merged_by_id[jid] = job
                 jobs_store["jobs"] = list(merged_by_id.values())
                 save_json(JOBS_FILE, jobs_store)
@@ -353,7 +363,12 @@ class ScanCoordinator:
             fresh_job = final_by_id.get(jid)
             if fresh_job is not None:
                 fresh_match = fresh_job.get("match")
-                if isinstance(fresh_match, dict) and not isinstance(job.get("match"), dict):
+                our_match = job.get("match")
+                fresh_better = isinstance(fresh_match, dict) and (
+                    not isinstance(our_match, dict)
+                    or (fresh_match.get("tier") in (1, 2) and our_match.get("tier") not in (1, 2))
+                )
+                if fresh_better:
                     job = dict(job)
                     job["match"] = fresh_match
             final_by_id[jid] = job
