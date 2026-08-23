@@ -405,9 +405,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1346,
+      "parsed_count": 1382,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T02:08:33.094761"
+      "last_parsed": "2026-08-24T02:25:39.662766"
     },
     {
       "id": "snowflake-india",
@@ -457,9 +457,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1177,
-      "parsing_accuracy": 0.35,
-      "last_parsed": "2026-08-24T02:08:39.592218"
+      "parsed_count": 1235,
+      "parsing_accuracy": 0.38,
+      "last_parsed": "2026-08-24T02:25:44.161223"
     },
     {
       "id": "cisco-india",
@@ -607,8 +607,8 @@
     {
       "id": "jpmorgan-chase-india",
       "name": "JPMorgan Chase India",
-      "career_url": "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1",
-      "ats": "oraclehcm",
+      "career_url": "https://careers.jpmorgan.com",
+      "ats": "custom",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
       "success_rate": 0,
@@ -659,7 +659,7 @@
     {
       "id": "walmart-global-tech-india",
       "name": "Walmart Global Tech India",
-      "career_url": "https://careers.walmart.com/content/careers/us/en/home/careers-areas/technology",
+      "career_url": "https://careers.walmart.com/global-tech",
       "ats": "custom",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
@@ -1103,8 +1103,8 @@
     {
       "id": "ola",
       "name": "Ola",
-      "career_url": "https://www.olacabs.com/careers",
-      "ats": "custom",
+      "career_url": "https://olacareers.turbohire.co/careerpage/e0c1eb37-eb7a-4ca4-bcc5-d59ce4ce9212",
+      "ats": "turbohire",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
       "success_rate": 0,
@@ -1116,8 +1116,8 @@
     {
       "id": "ola-electric",
       "name": "Ola Electric",
-      "career_url": "https://www.olaelectric.com/careers",
-      "ats": "custom",
+      "career_url": "https://olacareers.turbohire.co/careerpage/e0c1eb37-eb7a-4ca4-bcc5-d59ce4ce9212",
+      "ats": "turbohire",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
       "success_rate": 0,
@@ -3048,9 +3048,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1080,
+      "parsed_count": 1170,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T02:20:21.298957",
+      "last_parsed": "2026-08-24T02:24:52.078703",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3104,9 +3104,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 684,
+      "parsed_count": 741,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T02:20:57.092633",
+      "last_parsed": "2026-08-24T02:24:54.269523",
       "monitoring_status": "Active Monitoring"
     },
     {
