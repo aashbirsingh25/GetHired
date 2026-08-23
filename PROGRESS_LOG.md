@@ -537,3 +537,16 @@ Probed 5 untested Indian boards: Shine OPEN (built, 9th source, highest
 fresher density seen: 33/40 titles), Freshersworld partially reachable
 (queued), TimesJobs needs browser (queued), Foundit 403, Instahyre 403.
 Free aggregator substitutes still worth user signup: Adzuna, Jooble.
+
+## 2026-08-24 (01:45) — Freshersworld live (10th source)
+
+Fresher-native Indian board, plain HTML, no key. 22 of 27 sampled jobs are
+explicitly "0 Years" experience - the highest 0-exp density of any source.
+Fixed location junk ("Less M") and anonymous-agency company labels.
+Per-path yields measured; city paths thin (1-3) but kept.
+Source lineup now: 277 career pages + internshala + shine + freshersworld +
+linkedin(222-query sweep) + cutshort + remoteok + remotive (+ indeed/naukri
+stubs parked pending Apify).
+NEXT in my queue: TimesJobs (needs browser), resume discovery sweep on ~100
+dead companies, threshold recalibration after LLM refinement, wire
+company-health into Insights UI.
