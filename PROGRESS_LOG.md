@@ -526,3 +526,14 @@ new; store now 193 LinkedIn jobs / 10.9k total.
 NOTE: LinkedIn is now the highest-yield FRESHER source we have (career pages
 are senior-heavy). If LinkedIn ever starts 429ing, reduce queries_per_cycle
 before anything else.
+
+## 2026-08-24 (01:20) — Indian board probe results + Shine live
+
+Naukri/Indeed/Glassdoor: PARKED (not dropped) - all need a third-party
+scraper; user's Apify account is disabled. Glassdoor recommended for
+permanent deprioritisation (heaviest protection, listings duplicate career
+pages). LinkedIn's fresher sweep now covers much of their value.
+Probed 5 untested Indian boards: Shine OPEN (built, 9th source, highest
+fresher density seen: 33/40 titles), Freshersworld partially reachable
+(queued), TimesJobs needs browser (queued), Foundit 403, Instahyre 403.
+Free aggregator substitutes still worth user signup: Adzuna, Jooble.
