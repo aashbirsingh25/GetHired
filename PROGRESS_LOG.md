@@ -413,3 +413,29 @@ Rate-limit contention: sweep + background refinement share the key pool ->
 REMAINING: 106 dead companies still to sweep (batches of ~12), then
 re-verify BrowserStack/Postman/Hasura greenhouse tokens, then vision
 fallback for the JS-heavy stragglers.
+
+## 2026-08-23 (23:25) — Company sourcing strategy: measured comparison
+
+Claude (separate chat) correctly reported it cannot verify companies live and
+that name-generation punts all real work downstream. Tested the alternative
+sources with real numbers:
+
+1. MINING our own collected postings (live-verified hiring, zero guessing):
+   10k jobs -> 102 distinct new company names -> 95 plausible after junk
+   filter -> ATS-probed -> only 6 verified, and just 1 with India jobs
+   (Jitterbit). Board postings skew to tiny companies with no public ATS
+   API. Weak source for our pipeline; keep as passive trickle.
+2. MEMORY-SEEDED + LIVE PROBE (what worked today): 68 added from ~440
+   probes across categories. Well-known-company pool is thinning (hit rate
+   fell 60% -> 15%).
+3. NOT YET TRIED: per-category live web search for CURRENT lists (e.g. new
+   GCCs opened 2025-2026), then probe each name. Claude's point that 2,100+
+   GCCs exist means the addressable pool is far larger than either of us can
+   recall - search is the right tool for discovery, probe for verification.
+4. APIFY (user now has 10 keys ~= $50/mo free credit): unlocks Naukri +
+   TCS/Infosys (WAF-blocked to us) AND feeds far more company names into (1).
+
+STRATEGIC NOTE for future sessions: 1000 companies is a proxy metric. The
+user's actual goal is fresher-eligible job volume. Naukri via Apify likely
+delivers more relevant jobs than 700 additional company career pages.
+Recommend: Apify first, then search-driven discovery batches.
