@@ -11,6 +11,7 @@ from fetchers.cutshort_fetcher import fetch_cutshort_jobs
 from fetchers.remoteok_fetcher import fetch_remoteok_jobs
 from fetchers.remotive_fetcher import fetch_remotive_jobs
 from fetchers.internshala_fetcher import fetch_internshala_jobs
+from fetchers.linkedin_fetcher import fetch_linkedin_jobs
 from job_deduplicator import JobDeduplicator
 from recency_filter import expand_search_if_sparse
 from adaptive_concurrency_manager import AdaptiveConcurrencyManager
@@ -379,7 +380,7 @@ class BackgroundSearchWorker:
                 "jobs_after_filtering": len(curated_jobs),
                 "sources": source_counts,
                 "notes": {
-                    "linkedin": "manual import only",
+                    "linkedin": "public guest listings (no login, read-only)",
                     "angellist": "not available",
                     "multi_source_fetching": "true_parallel"
                 },
@@ -493,8 +494,15 @@ class BackgroundSearchWorker:
                 print(f"[BackgroundSearchWorker] Internshala error: {e}")
                 results["internshala"] = []
 
+        def fetch_linkedin():
+            try:
+                results["linkedin"] = fetch_linkedin_jobs(role=role, location=location, max_results=30)
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] LinkedIn error: {e}")
+                results["linkedin"] = []
+
         # Run all source types concurrently using ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=7) as executor:
+        with ThreadPoolExecutor(max_workers=8) as executor:
             futures = [
                 executor.submit(fetch_career_pages),
                 executor.submit(fetch_indeed),
@@ -503,6 +511,7 @@ class BackgroundSearchWorker:
                 executor.submit(fetch_remoteok),
                 executor.submit(fetch_remotive),
                 executor.submit(fetch_internshala),
+                executor.submit(fetch_linkedin),
             ]
             for f in futures:
                 f.result()
