@@ -365,3 +365,16 @@ healthify.darwinbox.in, porter.darwinbox.in, leadsquaredhrms.darwinbox.in,
 myhr.darwinbox.in(PharmEasy), dbx.darwinbox.in, quadeye.zohorecruit.in,
 go-yubi.zohorecruit.in) -> build Darwinbox + Zoho extractors NEXT using
 these real tenants, then re-run detector over remaining 141 custom rows.
+
+## 2026-08-23 (22:45) — Darwinbox: dead end for public extraction (verified)
+
+Real tenants (unacademy/pwhr/healthify/porter/myhr .darwinbox.in) load an
+Angular shell showing only the company name - NO public job list. API
+namespace found (/ms/candidateapi/*: groupcompanycareersetting,
+getLandingPage) but returns 403 to direct requests (Cloudflare) and the
+portal redirects to /user/login. Conclusion: Darwinbox candidate portals
+don't publish jobs anonymously at the careers path; those companies must
+be reached via their own website's embedded listings instead. Stopping per
+"2 attempts then report" rule. Zoho Recruit deferred (same catch-all
+problem, 3 companies only). PIVOT to LLM page-learner: platform-agnostic,
+the real answer to "robust for all career pages".
