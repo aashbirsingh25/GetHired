@@ -72,29 +72,61 @@ class BrowserScanner:
         company_name = company.get("name")
         company_id = company.get("id")
 
-        # Direct ATS REST API Extractors (bypass SPA DOM empty state)
+        # Direct ATS REST API Extractors (bypass SPA DOM empty state).
+        # NOTE: these return immediately ONLY when they actually found jobs.
+        # A declared-but-stale ATS (company migrated platforms, board renamed)
+        # used to return 0 jobs and stop the scan here, never reaching the
+        # browser heuristics or the LLM learner. Now a failed API attempt falls
+        # through to those fallbacks, and the ats_error is preserved for
+        # reporting if everything else also fails.
         ats_type = (company.get("ats") or "").lower()
+        ats_error = None
+
+        def _try_api(extractor, method_name):
+            a_jobs, a_err = extractor(company, target_url=url, return_error=True)
+            if a_jobs:
+                return a_jobs, None, method_name, a_err
+            return None, a_err
+
         if "myworkdayjobs.com" in url or ats_type == "workday":
-            workday_jobs, err = self._extract_workday_jobs(company, target_url=url, return_error=True)
-            return workday_jobs, None, "workday_api", err
+            got = _try_api(self._extract_workday_jobs, "workday_api")
+            if len(got) == 4:
+                return got
+            ats_error = got[1]
         elif "greenhouse.io" in url or ats_type == "greenhouse":
-            gh_jobs, err = self._extract_greenhouse_jobs(company, target_url=url, return_error=True)
-            return gh_jobs, None, "greenhouse_api", err
+            got = _try_api(self._extract_greenhouse_jobs, "greenhouse_api")
+            if len(got) == 4:
+                return got
+            ats_error = got[1]
         elif "lever.co" in url or ats_type == "lever":
-            lever_jobs, err = self._extract_lever_jobs(company, target_url=url, return_error=True)
-            return lever_jobs, None, "lever_api", err
+            got = _try_api(self._extract_lever_jobs, "lever_api")
+            if len(got) == 4:
+                return got
+            ats_error = got[1]
         elif "ashbyhq.com" in url or ats_type == "ashby":
-            ashby_jobs, err = self._extract_ashby_jobs(company, target_url=url, return_error=True)
-            return ashby_jobs, None, "ashby_api", err
+            got = _try_api(self._extract_ashby_jobs, "ashby_api")
+            if len(got) == 4:
+                return got
+            ats_error = got[1]
         elif "smartrecruiters.com" in url or ats_type == "smartrecruiters":
-            sr_jobs, err = self._extract_smartrecruiters_jobs(company, target_url=url, return_error=True)
-            return sr_jobs, None, "smartrecruiters_api", err
+            got = _try_api(self._extract_smartrecruiters_jobs, "smartrecruiters_api")
+            if len(got) == 4:
+                return got
+            ats_error = got[1]
         elif "turbohire.co" in url or ats_type == "turbohire":
-            th_jobs, err = self._extract_turbohire_jobs(company, target_url=url, return_error=True)
-            return th_jobs, None, "turbohire_api", err
+            got = _try_api(self._extract_turbohire_jobs, "turbohire_api")
+            if len(got) == 4:
+                return got
+            ats_error = got[1]
         elif ".keka.com" in url or ats_type == "keka":
-            keka_jobs, err = self._extract_keka_jobs(company, target_url=url, return_error=True)
-            return keka_jobs, None, "keka_api", err
+            got = _try_api(self._extract_keka_jobs, "keka_api")
+            if len(got) == 4:
+                return got
+            ats_error = got[1]
+
+        if ats_error:
+            print(f"[BrowserScanner] {company.get('name')}: declared ATS "
+                  f"'{ats_type or 'auto'}' failed ({str(ats_error)[:70]}) - falling back to page scan")
 
         self.start()
 
