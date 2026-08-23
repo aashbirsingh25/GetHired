@@ -79,3 +79,5 @@ Thumbs.db
 .idea/
 # API keys - never commit
 .env
+company_discovery_log.json
+company_watchlist.json

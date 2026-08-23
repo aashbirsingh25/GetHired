@@ -1,0 +1,9 @@
+{
+  "blocklist_names": [],
+  "force_watch_names": [],
+  "min_fresher_to_admit": 1,
+  "notes": [
+    "2026-08-23 (orchestrator): watchlist is the anti-forgetting mechanism - never delete a verified-real company just because it has no fresher opening today.",
+    "2026-08-23 (orchestrator): quality over quantity. Prefer parking an uncertain company on the watchlist over admitting it."
+  ]
+}

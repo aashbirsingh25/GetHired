@@ -35,6 +35,15 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 COMPANIES_FILE = os.path.join(BASE_DIR, "companies.json")
 JOBS_FILE = os.path.join(BASE_DIR, "jobs_store.json")
 LOG_FILE = os.path.join(BASE_DIR, "company_discovery_log.json")
+# Verified-real companies that simply have no fresher opening TODAY. They are
+# NEVER discarded: a company with zero fresher roles this week may post one
+# tomorrow, so they are re-probed every cycle and promoted when they do.
+WATCHLIST_FILE = os.path.join(BASE_DIR, "company_watchlist.json")
+# Rules/lessons written by the human-reviewed orchestrator (weekly review).
+# The worker reads these each cycle - this is how it gets taught.
+RULES_FILE = os.path.join(BASE_DIR, "discovery_rules.json")
+# Human-readable artifact for the weekly orchestrator review.
+REVIEW_FILE = os.path.join(BASE_DIR, "WEEKLY_REVIEW.md")
 
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"}
@@ -253,6 +262,99 @@ def propose_candidates_via_llm(category: str, known_names: set, llm_router, limi
 
 # --------------------------------------------------------------- writing
 
+def load_rules() -> Dict[str, Any]:
+    """Lessons taught by the orchestrator during weekly review.
+
+    Supported keys:
+      blocklist_names   - never propose/admit these (confirmed junk)
+      force_watch_names - keep on the watchlist even if they look dead
+      min_fresher_to_admit - default 1
+      notes             - free text for the worker's own log
+    """
+    default = {"blocklist_names": [], "force_watch_names": [],
+               "min_fresher_to_admit": 1, "notes": []}
+    if not os.path.exists(RULES_FILE):
+        return default
+    try:
+        data = json.load(open(RULES_FILE, encoding="utf-8"))
+        default.update({k: v for k, v in data.items() if k in default})
+    except Exception:
+        pass
+    return default
+
+
+def _load_watchlist() -> Dict[str, Any]:
+    if not os.path.exists(WATCHLIST_FILE):
+        return {"companies": {}}
+    try:
+        return json.load(open(WATCHLIST_FILE, encoding="utf-8"))
+    except Exception:
+        return {"companies": {}}
+
+
+def _save_watchlist(data: Dict[str, Any]) -> None:
+    tmp = WATCHLIST_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+    os.replace(tmp, WATCHLIST_FILE)
+
+
+def watchlist_add_or_update(result: Dict[str, Any], reason: str) -> None:
+    """Park a verified-real company that has no fresher opening yet.
+
+    Nothing is ever deleted here - this is the anti-forgetting mechanism.
+    """
+    wl = _load_watchlist()
+    key = result["name"].strip().lower()
+    entry = wl["companies"].get(key, {})
+    entry.update({
+        "name": result["name"].strip(),
+        "ats": result.get("ats"),
+        "career_url": result.get("career_url"),
+        "last_checked": datetime.now(timezone.utc).isoformat(),
+        "checks": entry.get("checks", 0) + 1,
+        "last_total_jobs": result.get("total_jobs", 0),
+        "last_india_jobs": result.get("india_jobs", 0),
+        "last_fresher_jobs": result.get("fresher_jobs", 0),
+        "reason": reason,
+        "best_fresher_seen": max(entry.get("best_fresher_seen", 0), result.get("fresher_jobs", 0) or 0),
+    })
+    if entry.get("first_seen") is None:
+        entry["first_seen"] = datetime.now(timezone.utc).isoformat()
+    wl["companies"][key] = entry
+    _save_watchlist(wl)
+
+
+def recheck_watchlist(limit: int = 40) -> Tuple[List[Dict[str, Any]], int]:
+    """Re-probe watchlisted companies. Returns (promotable, checked_count).
+
+    A company is promotable the moment it shows a fresher-eligible opening -
+    this is how "it had nothing yesterday but posted today" gets caught.
+    """
+    wl = _load_watchlist()
+    entries = list(wl["companies"].values())
+    if not entries:
+        return [], 0
+    # oldest-checked first so everything gets revisited fairly
+    entries.sort(key=lambda e: e.get("last_checked") or "")
+    batch = entries[:limit]
+
+    promotable = []
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        results = list(ex.map(lambda e: verify_candidate(e["name"]), batch))
+    for res in results:
+        if res.get("status") == "verified":
+            promotable.append(res)
+            wl["companies"].pop(res["name"].strip().lower(), None)
+        else:
+            watchlist_add_or_update(res if res.get("ats") else
+                                    {"name": res["name"], "total_jobs": 0,
+                                     "india_jobs": 0, "fresher_jobs": 0},
+                                    res.get("reason", "still no fresher openings"))
+    _save_watchlist(wl)
+    return promotable, len(batch)
+
+
 def _append_log(entry: Dict[str, Any]) -> None:
     try:
         data = json.load(open(LOG_FILE, encoding="utf-8")) if os.path.exists(LOG_FILE) else {"cycles": []}
@@ -302,17 +404,125 @@ def add_verified_companies(verified: List[Dict[str, Any]]) -> List[str]:
     return added
 
 
+def generate_weekly_review() -> str:
+    """Write a human/orchestrator-readable review of the week's decisions.
+
+    The orchestrator (Kiro, weekly) reads this, spot-checks the calls, and
+    writes corrections into discovery_rules.json - which the worker then
+    obeys. That is the teaching loop.
+    """
+    try:
+        log = json.load(open(LOG_FILE, encoding="utf-8")).get("cycles", [])
+    except Exception:
+        log = []
+    wl = _load_watchlist().get("companies", {})
+    rules = load_rules()
+
+    cutoff = time.time() - 7 * 86400
+    recent = []
+    for c in log:
+        try:
+            ts = datetime.fromisoformat((c.get("finished_at") or "").replace("Z", "+00:00")).timestamp()
+        except Exception:
+            ts = 0
+        if ts >= cutoff:
+            recent.append(c)
+
+    probed = sum(c.get("candidates_probed", 0) for c in recent)
+    added = [n for c in recent for n in (c.get("added") or [])]
+    promoted = [n for c in recent for n in (c.get("promoted") or [])]
+    rej: Dict[str, int] = {}
+    for c in recent:
+        for k, v in (c.get("rejections") or {}).items():
+            rej[k] = rej.get(k, 0) + v
+
+    near_miss = sorted(
+        [e for e in wl.values() if (e.get("best_fresher_seen") or 0) == 0 and (e.get("last_india_jobs") or 0) > 0],
+        key=lambda e: -(e.get("last_india_jobs") or 0))[:15]
+    stale_watch = sorted(wl.values(), key=lambda e: -(e.get("checks") or 0))[:10]
+
+    lines = [
+        "# Weekly Company-Discovery Review",
+        "",
+        f"Generated: {datetime.now(timezone.utc).isoformat()}",
+        "",
+        "Orchestrator: verify the decisions below, then teach the worker by",
+        "editing `discovery_rules.json` (blocklist_names, force_watch_names,",
+        "min_fresher_to_admit, notes). The worker reads that file every cycle.",
+        "",
+        "## Activity (last 7 days)",
+        f"- discovery cycles: {len(recent)}",
+        f"- candidates probed: {probed}",
+        f"- ADDED to list: {len(added)} -> {', '.join(added[:25]) or 'none'}",
+        f"- PROMOTED from watchlist: {len(promoted)} -> {', '.join(promoted[:25]) or 'none'}",
+        f"- watchlist size: {len(wl)}",
+        "",
+        "## Rejection reasons (nothing is deleted; all are re-checked)",
+    ]
+    for k, v in sorted(rej.items(), key=lambda kv: -kv[1]):
+        lines.append(f"- {v} x {k}")
+    lines += [
+        "",
+        "## Near-misses to review (real India hiring, no fresher role yet)",
+        "These are the highest-risk calls: if the worker is wrong about a",
+        "company, it will most likely be one of these.",
+    ]
+    for e in near_miss:
+        lines.append(f"- {e['name']} ({e.get('ats')}) - {e.get('last_india_jobs')} India jobs, "
+                     f"0 fresher, checked {e.get('checks')}x")
+    lines += [
+        "",
+        "## Long-parked watchlist entries (checked most often, still no fresher)",
+    ]
+    for e in stale_watch:
+        lines.append(f"- {e['name']} - checked {e.get('checks')}x, best fresher seen "
+                     f"{e.get('best_fresher_seen', 0)}")
+    lines += [
+        "",
+        "## Current taught rules",
+        f"- blocklist: {rules.get('blocklist_names') or 'empty'}",
+        f"- force_watch: {rules.get('force_watch_names') or 'empty'}",
+        f"- min_fresher_to_admit: {rules.get('min_fresher_to_admit')}",
+        f"- notes: {rules.get('notes') or 'none'}",
+        "",
+    ]
+    content = "\n".join(lines)
+    tmp = REVIEW_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write(content)
+    os.replace(tmp, REVIEW_FILE)
+    return content
+
+
 def run_discovery_cycle(llm_router=None, use_llm: bool = True) -> Dict[str, Any]:
-    """One autonomous cycle: propose -> verify -> gate -> record."""
+    """One autonomous cycle: recheck watchlist -> propose -> verify -> gate -> record.
+
+    Quality-first design decisions (per user directive):
+      - Nothing is ever discarded. A company without fresher openings today
+        goes to the watchlist and is re-probed every cycle, so a role posted
+        tomorrow is caught within hours.
+      - Taught rules (discovery_rules.json) override the worker's judgement.
+      - Every decision is written to the log and summarised for weekly review.
+    """
     started = datetime.now(timezone.utc).isoformat()
+    rules = load_rules()
+    blocked = {n.strip().lower() for n in (rules.get("blocklist_names") or [])}
+    min_fresher = max(1, int(rules.get("min_fresher_to_admit", 1) or 1))
+
     data = json.load(open(COMPANIES_FILE, encoding="utf-8"))
     known = {(c.get("name") or "").strip().lower() for c in data.get("companies", [])}
 
-    candidates = mine_candidates_from_jobs(known, limit=25)
+    # 1. Re-check the watchlist FIRST: promoting a company that just posted a
+    # fresher role is more valuable than finding a brand-new candidate.
+    promotable, rechecked = recheck_watchlist(limit=40)
+    promoted = add_verified_companies(promotable) if promotable else []
 
+    known |= {p.strip().lower() for p in promoted}
+
+    # 2. Propose new candidates
+    candidates = mine_candidates_from_jobs(known, limit=25)
     category_used = None
     if use_llm and llm_router is not None:
-        # rotate categories by cycle count so coverage stays balanced
         try:
             log = json.load(open(LOG_FILE, encoding="utf-8")) if os.path.exists(LOG_FILE) else {"cycles": []}
             cycle_no = len(log.get("cycles", []))
@@ -321,30 +531,41 @@ def run_discovery_cycle(llm_router=None, use_llm: bool = True) -> Dict[str, Any]
         category_used = CATEGORIES[cycle_no % len(CATEGORIES)]
         candidates += propose_candidates_via_llm(category_used, known, llm_router, limit=30)
 
-    # de-dup, cap
     seen, unique = set(), []
     for n in candidates:
         k = n.strip().lower()
-        if k and k not in seen and k not in known:
+        if k and k not in seen and k not in known and k not in blocked:
             seen.add(k)
             unique.append(n.strip())
     unique = unique[:MAX_CANDIDATES_PER_CYCLE]
 
+    # 3. Verify + gate
     results = []
     if unique:
         with ThreadPoolExecutor(max_workers=8) as ex:
             results = list(ex.map(verify_candidate, unique))
 
-    verified = [r for r in results if r.get("status") == "verified"]
+    verified, watchlisted = [], 0
+    for r in results:
+        if r.get("status") == "verified" and (r.get("fresher_jobs") or 0) >= min_fresher:
+            verified.append(r)
+        elif r.get("ats") and (r.get("total_jobs") or 0) > 0:
+            # real company, real careers API, just not fresher-hiring today
+            watchlist_add_or_update(r, r.get("reason") or "no fresher openings at discovery time")
+            watchlisted += 1
+
     added = add_verified_companies(verified) if verified else []
 
     summary = {
         "started_at": started,
         "finished_at": datetime.now(timezone.utc).isoformat(),
         "category": category_used,
+        "watchlist_rechecked": rechecked,
+        "promoted": promoted,
         "candidates_probed": len(unique),
         "verified": len(verified),
         "added": added,
+        "watchlisted": watchlisted,
         "rejections": {},
         "details": results[:80],
     }
@@ -354,6 +575,11 @@ def run_discovery_cycle(llm_router=None, use_llm: bool = True) -> Dict[str, Any]
             summary["rejections"][reason] = summary["rejections"].get(reason, 0) + 1
 
     _append_log(summary)
-    print(f"[CompanyDiscovery] cycle done: probed {len(unique)}, verified {len(verified)}, "
-          f"added {len(added)} ({category_used})")
+    try:
+        generate_weekly_review()
+    except Exception as e:
+        print(f"[CompanyDiscovery] review generation failed: {e}")
+
+    print(f"[CompanyDiscovery] cycle done: rechecked {rechecked}, promoted {len(promoted)}, "
+          f"probed {len(unique)}, added {len(added)}, watchlisted {watchlisted} ({category_used})")
     return summary
