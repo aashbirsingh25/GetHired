@@ -482,6 +482,43 @@ def get_search_task_status(task_id):
         return jsonify(st), 404
     return jsonify(st), 200
 
+@app.route("/api/company-health", methods=["GET"])
+def company_health():
+    """Transparency: how much of the company list is actually hiring freshers,
+    plus what the autonomous discovery worker has been doing."""
+    comps = load_json(COMPANIES_FILE, {"companies": []}).get("companies", [])
+    metrics = load_json(os.path.join(BASE_DIR, "company_metrics.json"), {}).get("companies", {})
+
+    total = len(comps)
+    scanned = fresher_active = producing = 0
+    for c in comps:
+        m = metrics.get(c.get("id")) or {}
+        if m.get("total_scans", 0) > 0:
+            scanned += 1
+        if m.get("jobs_extracted", 0) > 0:
+            producing += 1
+        if m.get("fresher_jobs_total", 0) > 0 and m.get("fresher_zero_streak", 99) <= 3:
+            fresher_active += 1
+
+    disc = load_json(os.path.join(BASE_DIR, "company_discovery_log.json"), {"cycles": []})
+    cycles = disc.get("cycles", [])[-5:]
+
+    return jsonify({
+        "total_companies": total,
+        "scanned_at_least_once": scanned,
+        "producing_jobs": producing,
+        "fresher_active": fresher_active,
+        "fresher_active_pct": round(100.0 * fresher_active / total, 1) if total else 0.0,
+        "target_pct": 75.0,
+        "discovery_recent_cycles": [
+            {"finished_at": c.get("finished_at"), "category": c.get("category"),
+             "probed": c.get("candidates_probed"), "verified": c.get("verified"),
+             "added": c.get("added"), "rejections": c.get("rejections")}
+            for c in cycles
+        ],
+    }), 200
+
+
 @app.route("/api/ollama-status", methods=["GET"])
 def get_ollama_status():
     cfg = load_json(CONFIG_FILE, {}).get("ollama", {})
@@ -1568,6 +1605,28 @@ def check_duplicate_application(job_id):
 
     return jsonify({"is_duplicate": False})
 
+def _company_discovery_loop():
+    """Autonomous company-list growth (no human in the loop).
+
+    Proposes candidates (mined from collected postings + LLM by category),
+    verifies each live against its ATS API, and admits only companies with
+    India openings AND fresher-eligible openings right now. Every decision
+    is logged to company_discovery_log.json.
+
+    Deliberately offset from the scan loop and paced slowly: it shares the
+    LLM key pool with scoring, and additions are capped per cycle.
+    """
+    time.sleep(900)  # let startup scan + scoring settle first
+    while True:
+        try:
+            from company_discovery import run_discovery_cycle
+            from llm_router import LLMRouter
+            run_discovery_cycle(llm_router=LLMRouter(), use_llm=True)
+        except Exception as e:
+            print(f"[CompanyDiscovery] cycle error: {e}")
+        time.sleep(21600)  # every 6 hours
+
+
 if __name__ == "__main__":
     # Restored from master: the debug/gethired-stability branch removed this
     # thread start, leaving the real career-page scanner (ScanCoordinator /
@@ -1576,6 +1635,10 @@ if __name__ == "__main__":
     # re-reads jobs_store.json; this thread is what actually fills it.)
     scan_thread = threading.Thread(target=background_scanner_loop, daemon=True)
     scan_thread.start()
+
+    # Autonomous company-list growth + verification (see _company_discovery_loop)
+    discovery_thread = threading.Thread(target=_company_discovery_loop, daemon=True)
+    discovery_thread.start()
 
     port = int(os.environ.get("PORT", 5050))
     print(f"Starting GetHired Flask server on http://127.0.0.1:{port}...")

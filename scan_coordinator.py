@@ -247,6 +247,22 @@ class ScanCoordinator:
                     m_comp["errors"].append(error_msg)
                 update_yield_streak(m_comp, len(jobs), now_iso)
 
+                # Fresher-yield tracking: the user's goal is a list where
+                # 70-80% of companies are actively hiring freshers, so we
+                # measure that per company instead of assuming it.
+                try:
+                    from company_discovery import is_fresher_title
+                    fresher_now = sum(1 for j in jobs if is_fresher_title(j.get("title", "")))
+                except Exception:
+                    fresher_now = 0
+                m_comp["fresher_jobs_last_scan"] = fresher_now
+                m_comp["fresher_jobs_total"] = m_comp.get("fresher_jobs_total", 0) + fresher_now
+                if fresher_now > 0:
+                    m_comp["last_fresher_at"] = now_iso
+                    m_comp["fresher_zero_streak"] = 0
+                else:
+                    m_comp["fresher_zero_streak"] = m_comp.get("fresher_zero_streak", 0) + 1
+
                 metrics_store["companies"][cid] = m_comp
 
                 update_company_difficulty(cid, len(jobs), is_success)
