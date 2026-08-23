@@ -73,3 +73,25 @@ at a time, with exact copy-pasteable commands. Never a wall of instructions.
 - Aashbir starts sessions with: cd ~/Desktop/aashbir/GetHired && kiro-cli chat
   then says "Continue GetHired work." If steering didn't auto-load (started
   from wrong directory), find and read these files manually before acting.
+
+## Weekend review ritual (added 2026-08-23 by user directive)
+
+The app now grows its own company list autonomously (company_discovery.py,
+6-hourly thread). The user's rule: the worker acts, I review WEEKLY as the
+orchestrator, and I TEACH it - quality over quantity, and accuracy matters
+more than list size.
+
+Every weekend session, before other work:
+1. Read WEEKLY_REVIEW.md (regenerated each cycle by the worker).
+2. Spot-check the 'near-misses' section - these are the worker's riskiest
+   calls (real India hiring, no fresher role yet). Verify a few live.
+3. Verify a sample of that week's ADDED companies actually scan and have
+   fresher-eligible roles.
+4. Teach the worker by editing discovery_rules.json (blocklist_names,
+   force_watch_names, min_fresher_to_admit, notes with dated reasoning).
+   The worker reads that file every cycle.
+5. Append findings to PROGRESS_LOG.md.
+
+NON-NEGOTIABLE: never delete a verified-real company because it has no
+fresher opening today - it goes on the watchlist and is re-probed every
+cycle. A company can post a fresher role tomorrow.
