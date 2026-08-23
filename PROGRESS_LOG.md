@@ -550,3 +550,10 @@ stubs parked pending Apify).
 NEXT in my queue: TimesJobs (needs browser), resume discovery sweep on ~100
 dead companies, threshold recalibration after LLM refinement, wire
 company-health into Insights UI.
+
+## 2026-08-24 (02:00) — TimesJobs: NOT viable (2 attempts, stopped)
+
+Next.js app renders only filters/chrome - no listings after 12s + scroll in
+a real browser; networkidle never settles (45s timeout). No job API observed.
+Verdict: needs either a logged-in session or a third-party scraper. Parked
+alongside Naukri/Indeed/Foundit/Instahyre.
