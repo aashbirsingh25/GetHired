@@ -113,6 +113,11 @@ class BrowserScanner:
             if len(got) == 4:
                 return got
             ats_error = got[1]
+        elif ".fa.oraclecloud.com" in url or ats_type == "oraclehcm":
+            got = _try_api(self._extract_oraclehcm_jobs, "oraclehcm_api")
+            if len(got) == 4:
+                return got
+            ats_error = got[1]
         elif "turbohire.co" in url or ats_type == "turbohire":
             got = _try_api(self._extract_turbohire_jobs, "turbohire_api")
             if len(got) == 4:
@@ -802,6 +807,89 @@ class BrowserScanner:
         if return_error:
             return jobs, error_msg
         return jobs
+
+    def _extract_oraclehcm_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
+        """Extract jobs from an Oracle Cloud HCM (Fusion) career site.
+
+        Used by many banks/enterprises (e.g. JPMorgan: jpmc.fa.oraclecloud.com).
+        Public REST endpoint, no key:
+          https://<tenant>.fa.oraclecloud.com/hcmRestApi/resources/latest/
+            recruitingCEJobRequisitions?onlyData=true
+            &finder=findReqs;siteNumber=<site>,limit=200,sortBy=POSTING_DATES_DESC
+        siteNumber comes from the portal URL (…/sites/CX_1…); defaults to CX_1.
+        """
+        url = target_url or company.get("career_url", "")
+        import requests
+        import re as _re
+        from urllib.parse import urlparse
+
+        host = urlparse(url).netloc
+        if ".fa.oraclecloud.com" not in host:
+            return ([], "Oracle HCM: not an oraclecloud host") if return_error else []
+        tenant_host = host
+
+        m = _re.search(r"/sites/([A-Za-z0-9_\-]+)", url)
+        site = m.group(1) if m else (company.get("ats_site") or "CX_1")
+
+        api = (f"https://{tenant_host}/hcmRestApi/resources/latest/recruitingCEJobRequisitions"
+               f"?onlyData=true&expand=requisitionList.secondaryLocations"
+               f"&finder=findReqs;siteNumber={site},limit=200,sortBy=POSTING_DATES_DESC")
+        now_iso = datetime.now().isoformat()
+        jobs = []
+        error_msg = None
+
+        try:
+            r = requests.get(api, headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"},
+                             timeout=20)
+            if r is not None and r.status_code == 200:
+                data = r.json() or {}
+                reqs = []
+                for item in (data.get("items") or []):
+                    reqs.extend(item.get("requisitionList") or [])
+                for req in reqs:
+                    if not isinstance(req, dict):
+                        continue
+                    title = (req.get("Title") or "").strip()
+                    if not title:
+                        continue
+                    job_ref = req.get("Id")
+                    location = (req.get("PrimaryLocation") or "India").strip()
+                    desc = (req.get("ShortDescriptionStr") or "").strip()
+                    dept = (req.get("Department") or "").strip()
+                    desc_text = " ".join(x for x in [
+                        desc[:1500],
+                        f"Department: {dept}." if dept else "",
+                        f"Job family: {req.get('JobFamily')}." if req.get("JobFamily") else "",
+                    ] if x) or f"Oracle HCM posting: {title}"
+
+                    full_url = (f"https://{tenant_host}/hcmUI/CandidateExperience/en/sites/{site}"
+                                f"/job/{job_ref}" if job_ref else url)
+
+                    job_id = self._generate_job_id(company["id"], title, full_url)
+                    cand_job = {
+                        "id": job_id,
+                        "company": company["name"],
+                        "title": title,
+                        "location": location,
+                        "url": full_url,
+                        "description": desc_text,
+                        "posted_date": req.get("PostedDate"),
+                        "extraction_method": "oraclehcm_api",
+                        "scan_timestamp": now_iso,
+                        "first_seen_at": now_iso,
+                        "closed": False,
+                        "needs_manual_link_review": False,
+                        "match": None
+                    }
+                    is_valid, _ = check_job_posting_validity(cand_job)
+                    if is_valid:
+                        jobs.append(cand_job)
+            elif r is not None:
+                error_msg = f"Oracle HCM API returned HTTP {r.status_code}"
+        except Exception as e:
+            error_msg = f"Oracle HCM API extraction error: {e}"
+
+        return (jobs, error_msg) if return_error else jobs
 
     def _extract_turbohire_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
         """Extract jobs from a TurboHire-hosted career page.

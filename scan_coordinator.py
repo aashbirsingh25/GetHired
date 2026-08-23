@@ -57,10 +57,10 @@ from scan_scheduler import partition_companies, update_yield_streak, next_cycle_
 # ATS types whose extraction is pure HTTP (requests) in
 # BrowserScanner.scan_company — they never launch the browser, so they are
 # safe to scan from worker threads in parallel.
-_API_ATS_TYPES = ("workday", "greenhouse", "lever", "ashby", "smartrecruiters", "keka", "turbohire")
+_API_ATS_TYPES = ("workday", "greenhouse", "lever", "ashby", "smartrecruiters", "keka", "turbohire", "oraclehcm")
 _API_URL_HINTS = (
     "myworkdayjobs.com", "greenhouse.io", "lever.co", "ashbyhq.com",
-    "smartrecruiters.com", ".keka.com", "turbohire.co",
+    "smartrecruiters.com", ".keka.com", "turbohire.co", ".fa.oraclecloud.com",
 )
 
 def _is_api_scannable(company: dict) -> bool:
