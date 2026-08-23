@@ -13,6 +13,8 @@ from fetchers.remotive_fetcher import fetch_remotive_jobs
 from fetchers.internshala_fetcher import fetch_internshala_jobs
 from fetchers.shine_fetcher import fetch_shine_jobs
 from fetchers.freshersworld_fetcher import fetch_freshersworld_jobs
+from fetchers.adzuna_fetcher import fetch_adzuna_jobs
+from fetchers.jooble_fetcher import fetch_jooble_jobs
 from fetchers.linkedin_fetcher import fetch_linkedin_jobs, fetch_linkedin_fresher_targets
 from job_deduplicator import JobDeduplicator
 from recency_filter import expand_search_if_sparse
@@ -427,6 +429,8 @@ class BackgroundSearchWorker:
             "internshala": [],
             "shine": [],
             "freshersworld": [],
+            "adzuna": [],
+            "jooble": [],
             "linkedin": []
         }
 
@@ -516,6 +520,24 @@ class BackgroundSearchWorker:
                 print(f"[BackgroundSearchWorker] Freshersworld error: {e}")
                 results["freshersworld"] = []
 
+        def fetch_adzuna():
+            try:
+                import time as _t
+                seed = int(_t.time() // 21600)
+                results["adzuna"] = fetch_adzuna_jobs(max_results=60, queries_per_cycle=3, cycle_seed=seed)
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] Adzuna error: {e}")
+                results["adzuna"] = []
+
+        def fetch_jooble():
+            try:
+                import time as _t
+                seed = int(_t.time() // 21600)
+                results["jooble"] = fetch_jooble_jobs(max_results=40, cycle_seed=seed)
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] Jooble error: {e}")
+                results["jooble"] = []
+
         def fetch_linkedin():
             try:
                 jobs = list(fetch_linkedin_jobs(role=role, location=location, max_results=30))
@@ -538,7 +560,7 @@ class BackgroundSearchWorker:
                 results["linkedin"] = []
 
         # Run all source types concurrently using ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=10) as executor:
+        with ThreadPoolExecutor(max_workers=12) as executor:
             futures = [
                 executor.submit(fetch_career_pages),
                 executor.submit(fetch_indeed),
@@ -549,6 +571,8 @@ class BackgroundSearchWorker:
                 executor.submit(fetch_internshala),
                 executor.submit(fetch_shine),
                 executor.submit(fetch_freshersworld),
+                executor.submit(fetch_adzuna),
+                executor.submit(fetch_jooble),
                 executor.submit(fetch_linkedin),
             ]
             for f in futures:
