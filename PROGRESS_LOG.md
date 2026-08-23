@@ -398,3 +398,18 @@ collect more platform destinations; (2) sweep all 119 zero-yield companies
 with the learner, persist discovered jobs_urls back into companies.json;
 (3) re-verify BrowserStack/Postman/Hasura greenhouse tokens (now 0 jobs);
 (4) vision fallback for pages that defeat text parsing.
+
+## 2026-08-23 (23:20) — TurboHire extractor + first discovery sweep
+
+TurboHire extractor built from the learner's Flipkart discovery (token/noauth
++ careerpagev2/filteredjobs): Flipkart 0 -> 8 real jobs.
+Discovery sweep (12 of 118 dead companies): 5 real jobs-URLs found; VMware
+India converted to Workday (38 jobs), LinkedIn India fixed (15 jobs), 3 URL
+improvements pending per-site work (Byju's/Meta/Oracle).
+Honest blockers found: TCS + Infosys = WAF/Akamai anonymous block (mark as
+unscannable, not parser bugs); Zomato/Netflix = protocol errors.
+Rate-limit contention: sweep + background refinement share the key pool ->
+429s handled by cooldowns, no keys killed. Run sweeps when refinement idle.
+REMAINING: 106 dead companies still to sweep (batches of ~12), then
+re-verify BrowserStack/Postman/Hasura greenhouse tokens, then vision
+fallback for the JS-heavy stragglers.
