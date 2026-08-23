@@ -572,3 +572,20 @@ Verified by simulation (7/12 cooling -> refuse, 3/12 -> allow).
 Queue remaining: threshold recalibration after refinement completes, wire
 company-health into Insights UI, more sweep batches (~90 dead left),
 Adzuna/Jooble fetchers when user supplies keys.
+
+## 2026-08-24 (02:45) — Oracle HCM extractor + Insights card + sweep 3
+
+- Insights "Company List Health" card live (fresher-active % vs 75% target,
+  producing/watchlist counts, last 5 discovery cycles with skip reasons).
+  Browser-verified; showed a real autonomous cycle that added Jitterbit.
+- Oracle Cloud HCM extractor built (JPMorgan 0 -> 46 jobs, 32 India). KEY:
+  expand=requisitionList.secondaryLocations is mandatory or the API returns
+  an empty list with HTTP 200. Generalises to other banks/enterprises on
+  Oracle Fusion - worth probing more tenants.
+- Adzuna + Jooble keys stored in .env (Adzuna validated live). Fetchers NOT
+  built yet (user asked to finish queue first). Jooble note: 500-request
+  default limit -> design conservatively (few calls/cycle).
+- LESSON: LLM-supplied URLs can be truncated mid-string (/sites/CX_) -
+  validate before storing.
+Remaining queue: Adzuna+Jooble fetchers, threshold recalibration, more sweep
+batches (~85 dead), probe more Oracle HCM tenants.
