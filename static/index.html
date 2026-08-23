@@ -620,6 +620,28 @@
             <p class="font-body-md text-on-surface-variant">Data-driven perspectives, fully transparent.</p>
           </div>
 
+          <!-- Company list health (autonomous discovery transparency) -->
+          <div class="glass-card rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-white/60 pb-3">
+              <h3 class="font-title-md text-on-background flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">domain_verification</span>
+                Company List Health
+              </h3>
+              <span id="company-health-pct" class="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">—</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              <div><div id="ch-total" class="font-headline-lg text-2xl font-extrabold text-on-background">—</div>
+                   <span class="text-[11px] text-on-surface-variant font-bold uppercase">Companies</span></div>
+              <div><div id="ch-producing" class="font-headline-lg text-2xl font-extrabold text-secondary">—</div>
+                   <span class="text-[11px] text-on-surface-variant font-bold uppercase">Producing Jobs</span></div>
+              <div><div id="ch-fresher" class="font-headline-lg text-2xl font-extrabold text-emerald-600">—</div>
+                   <span class="text-[11px] text-on-surface-variant font-bold uppercase">Fresher-Active</span></div>
+              <div><div id="ch-watchlist" class="font-headline-lg text-2xl font-extrabold text-amber-600">—</div>
+                   <span class="text-[11px] text-on-surface-variant font-bold uppercase">On Watchlist</span></div>
+            </div>
+            <div id="ch-cycles" class="space-y-1.5 text-xs text-on-surface-variant"></div>
+          </div>
+
           <!-- Top Health 4 Stat Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="glass-card rounded-3xl p-5 space-y-2">
@@ -2353,6 +2375,40 @@
       loadAIRecommendations();
       loadResourceAllocationCard();
       loadCycleYieldHistoryCard();
+      loadCompanyHealthCard();
+    }
+
+    async function loadCompanyHealthCard() {
+      try {
+        const res = await fetch('/api/company-health');
+        const d = await res.json();
+        const pct = (d.fresher_active_pct ?? 0);
+        const badge = document.getElementById('company-health-pct');
+        badge.innerText = `${pct}% fresher-active (target ${d.target_pct ?? 75}%)`;
+        badge.className = 'px-3 py-1 rounded-full text-xs font-bold ' +
+          (pct >= (d.target_pct ?? 75) ? 'bg-emerald-100 text-emerald-700'
+           : pct >= 30 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700');
+        document.getElementById('ch-total').innerText = d.total_companies ?? '—';
+        document.getElementById('ch-producing').innerText = d.producing_jobs ?? '—';
+        document.getElementById('ch-fresher').innerText = d.fresher_active ?? '—';
+        document.getElementById('ch-watchlist').innerText = d.watchlist_size ?? '0';
+
+        const cycles = d.discovery_recent_cycles || [];
+        document.getElementById('ch-cycles').innerHTML = cycles.length
+          ? cycles.slice().reverse().map(c => {
+              const when = c.finished_at ? computeRelativeTime(c.finished_at) : '';
+              const added = (c.added || []).length;
+              const rej = Object.entries(c.rejections || {})
+                .map(([k, v]) => `${v} ${escapeHTML(k)}`).join(', ');
+              return `<div class="flex justify-between gap-4 border-t border-white/50 pt-1.5">
+                        <span>${when} · ${escapeHTML(c.category || 'mined candidates')}</span>
+                        <span class="font-bold text-on-background">probed ${c.probed ?? 0} · added ${added}</span>
+                      </div>${rej ? `<div class="text-[11px] opacity-70 pl-1">skipped: ${rej}</div>` : ''}`;
+            }).join('')
+          : '<div class="opacity-70">No discovery cycles recorded yet.</div>';
+      } catch (e) {
+        console.error('company health load failed', e);
+      }
     }
 
     async function loadResourceAllocationCard() {

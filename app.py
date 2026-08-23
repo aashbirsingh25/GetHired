@@ -502,6 +502,7 @@ def company_health():
 
     disc = load_json(os.path.join(BASE_DIR, "company_discovery_log.json"), {"cycles": []})
     cycles = disc.get("cycles", [])[-5:]
+    watchlist = load_json(os.path.join(BASE_DIR, "company_watchlist.json"), {"companies": {}})
 
     return jsonify({
         "total_companies": total,
@@ -510,6 +511,7 @@ def company_health():
         "fresher_active": fresher_active,
         "fresher_active_pct": round(100.0 * fresher_active / total, 1) if total else 0.0,
         "target_pct": 75.0,
+        "watchlist_size": len(watchlist.get("companies", {})),
         "discovery_recent_cycles": [
             {"finished_at": c.get("finished_at"), "category": c.get("category"),
              "probed": c.get("candidates_probed"), "verified": c.get("verified"),
