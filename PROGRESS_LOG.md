@@ -439,3 +439,31 @@ STRATEGIC NOTE for future sessions: 1000 companies is a proxy metric. The
 user's actual goal is fresher-eligible job volume. Naukri via Apify likely
 delivers more relevant jobs than 700 additional company career pages.
 Recommend: Apify first, then search-driven discovery batches.
+
+## 2026-08-23 (23:40) — AUTONOMY: company discovery now runs inside the app
+
+User's requirement: "system should be autonomous, I don't want to come back
+to Kiro again and again". Moved company-list building out of my session and
+into the app:
+- company_discovery.py: propose (mined postings + LLM by rotating category)
+  -> verify (live ATS probe) -> gate (India jobs AND fresher jobs) -> record
+  (company_discovery_log.json, incl. rejection reasons). Caps: 60 candidates,
+  25 adds per cycle. A hallucinated name cannot enter - it fails the probe.
+- app.py: _company_discovery_loop background thread, starts 15min after boot,
+  runs every 6h.
+- scan_coordinator.py: per-company fresher-yield tracking
+  (fresher_jobs_last_scan/_total, last_fresher_at, fresher_zero_streak) so
+  the list self-cleans toward the 70-80% fresher-active goal.
+- GET /api/company-health: live fresher_active_pct vs 75% target + recent
+  discovery cycles (for the Insights page).
+Baseline at build time: 277 companies, 122 producing, 4 fresher-active
+(1.5% by the strict rolling definition; 15% by the looser one-off measure).
+
+STILL HUMAN-DEPENDENT (things autonomy cannot cover):
+- Apify keys (user has 10, not yet pasted) -> Naukri/TCS/Infosys
+- Adzuna key; UI direction; merge-to-master sign-off
+- Genuinely new product decisions
+NEXT AUTONOMY STEPS: (a) wire fresher_zero_streak into partition_companies
+so dormancy demotes non-fresher companies, (b) let discovery also run the
+LLM page-learner on candidates whose ATS is unknown, (c) surface
+company-health on the Insights page.
