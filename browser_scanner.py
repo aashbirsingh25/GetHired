@@ -89,6 +89,9 @@ class BrowserScanner:
         elif "smartrecruiters.com" in url or ats_type == "smartrecruiters":
             sr_jobs, err = self._extract_smartrecruiters_jobs(company, target_url=url, return_error=True)
             return sr_jobs, None, "smartrecruiters_api", err
+        elif "turbohire.co" in url or ats_type == "turbohire":
+            th_jobs, err = self._extract_turbohire_jobs(company, target_url=url, return_error=True)
+            return th_jobs, None, "turbohire_api", err
         elif ".keka.com" in url or ats_type == "keka":
             keka_jobs, err = self._extract_keka_jobs(company, target_url=url, return_error=True)
             return keka_jobs, None, "keka_api", err
@@ -767,6 +770,116 @@ class BrowserScanner:
         if return_error:
             return jobs, error_msg
         return jobs
+
+    def _extract_turbohire_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
+        """Extract jobs from a TurboHire-hosted career page.
+
+        TurboHire (used by Flipkart among others) serves listings from
+        thapi.azurewebsites.net. Flow: GET /api/token/noauth with the tenant
+        Referer to obtain an anonymous bearer token, then POST
+        /api/careerpagev2/filteredjobs?orgId=<uuid>. The orgId is the UUID in
+        the portal URL (…/careerpage/<uuid>).
+        """
+        url = target_url or company.get("career_url", "")
+        import requests
+        import re as _re
+        from urllib.parse import urlparse
+
+        m = _re.search(r"/careerpage/([0-9a-f\-]{32,40})", url, _re.I)
+        org_id = m.group(1) if m else (company.get("ats_org_id") or "")
+        if not org_id:
+            return ([], "TurboHire: no orgId in career_url") if return_error else []
+
+        parsed = urlparse(url)
+        tenant_origin = f"{parsed.scheme}://{parsed.netloc}"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+            "Referer": tenant_origin + "/",
+            "Origin": tenant_origin,
+        }
+        now_iso = datetime.now().isoformat()
+        jobs = []
+        error_msg = None
+
+        try:
+            tok_r = requests.get("https://thapi.azurewebsites.net/api/token/noauth",
+                                 headers=headers, timeout=12)
+            token = ""
+            if tok_r is not None and tok_r.status_code == 200:
+                try:
+                    token = (tok_r.json() or {}).get("access_token", "")
+                except Exception:
+                    token = ""
+            if not token:
+                return ([], "TurboHire: could not obtain anonymous token") if return_error else []
+
+            api = ("https://thapi.azurewebsites.net/api/careerpagev2/filteredjobs"
+                   f"?orgId={org_id}&pageType=0")
+            post_headers = dict(headers)
+            post_headers.update({"Content-Type": "application/json",
+                                 "Authorization": f"Bearer {token}"})
+            r = requests.post(api, headers=post_headers, timeout=15, json={
+                "SortByV2": {"Key": "PostedDate", "Order": 2},
+                "PageSize": 100, "PageNumber": 1})
+
+            if r is not None and r.status_code == 200:
+                data = r.json() or {}
+                for item in (data.get("Result") or []):
+                    if not isinstance(item, dict):
+                        continue
+                    title = (item.get("JobTitle") or "").strip()
+                    if not title:
+                        continue
+
+                    # Location arrives as a JSON string of address objects
+                    location = "India"
+                    raw_loc = item.get("Location")
+                    try:
+                        if isinstance(raw_loc, str) and raw_loc.strip().startswith("["):
+                            addrs = json.loads(raw_loc)
+                            names = [a.get("Address") for a in addrs if isinstance(a, dict) and a.get("Address")]
+                            if names:
+                                location = ", ".join(names[:3])
+                        elif isinstance(raw_loc, str) and raw_loc.strip():
+                            location = raw_loc.strip()
+                    except Exception:
+                        pass
+
+                    obf = item.get("JobIdObfuscated") or ""
+                    full_url = f"{tenant_origin}/careerpage/jobdetails/{obf}" if obf else url
+
+                    dept = item.get("Department") or ""
+                    desc_text = " ".join(x for x in [
+                        f"{title} at {company.get('name')}.",
+                        f"Department: {dept}." if dept else "",
+                        f"Job code: {item.get('JobCode')}." if item.get("JobCode") else "",
+                    ] if x)
+
+                    job_id = self._generate_job_id(company["id"], title, full_url)
+                    cand_job = {
+                        "id": job_id,
+                        "company": company["name"],
+                        "title": title,
+                        "location": location,
+                        "url": full_url,
+                        "description": desc_text,
+                        "posted_date": item.get("PublishedDate") or item.get("UpdatedDate"),
+                        "extraction_method": "turbohire_api",
+                        "scan_timestamp": now_iso,
+                        "first_seen_at": now_iso,
+                        "closed": False,
+                        "needs_manual_link_review": False,
+                        "match": None
+                    }
+                    is_valid, _ = check_job_posting_validity(cand_job)
+                    if is_valid:
+                        jobs.append(cand_job)
+            elif r is not None:
+                error_msg = f"TurboHire API returned HTTP {r.status_code}"
+        except Exception as e:
+            error_msg = f"TurboHire API extraction error: {e}"
+
+        return (jobs, error_msg) if return_error else jobs
 
     def _extract_keka_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
         """Extract jobs from a Keka-hosted careers portal.
