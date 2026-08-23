@@ -25,10 +25,49 @@ USER_AGENT = (
 PAGE_SIZE = 10
 PAGE_DELAY_SECONDS = 1.5  # politeness between page requests
 
-# India's biggest fresher/campus recruiters block our direct scanners
-# (TCS and Infosys career sites are WAF-protected), but they post the same
-# roles publicly on LinkedIn. These targeted queries reach them for free -
-# no Apify, no account. Rotated across cycles to spread the request load.
+# --- Fresher opportunity coverage -------------------------------------------
+# Goal: find ALL fresher/entry-level openings on LinkedIn, not just those of a
+# few named employers. The query space is roles x locations, rotated by cycle
+# so the whole space is swept over a day or two without hammering LinkedIn.
+
+FRESHER_ROLE_QUERIES = [
+    # core software
+    "software engineer intern",
+    "software developer intern",
+    "software engineer fresher",
+    "software developer fresher",
+    "graduate engineer trainee",
+    "software development engineer 1",
+    "associate software engineer",
+    "junior software developer",
+    "trainee software engineer",
+    "campus hire software",
+    "entry level software engineer",
+    # specialisations a fresher can enter
+    "backend developer intern",
+    "frontend developer intern",
+    "full stack developer intern",
+    "python developer fresher",
+    "java developer fresher",
+    "react developer intern",
+    "data analyst fresher",
+    "data engineer intern",
+    "machine learning intern",
+    "qa engineer fresher",
+    "devops intern",
+    "cloud engineer fresher",
+    "android developer intern",
+    "ios developer intern",
+    "web developer intern",
+    "technical support engineer fresher",
+    # programme-style hiring
+    "graduate trainee engineer",
+    "management trainee technology",
+    "apprentice software",
+]
+
+# Mass fresher recruiters whose own career sites are WAF-blocked to us; kept
+# because company-scoped queries surface roles the generic ones miss.
 FRESHER_TARGET_QUERIES = [
     "TCS fresher",
     "Infosys graduate trainee",
@@ -39,29 +78,45 @@ FRESHER_TARGET_QUERIES = [
     "HCLTech graduate engineer trainee",
     "Tech Mahindra fresher software",
     "LTIMindtree graduate trainee",
-    "software engineer intern India",
-    "graduate engineer trainee India",
-    "software developer fresher India",
+    "Zoho fresher",
+    "Mphasis trainee",
+    "Persistent Systems fresher",
+]
+
+FRESHER_LOCATIONS = [
+    "India",
+    "Bangalore, Karnataka, India",
+    "Gurugram, Haryana, India",
+    "Noida, Uttar Pradesh, India",
+    "Delhi, India",
+    "Hyderabad, Telangana, India",
+    "Pune, Maharashtra, India",
 ]
 
 
 def fetch_linkedin_fresher_targets(location: str = "India", per_query: int = 10,
-                                   queries_per_cycle: int = 3, cycle_seed: int = 0):
-    """Run a rotating slice of the fresher-recruiter queries.
+                                   queries_per_cycle: int = 6, cycle_seed: int = 0):
+    """Sweep the fresher query space (roles x locations + mass recruiters).
 
-    Returns a plain list of job dicts (deduplicated by id). Kept separate from
-    fetch_linkedin_jobs so the normal role-based search is unaffected.
+    Each cycle takes a rotating slice so coverage completes over ~1-2 days of
+    6-hourly cycles instead of blasting LinkedIn in one go. Returns a plain
+    list of job dicts, deduplicated by id.
     """
-    total = len(FRESHER_TARGET_QUERIES)
-    start = (cycle_seed * queries_per_cycle) % total
-    picked = [FRESHER_TARGET_QUERIES[(start + i) % total] for i in range(queries_per_cycle)]
+    # Build the rotating plan: mostly role x location, plus company-scoped ones
+    role_plan = [(r, l) for l in FRESHER_LOCATIONS for r in FRESHER_ROLE_QUERIES]
+    target_plan = [(q, "India") for q in FRESHER_TARGET_QUERIES]
+    plan = role_plan + target_plan
+
+    n = max(1, queries_per_cycle)
+    start = (cycle_seed * n) % len(plan)
+    picked = [plan[(start + i) % len(plan)] for i in range(n)]
 
     seen, out = set(), []
-    for q in picked:
+    for role_q, loc in picked:
         try:
-            jobs = fetch_linkedin_jobs(role=q, location=location, max_results=per_query)
+            jobs = fetch_linkedin_jobs(role=role_q, location=loc, max_results=per_query)
         except Exception as e:
-            print(f"[LinkedInFetcher] target query '{q}' failed: {str(e)[:80]}")
+            print(f"[LinkedInFetcher] query '{role_q}' @ {loc} failed: {str(e)[:70]}")
             continue
         for j in jobs:
             jid = j.get("id")
@@ -69,7 +124,9 @@ def fetch_linkedin_fresher_targets(location: str = "India", per_query: int = 10,
                 seen.add(jid)
                 out.append(j)
         time.sleep(PAGE_DELAY_SECONDS)
-    print(f"[LinkedInFetcher] fresher-target queries {picked} -> {len(out)} unique jobs")
+
+    print(f"[LinkedInFetcher] fresher sweep: {len(picked)} queries "
+          f"(slice {start}-{start + n - 1} of {len(plan)}) -> {len(out)} unique jobs")
     return out
 
 

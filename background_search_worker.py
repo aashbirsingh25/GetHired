@@ -502,8 +502,7 @@ class BackgroundSearchWorker:
                 try:
                     import time as _t
                     seed = int(_t.time() // 21600)  # rotates each 6h cycle
-                    jobs += fetch_linkedin_fresher_targets(location="India", per_query=10,
-                                                           queries_per_cycle=3, cycle_seed=seed)
+                    jobs += fetch_linkedin_fresher_targets(per_query=20, queries_per_cycle=6, cycle_seed=seed)
                 except Exception as te:
                     print(f"[BackgroundSearchWorker] LinkedIn fresher targets error: {te}")
                 seen, uniq = set(), []
