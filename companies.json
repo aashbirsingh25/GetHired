@@ -171,7 +171,7 @@
     {
       "id": "byjus",
       "name": "Byju's",
-      "career_url": "https://byjus.com/careers/",
+      "career_url": "https://byjus.com/careers/all-openings/job-category/tech/",
       "ats": "custom",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.9,
@@ -269,7 +269,7 @@
     {
       "id": "meta-india",
       "name": "Meta India",
-      "career_url": "https://www.metacareers.com",
+      "career_url": "https://www.metacareers.com/jobs",
       "ats": "custom",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
@@ -360,7 +360,7 @@
     {
       "id": "linkedin-india",
       "name": "LinkedIn India",
-      "career_url": "https://careers.linkedin.com",
+      "career_url": "https://www.linkedin.com/company/linkedin/jobs/?src=direct%2Fnone&veh=direct%2Fnone",
       "ats": "custom",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
@@ -477,8 +477,8 @@
     {
       "id": "vmware-india",
       "name": "VMware India",
-      "career_url": "https://www.broadcom.com/company/careers",
-      "ats": "custom",
+      "career_url": "https://broadcom.wd1.myworkdayjobs.com/External_Career",
+      "ats": "workday",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
       "success_rate": 0,
@@ -503,7 +503,7 @@
     {
       "id": "oracle-india",
       "name": "Oracle India",
-      "career_url": "https://www.oracle.com/careers",
+      "career_url": "https://www.oracle.com/in/careers/",
       "ats": "custom",
       "difficulty_estimate": 0.8,
       "your_preference_score": 0.7,
