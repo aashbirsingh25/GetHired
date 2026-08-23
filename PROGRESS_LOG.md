@@ -516,3 +516,13 @@ C) Bonus fix found via Hasura: stale-ATS fallthrough. Declared-ATS failure
    no longer aborts a scan; heuristics + learner now run.
 LESSON RECORDED: URL discovery must never overwrite a working ATS board URL
 with a non-ATS page - add a guard if that sweep is automated later.
+
+## 2026-08-24 (01:00) — LinkedIn broadened to full fresher sweep
+
+222-query space (30 fresher roles x 7 India locations + 12 mass-recruiter
+queries), 6 rotated per cycle @20 results => full sweep in ~1.5 days.
+Verified: 94 jobs in one slice (46 fresher-titled), full cycle persisted 81
+new; store now 193 LinkedIn jobs / 10.9k total.
+NOTE: LinkedIn is now the highest-yield FRESHER source we have (career pages
+are senior-heavy). If LinkedIn ever starts 429ing, reduce queries_per_cycle
+before anything else.
