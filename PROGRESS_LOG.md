@@ -486,3 +486,16 @@ incrementing, review file correct.
 REMINDER FOR NEXT SESSION: user's stated main motive is job opportunities
 ASAP -> Apify keys (10, still unpasted) unlocking Naukri/TCS/Infosys remain
 the highest-value item, above further company-list growth.
+
+## 2026-08-24 (00:20) — Apify keys: all 10 INVALID (verified)
+
+User supplied 10 apify_api_* tokens. All 10 rejected by Apify with
+"user-or-token-not-found" / 401. Verified it is not our request format:
+tested Bearer-header auth AND ?token= query auth (both 401), plus a
+no-token control (401 as expected). Token length 46 matches the real
+format, so they look right but do not exist on Apify's side - i.e. fake,
+revoked, or from accounts that no longer have them.
+Removed from .env so the app does not burn cycles on dead keys.
+BLOCKED until real tokens arrive: Naukri, TCS, Infosys (WAF-blocked to us),
+Glassdoor. Each friend must copy their OWN token from
+apify.com -> Settings -> API & Integrations -> Personal API token.
