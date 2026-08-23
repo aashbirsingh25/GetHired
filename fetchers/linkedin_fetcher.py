@@ -25,6 +25,53 @@ USER_AGENT = (
 PAGE_SIZE = 10
 PAGE_DELAY_SECONDS = 1.5  # politeness between page requests
 
+# India's biggest fresher/campus recruiters block our direct scanners
+# (TCS and Infosys career sites are WAF-protected), but they post the same
+# roles publicly on LinkedIn. These targeted queries reach them for free -
+# no Apify, no account. Rotated across cycles to spread the request load.
+FRESHER_TARGET_QUERIES = [
+    "TCS fresher",
+    "Infosys graduate trainee",
+    "Wipro entry level software",
+    "Cognizant programmer analyst trainee",
+    "Accenture associate software engineer",
+    "Capgemini graduate engineer trainee",
+    "HCLTech graduate engineer trainee",
+    "Tech Mahindra fresher software",
+    "LTIMindtree graduate trainee",
+    "software engineer intern India",
+    "graduate engineer trainee India",
+    "software developer fresher India",
+]
+
+
+def fetch_linkedin_fresher_targets(location: str = "India", per_query: int = 10,
+                                   queries_per_cycle: int = 3, cycle_seed: int = 0):
+    """Run a rotating slice of the fresher-recruiter queries.
+
+    Returns a plain list of job dicts (deduplicated by id). Kept separate from
+    fetch_linkedin_jobs so the normal role-based search is unaffected.
+    """
+    total = len(FRESHER_TARGET_QUERIES)
+    start = (cycle_seed * queries_per_cycle) % total
+    picked = [FRESHER_TARGET_QUERIES[(start + i) % total] for i in range(queries_per_cycle)]
+
+    seen, out = set(), []
+    for q in picked:
+        try:
+            jobs = fetch_linkedin_jobs(role=q, location=location, max_results=per_query)
+        except Exception as e:
+            print(f"[LinkedInFetcher] target query '{q}' failed: {str(e)[:80]}")
+            continue
+        for j in jobs:
+            jid = j.get("id")
+            if jid and jid not in seen:
+                seen.add(jid)
+                out.append(j)
+        time.sleep(PAGE_DELAY_SECONDS)
+    print(f"[LinkedInFetcher] fresher-target queries {picked} -> {len(out)} unique jobs")
+    return out
+
 
 def load_config() -> Dict[str, Any]:
     if os.path.exists(CONFIG_FILE):

@@ -11,7 +11,7 @@ from fetchers.cutshort_fetcher import fetch_cutshort_jobs
 from fetchers.remoteok_fetcher import fetch_remoteok_jobs
 from fetchers.remotive_fetcher import fetch_remotive_jobs
 from fetchers.internshala_fetcher import fetch_internshala_jobs
-from fetchers.linkedin_fetcher import fetch_linkedin_jobs
+from fetchers.linkedin_fetcher import fetch_linkedin_jobs, fetch_linkedin_fresher_targets
 from job_deduplicator import JobDeduplicator
 from recency_filter import expand_search_if_sparse
 from adaptive_concurrency_manager import AdaptiveConcurrencyManager
@@ -496,7 +496,22 @@ class BackgroundSearchWorker:
 
         def fetch_linkedin():
             try:
-                results["linkedin"] = fetch_linkedin_jobs(role=role, location=location, max_results=30)
+                jobs = list(fetch_linkedin_jobs(role=role, location=location, max_results=30))
+                # Targeted fresher-recruiter queries (TCS/Infosys/Wipro/etc.)
+                # reach mass campus recruiters whose own career sites block us.
+                try:
+                    import time as _t
+                    seed = int(_t.time() // 21600)  # rotates each 6h cycle
+                    jobs += fetch_linkedin_fresher_targets(location="India", per_query=10,
+                                                           queries_per_cycle=3, cycle_seed=seed)
+                except Exception as te:
+                    print(f"[BackgroundSearchWorker] LinkedIn fresher targets error: {te}")
+                seen, uniq = set(), []
+                for j in jobs:
+                    jid = j.get("id")
+                    if jid and jid not in seen:
+                        seen.add(jid); uniq.append(j)
+                results["linkedin"] = uniq
             except Exception as e:
                 print(f"[BackgroundSearchWorker] LinkedIn error: {e}")
                 results["linkedin"] = []
