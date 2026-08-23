@@ -320,3 +320,13 @@ downgrading refined scores. Refinement runs ~3.5h in background at paced
 RPM; feed gets honest scores progressively (LLM correctly rejects senior
 roles local tier overrated). Groq untested live (gemini never exhausted
 during verification) - watch first Groq fallback.
+
+## 2026-08-23 (19:00) — LinkedIn public listings live + Groq fixed
+
+LinkedIn boundary narrowed by user's explicit repeated daylight request
+(steering docs updated + committed): public guest endpoint only, no
+login ever. Fetcher live as 8th source: 30 jobs/cycle, verified in store.
+Groq: SDK was missing AND model retired (llama-3.1-8b-instant ->
+openai/gpt-oss-20b). Verified live scoring. Fallback tier now real.
+Quota math confirmed for user: refinement = one-time ~2k calls (~172/key
+= 11% of daily); steady state = few hundred calls/day pool-wide.
