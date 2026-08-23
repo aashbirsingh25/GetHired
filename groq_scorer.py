@@ -33,7 +33,7 @@ Score this match 0-100 as strict JSON only (no markdown formatting, no text befo
 """
 
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="openai/gpt-oss-20b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2
     )

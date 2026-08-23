@@ -187,7 +187,12 @@ purpose of the app (ranking jobs by fit).
   reviewed, working as intended, do not "improve" these as a side effect of
   another task.
 - Anything related to `_generate_career_jobs` — must stay disabled, always.
-- Anything related to LinkedIn automation — manual-import-only, always.
+- LinkedIn: RULE NARROWED 2026-08-23 by explicit user decision (asked twice
+  across sessions, confirmed in daylight). Allowed: fetching PUBLIC job
+  listings via LinkedIn's guest (logged-out) endpoints or third-party
+  scrapers (e.g. Apify) — no login, no credentials, read-only. Still
+  forbidden forever: using the user's LinkedIn account/credentials for
+  anything automated, auto-applying, messaging, or connection automation.
 - `.coderabbit.yaml` / CodeRabbit config — fine to merge (trivial), not fine
   to reconfigure without being asked.
 
