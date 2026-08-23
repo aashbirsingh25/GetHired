@@ -105,6 +105,7 @@ class BrowserScanner:
         learned_pattern = None
         method = "heuristic"
         llm_learned_method = False
+        self.discovered_jobs_url = None
 
         try:
             try:
@@ -173,7 +174,33 @@ class BrowserScanner:
                     current_html = page.content()
                     learned = learn_page_structure(
                         current_html, page.url, company.get("name", ""), self._llm_router)
-                    if learned:
+
+                    # The learner may report "no listings here, they live at X".
+                    # Follow that hint once, then retry heuristics + learning
+                    # on the real jobs page.
+                    hint = (learned or {}).get("jobs_url_hint") if learned else None
+                    if hint and hint.rstrip("/") != page.url.rstrip("/"):
+                        try:
+                            print(f"[LLMPageLearner] {company.get('name')}: following jobs_url hint -> {hint[:80]}")
+                            page.goto(hint, timeout=20000, wait_until="domcontentloaded")
+                            page.wait_for_timeout(3500)
+                            hint_html = page.content()
+                            hint_soup = BeautifulSoup(hint_html, "html.parser")
+                            h_jobs, h_pattern = self._extract_with_heuristics(hint_soup, page, company, now_iso)
+                            if h_jobs:
+                                jobs, learned_pattern = h_jobs, h_pattern
+                                llm_learned_method = True
+                                self.discovered_jobs_url = hint
+                            else:
+                                learned = learn_page_structure(
+                                    hint_html, page.url, company.get("name", ""), self._llm_router)
+                                if learned:
+                                    self.discovered_jobs_url = hint
+                                current_html = hint_html
+                        except Exception as hint_err:
+                            print(f"[LLMPageLearner] hint navigation failed: {str(hint_err)[:90]}")
+
+                    if not jobs and learned and learned.get("job_card_selector"):
                         llm_soup = BeautifulSoup(current_html, "html.parser")
                         llm_jobs = self._extract_with_pattern(llm_soup, company, learned, now_iso)
                         print(f"[LLMPageLearner] {company.get('name')}: selector "
