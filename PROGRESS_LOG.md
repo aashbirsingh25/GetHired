@@ -330,3 +330,13 @@ Groq: SDK was missing AND model retired (llama-3.1-8b-instant ->
 openai/gpt-oss-20b). Verified live scoring. Fallback tier now real.
 Quota math confirmed for user: refinement = one-time ~2k calls (~172/key
 = 11% of daily); steady state = few hundred calls/day pool-wide.
+
+## 2026-08-23 (19:20) — Keka extractor built (Indian startup portals unlocked)
+
+Public API found per tenant: <tenant>.keka.com/careers/api/jobs/default/active
+(no key). Extractor + dispatch + parallel-lane registration done. Probed 72
+tenants: 6 live-with-jobs added (Teachmint 31, Jupiter 12, Adda247/Niyo 10,
+Zluri 7, Chalo 2), 4 empty-but-valid. Hit rate lower than hoped - many
+Indian startups use Darwinbox/Zoho Recruit/custom instead. NEXT: same
+XHR-observation trick for Darwinbox (darwinbox.in tenants) and Zoho
+Recruit, then SuccessFactors for GDCs.
