@@ -177,6 +177,11 @@ class BrowserScanner:
             if len(got) == 4:
                 return got
             ats_error = got[1]
+        elif ats_type == "successfactors":
+            got = _try_api(self._extract_successfactors_jobs, "successfactors_api")
+            if len(got) == 4:
+                return got
+            ats_error = got[1]
 
         if ats_error:
             print(f"[BrowserScanner] {company.get('name')}: declared ATS "
@@ -1144,6 +1149,113 @@ class BrowserScanner:
                 error_msg = f"Keka API returned HTTP {r.status_code}"
         except Exception as e:
             error_msg = f"Keka API extraction error: {e}"
+
+        return (jobs, error_msg) if return_error else jobs
+
+    def _extract_successfactors_jobs(self, company: dict, target_url: str = None, return_error: bool = False):
+        """Extract jobs from an SAP SuccessFactors career site (Career Site Builder).
+
+        Used by the huge Indian fresher employers: EY GDS (careers.ey.com),
+        KPMG, Bosch, Siemens-class GCCs. The public search page is plain
+        server-rendered HTML - no key, no JS needed:
+          <base>/search/?q=&startrow=N     (25 rows per page)
+        with rows shaped as (verified live on careers.ey.com 2026-08-29):
+          <a class="jobTitle-link" href="/ey/job/...">Title</a>
+          <span class="jobLocation...">Bengaluru, KA, IN, 560048</span>
+        and total count as "N, Results" in the header.
+        """
+        url = target_url or company.get("career_url", "")
+        import re
+        import requests
+        from urllib.parse import urlparse
+
+        parsed = urlparse(url)
+        base = f"{parsed.scheme}://{parsed.netloc}"
+        # site prefix, e.g. /ey in careers.ey.com/ey/search/ - keep the first
+        # path segment when the career_url has one before /search or /job
+        seg = [s for s in parsed.path.split("/") if s]
+        prefix = f"/{seg[0]}" if seg and seg[0] not in ("search", "job") else ""
+        # Preserve the career_url's own filters (e.g. locationsearch=India on
+        # careers.ey.com): the global board is mostly non-India rows, and our
+        # 8-page budget should be spent on the filtered view.
+        extra_q = ""
+        if parsed.query:
+            keep = [p for p in parsed.query.split("&")
+                    if p and not p.startswith(("q=", "startrow="))]
+            if keep:
+                extra_q = "&" + "&".join(keep)
+
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
+        now_iso = datetime.now().isoformat()
+        jobs = []
+        error_msg = None
+        seen_hrefs = set()
+        # 8 pages x 25 rows = 200 jobs max per scan; big four boards hold
+        # thousands, and the fresher filter downstream is what matters
+        max_pages = 8
+
+        try:
+            for page in range(max_pages):
+                startrow = page * 25
+                search_url = f"{base}{prefix}/search/?q=&startrow={startrow}{extra_q}"
+                r = requests.get(search_url, headers=headers, timeout=15)
+                if r.status_code != 200:
+                    if page == 0:
+                        error_msg = f"SuccessFactors search returned HTTP {r.status_code}"
+                    break
+
+                rows = re.findall(
+                    r'<a[^>]*class="jobTitle-link"[^>]*href="([^"]+)"[^>]*>([^<]+)</a>',
+                    r.text)
+                # Locations appear once per row plus a "Location" table header;
+                # pair them positionally after dropping empties/headers.
+                locs = [l.strip() for l in re.findall(
+                    r'class="jobLocation[^"]*"[^>]*>\s*([^<]+?)\s*<', r.text)]
+                locs = [l for l in locs if l and l.lower() != "location"]
+
+                if not rows:
+                    if page == 0:
+                        error_msg = "SuccessFactors: no jobTitle-link rows on first page"
+                    break
+
+                # Desktop + mobile markup can duplicate each row; dedupe by href
+                new_on_page = 0
+                loc_i = 0
+                for href, title in rows:
+                    if href in seen_hrefs:
+                        continue
+                    seen_hrefs.add(href)
+                    location = locs[loc_i] if loc_i < len(locs) else "India"
+                    loc_i += 1
+                    new_on_page += 1
+                    title = title.strip()
+                    if not title:
+                        continue
+                    full_url = href if href.startswith("http") else f"{base}{href}"
+                    job_id = self._generate_job_id(company["id"], title, full_url)
+                    cand_job = {
+                        "id": job_id,
+                        "company": company["name"],
+                        "title": title,
+                        "location": location,
+                        "url": full_url,
+                        "description": f"{title} at {company['name']} - {location}. See posting for details.",
+                        "posted_date": None,
+                        "extraction_method": "successfactors_api",
+                        "scan_timestamp": now_iso,
+                        "first_seen_at": now_iso,
+                        "closed": False,
+                        "needs_manual_link_review": False,
+                        "match": None
+                    }
+                    is_valid, _ = check_job_posting_validity(cand_job)
+                    if is_valid:
+                        jobs.append(cand_job)
+
+                if new_on_page == 0:
+                    break  # past the last page
+        except Exception as e:
+            error_msg = f"SuccessFactors extraction error: {e}"
 
         return (jobs, error_msg) if return_error else jobs
 
