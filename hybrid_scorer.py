@@ -209,11 +209,19 @@ class HybridJobScorer:
         if target_tier == "paid_llm":
             tried_keys = set()
             tier_map = {"gemini": 1, "groq": 1, "claude": 2, "openai": 3}
+            # Why the LLM tier gave up, so a fallback to the local scorer is
+            # never silent. A silent fallback hid exhausted Gemini quotas for
+            # hours: the refinement pass looked like it was running while every
+            # score actually came from local_scorer.
+            llm_failures = []
 
             while True:
                 provider, api_key, key_idx = self.llm_router.get_best_available_key()
 
                 if (provider, key_idx) in tried_keys or provider is None:
+                    if provider is None and not llm_failures:
+                        llm_failures.append("router returned no usable key "
+                                            "(all keys out of daily quota or cooling down)")
                     break
 
                 tried_keys.add((provider, key_idx))
@@ -261,6 +269,7 @@ class HybridJobScorer:
 
                 except Exception as e:
                     err_text = str(e).lower()
+                    llm_failures.append(f"{provider}[{key_idx}]: {str(e)[:70]}")
                     # Dead key (invalid/revoked): remove from rotation.
                     # Transient (429 rate limit, quota message, 5xx, timeout):
                     # cool the key down and move to the next one.
@@ -281,6 +290,14 @@ class HybridJobScorer:
                         "error": str(e),
                         "status": "fallback"
                     })
+
+        # Reaching here means the LLM tier produced nothing. Say so out loud,
+        # once per job, with the actual reason - otherwise a refinement pass
+        # silently degrades to local scoring and looks healthy from outside.
+        if target_tier == "paid_llm":
+            why = "; ".join(llm_failures[:3]) if llm_failures else "no attempt made"
+            print(f"[HybridScorer] LLM tier unavailable for '{job_title[:40]}' "
+                  f"-> degrading to cheaper tier. Reason: {why}")
 
         # Tier 4: Ollama Local Model
         try:
