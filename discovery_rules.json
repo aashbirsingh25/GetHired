@@ -1,9 +1,16 @@
 {
   "blocklist_names": [],
-  "force_watch_names": [],
+  "force_watch_names": [
+    "InfoBeans Technologies",
+    "Iris Software Inc.",
+    "Kellton Tech Solutions"
+  ],
   "min_fresher_to_admit": 1,
   "notes": [
     "2026-08-23 (orchestrator): watchlist is the anti-forgetting mechanism - never delete a verified-real company just because it has no fresher opening today.",
-    "2026-08-23 (orchestrator): quality over quantity. Prefer parking an uncertain company on the watchlist over admitting it."
+    "2026-08-23 (orchestrator): quality over quantity. Prefer parking an uncertain company on the watchlist over admitting it.",
+    "2026-08-28 (weekly review): verified all 6 of the worker's parked/added calls live - every one correct. Jitterbit admission justified (9 India, 2 fresher, scans OK).",
+    "2026-08-28 (weekly review): force-watching Kellton Tech, Iris Software, InfoBeans - Indian/India-presence companies whose ATS boards currently tag no India roles. Kellton shows 2 fresher roles but none tagged India, so it is a likely near-term promotion.",
+    "2026-08-28 (orchestrator): rejection stats are dominated by 'no public ATS endpoint found' (207 of 227). LLM-proposed names are mostly companies without public career APIs - prefer categories known to use Greenhouse/Lever/SmartRecruiters/Keka, and keep mining our own postings."
   ]
 }

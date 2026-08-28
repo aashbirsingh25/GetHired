@@ -97,51 +97,46 @@ def _india_count(locations: List[str]) -> int:
 def _probe_greenhouse(token: str):
     d = _get_json(f"https://boards-api.greenhouse.io/v1/boards/{token}/jobs")
     jobs = d.get("jobs", [])
-    titles = [j.get("title", "") for j in jobs]
-    locs = [(j.get("location") or {}).get("name", "") for j in jobs]
-    return len(jobs), _india_count(locs), titles, f"https://boards.greenhouse.io/{token}"
+    pairs = [(j.get("title", ""), (j.get("location") or {}).get("name", "")) for j in jobs]
+    return len(jobs), _india_count([l for _, l in pairs]), pairs, f"https://boards.greenhouse.io/{token}"
 
 
 def _probe_lever(token: str):
     d = _get_json(f"https://api.lever.co/v0/postings/{token}?mode=json")
     if not isinstance(d, list):
         raise ValueError("unexpected lever payload")
-    titles = [j.get("text", "") for j in d]
-    locs = [((j.get("categories") or {}).get("location") or "") for j in d]
-    return len(d), _india_count(locs), titles, f"https://jobs.lever.co/{token}"
+    pairs = [(j.get("text", ""), ((j.get("categories") or {}).get("location") or "")) for j in d]
+    return len(d), _india_count([l for _, l in pairs]), pairs, f"https://jobs.lever.co/{token}"
 
 
 def _probe_ashby(token: str):
     d = _get_json(f"https://api.ashbyhq.com/posting-api/job-board/{token}?includeCompensation=false")
     jobs = d.get("jobs", [])
-    titles = [j.get("title", "") for j in jobs]
-    locs = [(j.get("location") or "") for j in jobs]
-    return len(jobs), _india_count(locs), titles, f"https://jobs.ashbyhq.com/{token}"
+    pairs = [(j.get("title", ""), (j.get("location") or "")) for j in jobs]
+    return len(jobs), _india_count([l for _, l in pairs]), pairs, f"https://jobs.ashbyhq.com/{token}"
 
 
 def _probe_smartrecruiters(token: str):
     d = _get_json(f"https://api.smartrecruiters.com/v1/companies/{token}/postings?limit=100")
     jobs = d.get("content", [])
-    titles = [j.get("name", "") for j in jobs]
-    locs = []
+    pairs = []
     for j in jobs:
         loc = j.get("location") or {}
-        locs.append(f"{loc.get('city','')} {loc.get('country','')}")
-    return d.get("totalFound", len(jobs)), _india_count(locs), titles, f"https://careers.smartrecruiters.com/{token}"
+        pairs.append((j.get("name", ""), f"{loc.get('city','')} {loc.get('country','')}"))
+    return d.get("totalFound", len(jobs)), _india_count([l for _, l in pairs]), pairs, f"https://careers.smartrecruiters.com/{token}"
 
 
 def _probe_keka(token: str):
     d = _get_json(f"https://{token}.keka.com/careers/api/jobs/default/active")
     items = d if isinstance(d, list) else (d.get("data") or [])
-    titles = [j.get("title", "") for j in items]
-    locs = []
+    pairs = []
     for j in items:
         names = []
         for l in (j.get("jobLocations") or []):
             if isinstance(l, dict):
                 names.append(l.get("city") or l.get("name") or "")
-        locs.append(", ".join(names) or "India")
-    return len(items), _india_count(locs), titles, f"https://{token}.keka.com/careers/"
+        pairs.append((j.get("title", ""), ", ".join(names) or "India"))
+    return len(items), _india_count([l for _, l in pairs]), pairs, f"https://{token}.keka.com/careers/"
 
 
 PROBES = {
@@ -159,28 +154,43 @@ def slugify(name: str) -> str:
     return re.sub(r"[^a-z0-9]", "", s)
 
 
+def _is_india_location(loc: str) -> bool:
+    return any(h in (loc or "").lower() for h in INDIA_HINTS) or (loc or "").strip().lower().endswith(" in")
+
+
 def verify_candidate(name: str) -> Dict[str, Any]:
     """Probe a company name against every supported ATS. Never guesses:
-    a result is only 'verified' when an endpoint returned real jobs."""
+    a result is only 'verified' when an endpoint returned real jobs.
+
+    GATE (fixed 2026-08-28 after weekly review): a company qualifies only if
+    it has jobs that are BOTH fresher-eligible AND in India. Counting the two
+    conditions independently let Jitterbit through on 14 senior India jobs
+    plus 2 interns in Brazil - zero fresher roles the user could apply to.
+    """
     token = slugify(name)
     if len(token) < 3:
         return {"name": name, "status": "rejected", "reason": "name too short to probe"}
 
     for ats, probe in PROBES.items():
         try:
-            total, india, titles, url = probe(token)
+            total, india, pairs, url = probe(token)
         except Exception:
             continue
         if total <= 0:
             continue
-        fresher = sum(1 for t in titles if is_fresher_title(t))
+        fresher = sum(1 for t, _ in pairs if is_fresher_title(t))
+        fresher_india = sum(1 for t, l in pairs if is_fresher_title(t) and _is_india_location(l))
         result = {"name": name, "ats": ats, "career_url": url, "total_jobs": total,
                   "india_jobs": india, "fresher_jobs": fresher,
-                  "titles_sampled": len(titles)}
+                  "fresher_india_jobs": fresher_india,
+                  "titles_sampled": len(pairs)}
         if india <= 0:
             result.update(status="rejected", reason="no India-based openings")
         elif fresher <= 0:
             result.update(status="rejected", reason="no fresher-eligible openings right now")
+        elif fresher_india <= 0:
+            result.update(status="rejected",
+                          reason="fresher openings exist but none in India")
         else:
             result.update(status="verified")
         return result

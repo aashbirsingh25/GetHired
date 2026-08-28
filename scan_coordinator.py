@@ -70,6 +70,27 @@ def _is_api_scannable(company: dict) -> bool:
     ats_type = (company.get("ats") or "").lower()
     return ats_type in _API_ATS_TYPES or any(h in url for h in _API_URL_HINTS)
 
+def _merge_save_companies(comp_map: dict) -> None:
+    """Write companies.json without clobbering concurrent additions.
+
+    A scan builds comp_map at start and saves it repeatedly. Meanwhile the
+    autonomous discovery worker appends newly verified companies. A plain
+    snapshot write deletes those additions - observed live: the worker added
+    Jitterbit on three separate cycles because each scan's write removed it
+    again. So: reload, update only the rows we scanned, keep everything else.
+    """
+    fresh = load_json(COMPANIES_FILE, {"companies": []})
+    rows = fresh.get("companies", [])
+    by_id = {c.get("id"): i for i, c in enumerate(rows) if c.get("id")}
+    for cid, updated in comp_map.items():
+        if cid in by_id:
+            rows[by_id[cid]] = updated
+        else:
+            rows.append(updated)
+    fresh["companies"] = rows
+    save_json(COMPANIES_FILE, fresh)
+
+
 class ScanCoordinator:
     def __init__(self):
         self.pattern_store = PatternStore()
@@ -321,8 +342,7 @@ class ScanCoordinator:
                 jobs_store["jobs"] = list(merged_by_id.values())
                 save_json(JOBS_FILE, jobs_store)
                 save_json(METRICS_FILE, metrics_store)
-                companies_data["companies"] = list(comp_map.values())
-                save_json(COMPANIES_FILE, companies_data)
+                _merge_save_companies(comp_map)
 
             print(f"Finished {cname}: Extracted {len(jobs)} jobs (Success: {is_success}, Method: {method})")
 
@@ -391,8 +411,7 @@ class ScanCoordinator:
         fresh_store["jobs"] = list(final_by_id.values())
         save_json(JOBS_FILE, fresh_store)
         save_json(METRICS_FILE, metrics_store)
-        companies_data["companies"] = list(comp_map.values())
-        save_json(COMPANIES_FILE, companies_data)
+        _merge_save_companies(comp_map)
 
         # Phase 3 Auto-Improvement Loop
         try:
