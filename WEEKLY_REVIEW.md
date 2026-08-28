@@ -1,32 +1,32 @@
 # Weekly Company-Discovery Review
 
-Generated: 2026-08-28T14:27:41.633776+00:00
+Generated: 2026-08-28T20:35:56.268605+00:00
 
 Orchestrator: verify the decisions below, then teach the worker by
 editing `discovery_rules.json` (blocklist_names, force_watch_names,
 min_fresher_to_admit, notes). The worker reads that file every cycle.
 
 ## Activity (last 7 days)
-- discovery cycles: 10
-- candidates probed: 277
+- discovery cycles: 13
+- candidates probed: 352
 - ADDED to list: 3 -> Jitterbit, Jitterbit, Jitterbit
 - PROMOTED from watchlist: 0 -> none
 - watchlist size: 5
 
 ## Rejection reasons (nothing is deleted; all are re-checked)
-- 255 x no public ATS endpoint found
+- 327 x no public ATS endpoint found
 - 16 x no India-based openings
-- 3 x no fresher-eligible openings right now
+- 6 x no fresher-eligible openings right now
 
 ## Near-misses to review (real India hiring, no fresher role yet)
 These are the highest-risk calls: if the worker is wrong about a
 company, it will most likely be one of these.
-- Iris Software Inc. (smartrecruiters) - 4 India jobs, 0 fresher, checked 3x
+- Iris Software Inc. (smartrecruiters) - 4 India jobs, 0 fresher, checked 6x
 
 ## Long-parked watchlist entries (checked most often, still no fresher)
+- Iris Software Inc. - checked 6x, best fresher seen 0
 - Coalition Technologies - checked 5x, best fresher seen 0
 - BOLD - checked 5x, best fresher seen 0
-- Iris Software Inc. - checked 3x, best fresher seen 0
 - Kellton Tech Solutions - checked 1x, best fresher seen 2
 - InfoBeans Technologies - checked 1x, best fresher seen 0
 

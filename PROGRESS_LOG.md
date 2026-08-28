@@ -656,3 +656,58 @@ watchlist 5.
 NEXT: after refinement completes, recalibrate min_match_score against the
 LLM-tier distribution (the current 55 was tuned on local-tier scores);
 then ~85 dead-company sweeps and list growth with the corrected gate.
+
+## 2026-08-29 (01:45) — LLM refinement was a no-op; scan crash fixed
+
+### Why refinement produced no LLM scores (measured, not inferred)
+Tested every key individually: **9 of 10 Gemini keys returned 429 after only
+23-52 calls**, so the free per-key daily cap for gemini-3.5-flash is ~50 —
+not the 1500 config assumed. Groq rate-limits per ORGANISATION on tokens, so
+its nominal 14,400 requests/day is unreachable. Real ceiling is a few hundred
+LLM scores per day, total.
+
+Three defects compounded it:
+1. **No daily rollover.** used_today only incremented, quota_remaining only
+   decremented. A key that hit its cap stayed dead forever even though
+   providers refill nightly — the pool shrank to nothing permanently.
+2. **Fictional quotas** meant the router kept selecting exhausted keys.
+3. **Hardcoded gemini-first order** — every job burned 10 failed API calls
+   before reaching Groq, then fell back to local scoring.
+Plus 4 keys still stuck at quota_remaining=0 from the older kill-on-any-error
+bug. Repaired.
+
+Refinement now takes the **top 150 candidates by local score** (REFINE_CAP)
+instead of all ~3000: at a few hundred calls/day, refining everything takes a
+week and starves the top of the feed, which is the only part read.
+
+### Scan crash: "cannot switch to a different thread (which happens to have exited)"
+Killed all browser-lane companies and then the whole cycle. ScanCoordinator
+reuses one BrowserScanner while each cycle can run on a new thread; Playwright
+binds a browser to its creating thread. Once a cycle ended without close(),
+the cached browser belonged to a dead thread, and close() raised the same
+error from inside finally — permanently poisoning the scanner.
+
+**Trap worth remembering: CPython REUSES thread idents.** A reproduction showed
+the new scan thread receiving the dead thread's exact ident, so a
+threading.get_ident() guard passes while the browser is actually orphaned.
+Compare Thread OBJECTS instead.
+
+Follow-on found in the logs: parallel API-lane workers WERE driving Playwright
+(a failed API extraction falls through to the page scan), 12 workers fighting
+over one browser. Workers now run with allow_browser=False and return
+"deferred_needs_browser"; the coordinator re-scans those sequentially on the
+browser-owning thread. Chosen over per-worker browsers, which would mean up
+to 12 Chromium instances on a laptop.
+
+### Verified this session
+- Live scan: 0 thread errors, 0 worker relaunches, 19 deferrals, 126+ scanned
+- Forced paid-tier score returns **tier 1 via groq**
+- Refinement: "top 150 of 3003" -> 150/150 processed; tier-1 272 -> 314
+- Feed **96 -> 158 jobs**; top two are LLM-scored: Arohana Python Full Stack
+  Intern/Entry 90%, Springer Capital Tech Intern 85%
+- 16 existing tests pass
+
+### Known limits
+Only ~28% of the 150 refinement attempts got an LLM score; the rest hit Groq's
+per-minute ceiling. ~500 more Gemini calls unlock when quota resets (~12:30 PM
+IST). Silent fallback is now loud (needs a restart to take effect).
