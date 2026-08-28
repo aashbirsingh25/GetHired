@@ -139,12 +139,49 @@ def _probe_keka(token: str):
     return len(items), _india_count([l for _, l in pairs]), pairs, f"https://{token}.keka.com/careers/"
 
 
+def _probe_successfactors(token: str):
+    """SuccessFactors sites live on company-owned hosts (careers.ey.com,
+    jobs.sap.com), not a shared tenant domain, so probe the two common
+    hostname shapes for the server-rendered /search/ page and parse the
+    jobTitle-link rows the same way the extractor does."""
+    import requests as _rq
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
+    last_err = None
+    for host in (f"careers.{token}.com", f"jobs.{token}.com"):
+        try:
+            r = _rq.get(f"https://{host}/search/?q=", headers=headers, timeout=12)
+            if r.status_code != 200:
+                continue
+            rows = re.findall(
+                r'<a[^>]*class="jobTitle-link"[^>]*href="[^"]*"[^>]*>([^<]+)</a>', r.text)
+            if not rows:
+                continue
+            locs = [l.strip() for l in re.findall(
+                r'class="jobLocation[^"]*"[^>]*>\s*([^<]+?)\s*<', r.text)]
+            locs = [l for l in locs if l and l.lower() != "location"]
+            titles = []
+            seen = set()
+            for t in rows:
+                t = t.strip()
+                if t and t not in seen:
+                    seen.add(t)
+                    titles.append(t)
+            pairs = [(t, locs[i] if i < len(locs) else "") for i, t in enumerate(titles)]
+            total_m = re.search(r'(\d[\d,]*)\s*,?\s*Results', r.text, re.I)
+            total = int(total_m.group(1).replace(",", "")) if total_m else len(pairs)
+            return total, _india_count([l for _, l in pairs]), pairs, f"https://{host}/search/?q="
+        except Exception as e:
+            last_err = e
+    raise ValueError(f"no SuccessFactors search page found ({last_err})")
+
+
 PROBES = {
     "greenhouse": _probe_greenhouse,
     "lever": _probe_lever,
     "ashby": _probe_ashby,
     "smartrecruiters": _probe_smartrecruiters,
     "keka": _probe_keka,
+    "successfactors": _probe_successfactors,
 }
 
 

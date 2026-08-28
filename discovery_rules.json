@@ -11,6 +11,7 @@
     "2026-08-23 (orchestrator): quality over quantity. Prefer parking an uncertain company on the watchlist over admitting it.",
     "2026-08-28 (weekly review): verified all 6 of the worker's parked/added calls live - every one correct. Jitterbit admission justified (9 India, 2 fresher, scans OK).",
     "2026-08-28 (weekly review): force-watching Kellton Tech, Iris Software, InfoBeans - Indian/India-presence companies whose ATS boards currently tag no India roles. Kellton shows 2 fresher roles but none tagged India, so it is a likely near-term promotion.",
-    "2026-08-28 (orchestrator): rejection stats are dominated by 'no public ATS endpoint found' (207 of 227). LLM-proposed names are mostly companies without public career APIs - prefer categories known to use Greenhouse/Lever/SmartRecruiters/Keka, and keep mining our own postings."
+    "2026-08-28 (orchestrator): rejection stats are dominated by 'no public ATS endpoint found' (207 of 227). LLM-proposed names are mostly companies without public career APIs - prefer categories known to use Greenhouse/Lever/SmartRecruiters/Keka, and keep mining our own postings.",
+    "2026-08-29: New ATS unlocked: successfactors (probe + extractor). Big-4/GCC employers host it on their own domains (careers.<co>.com or jobs.<co>.com with /search/?q= server-rendered pages). Confirmed live: EY GDS (51 fresher-titled India roles), SAP India. Ruled out (different systems/blocked): Deloitte USI=Avature, Cognizant=403, Bosch/Siemens/Wipro/HCLTech/TechM/LTIM/Genpact/DXC/Mphasis. When proposing candidates, consider consulting GCCs, German engineering GCCs, and enterprise software firms - many use SuccessFactors."
   ]
 }
