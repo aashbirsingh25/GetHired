@@ -711,3 +711,18 @@ to 12 Chromium instances on a laptop.
 Only ~28% of the 150 refinement attempts got an LLM score; the rest hit Groq's
 per-minute ceiling. ~500 more Gemini calls unlock when quota resets (~12:30 PM
 IST). Silent fallback is now loud (needs a restart to take effect).
+
+## 2026-08-29 (04:20) — SuccessFactors unlocked; discovery batch run
+
+- **New ATS: SuccessFactors** (extractor + discovery probe). EY GDS live in
+  the store with 200 India jobs (51 fresher-titled: Industrial Trainee /
+  Analyst / Associate / Staff); SAP India with 50. Both scan on the parallel
+  API lane. Probed and ruled out: Deloitte USI (Avature), Cognizant (403),
+  Bosch, Siemens, Wipro, HCLTech, TechM, LTIM, Genpact, DXC, Mphasis.
+- **Watchlist re-probe (all 5):** every company correctly stays parked.
+  Kellton still 2 fresher roles outside India; Iris 4 India roles none fresher.
+- **Discovery batch (34 names):** Tower Research Capital ADMITTED (16 India,
+  1 fresher-India, greenhouse) -> 279 companies. WorldQuant, Dhan, Refyne,
+  GoKwik (19 India roles, keka), Skyflow parked with India presence ->
+  watchlist 12. GoKwik is the likeliest near-term promotion.
+- Store: 15,281 jobs.
