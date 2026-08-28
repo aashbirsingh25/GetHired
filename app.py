@@ -824,19 +824,33 @@ def _async_rescore_jobs(resume_data):
             return
 
         # QUALITY REFINEMENT PASS (user's quality-first directive): the cheap
-        # pass above filters the pile; every feed CANDIDATE (local score >=
-        # refine threshold) is now rescored through the paid LLM tier for
-        # real semantic matching + reasoning. This spends O(feed candidates)
-        # LLM calls, not O(store size). Router still handles key rotation,
-        # quota accounting, and Gemini->Groq->local degradation on failure.
+        # pass above filters the pile; feed CANDIDATES (local score >= refine
+        # threshold) are rescored through the paid LLM tier for real semantic
+        # matching + reasoning.
+        #
+        # HARD CAP, added 2026-08-29 after measuring real free-tier capacity:
+        # Gemini free keys allow only ~50 calls/key/day (9 of 10 keys returned
+        # 429 after 23-52 calls), and Groq rate-limits at the ORGANISATION
+        # level on tokens, not per key. Actual ceiling is a few hundred LLM
+        # scores per day - not the 14,400 the config used to claim. Refining
+        # all ~2,900 candidates would take a week and starve the top of the
+        # feed, which is the only part actually read. So: refine the BEST
+        # candidates first, capped per pass, and let later passes walk down
+        # the list as quota frees up.
         refine_threshold = 50
+        refine_cap = int(os.environ.get("REFINE_CAP", "150"))
         candidates = [j for j in jobs_list
                       if isinstance(j.get("match"), dict)
                       and j["match"].get("tier") not in (1, 2)
                       and (j["match"].get("score") or 0) >= refine_threshold]
+        candidates.sort(key=lambda j: -(j["match"].get("score") or 0))
+        total_candidates = len(candidates)
+        candidates = candidates[:refine_cap]
         refined = 0
         if candidates:
-            print(f"[AppRescore] Quality refinement: {len(candidates)} feed candidates -> paid LLM tier...")
+            print(f"[AppRescore] Quality refinement: top {len(candidates)} of "
+                  f"{total_candidates} feed candidates -> paid LLM tier "
+                  f"(free-tier daily ceiling)...")
 
             def _persist_refined(batch):
                 # merge refined paid-tier scores into the live store now, so

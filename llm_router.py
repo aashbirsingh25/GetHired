@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from datetime import datetime
 
 CONFIG_FILE = os.path.join(os.path.dirname(__file__), "config.json")
 
@@ -30,6 +31,8 @@ class LLMRouter:
         # key_index -> unix time until which the key is cooling down after a
         # rate-limit/transient error (in-memory; resets on process restart)
         self.cooldowns = {}
+        # key_index -> consecutive failure count, for escalating backoff
+        self.consecutive_failures = {}
 
     def _load(self):
         load_dotenv()
@@ -78,6 +81,15 @@ class LLMRouter:
                     keys[gemini_indices[i]]["api_key"] = k_val
                 else:
                     keys.append({"provider": "gemini", "api_key": k_val, "quota_remaining": 1500, "used_today": 0})
+            # Drop gemini rows the env list no longer covers. Keys are injected
+            # BY POSITION, so shrinking the env list (e.g. removing keys Google
+            # permanently denied) used to leave trailing rows holding sanitized
+            # "YOUR_*" placeholders - phantom keys that stayed in rotation and
+            # burned a failed attempt every time they came up.
+            stale = gemini_indices[len(env_gemini_keys):]
+            if stale:
+                for idx in sorted(stale, reverse=True):
+                    keys.pop(idx)
 
         if env_groq_key:
             groq_item = next((k for k in keys if k.get("provider") == "groq"), None)
@@ -101,6 +113,35 @@ class LLMRouter:
                 keys.append({"provider": "openai", "api_key": env_openai_key, "quota_remaining": 3000, "used_today": 0})
 
         cfg["llm"]["keys"] = keys
+        self._apply_daily_rollover(cfg)
+        return cfg
+
+    # Measured free-tier daily request caps (2026-08-29, observed live, not guessed).
+    # gemini: 9 of 10 keys returned 429 ResourceExhausted after only 23-52 calls
+    # each, so the per-key daily cap for gemini-3.5-flash is ~50 - NOT the 1500
+    # the config previously assumed. Groq's cap is genuinely large, which makes
+    # it the workhorse for bulk scoring.
+    # groq additionally rate-limits per ORGANISATION on tokens/minute, so the
+    # practical daily ceiling is far below its nominal request cap.
+    DAILY_LIMITS = {"gemini": 50, "groq": 400, "claude": 100000, "openai": 3000}
+
+    def _apply_daily_rollover(self, cfg):
+        """Reset per-key daily counters when the date changes.
+
+        used_today only ever incremented, and quota_remaining only ever
+        decremented, so once a key hit its cap it stayed 'exhausted' forever
+        even though Google/Groq reset quotas every day. That silently shrank
+        the usable key pool to nothing over time.
+        """
+        today = datetime.now().strftime("%Y-%m-%d")
+        if cfg.get("llm", {}).get("quota_date") == today:
+            return cfg
+        for k in cfg.get("llm", {}).get("keys", []):
+            limit = k.get("daily_limit") or self.DAILY_LIMITS.get(k.get("provider"), 1000)
+            k["daily_limit"] = limit
+            k["used_today"] = 0
+            k["quota_remaining"] = limit
+        cfg.setdefault("llm", {})["quota_date"] = today
         return cfg
 
     def _save(self):
@@ -115,15 +156,33 @@ class LLMRouter:
     def get_best_available_key(self):
         """
         Returns tuple: (provider, api_key, key_index)
-        Searches providers in order: gemini -> groq -> claude -> openai
+
+        Providers are tried in order of ACTUAL remaining daily headroom, not a
+        fixed gemini-first order. The fixed order was actively harmful: gemini's
+        free cap is ~50/key/day, so once those were spent every scoring call
+        still tried all 10 gemini keys first, ate a 429 on each, and only then
+        reached Groq - which had 14k calls available. Measured effect: quality
+        refinement moved ~1 job per 100 seconds and mostly fell back to the
+        local scorer.
         Applies RPM rate limit throttling if specified for key (e.g. 30/min for Groq).
         """
         self.config = self._load()
         keys = self.config.get("llm", {}).get("keys", [])
         now = time.time()
 
-        # Priority order: gemini -> groq -> claude -> openai
-        for provider in ["gemini", "groq", "claude", "openai"]:
+        # Rank providers by how much daily quota they actually have left.
+        # Only count keys that are real (placeholder rows like YOUR_CLAUDE_API_KEY
+        # would otherwise sort to the top on their notional 100k cap).
+        headroom = {}
+        for item in keys:
+            prov = item.get("provider")
+            key_val = (item.get("api_key") or "").strip()
+            if not prov or not key_val or key_val.startswith("YOUR_"):
+                continue
+            headroom[prov] = headroom.get(prov, 0) + max(0, int(item.get("quota_remaining", 0) or 0))
+        provider_order = sorted(headroom.keys(), key=lambda p: -headroom[p])
+
+        for provider in provider_order:
             for idx, item in enumerate(keys):
                 if item.get("provider") == provider:
                     key_val = (item.get("api_key") or "").strip()
@@ -154,6 +213,8 @@ class LLMRouter:
 
     def mark_used(self, provider: str, key_index: int):
         now = time.time()
+        # a successful call clears the failure streak for this key
+        self.consecutive_failures.pop(key_index, None)
         # Record timestamp for RPM throttling window
         if key_index not in self.request_timestamps:
             self.request_timestamps[key_index] = []
@@ -219,8 +280,21 @@ class LLMRouter:
 
         Permanently zeroing quota on any exception (the old behavior) wiped
         the whole key pool within minutes of a burst - observed live with
-        12 fresh keys all zeroed at ~6 calls each."""
-        self.cooldowns[key_index] = time.time() + cooldown_seconds
+        12 fresh keys all zeroed at ~6 calls each.
+
+        Cooldowns ESCALATE per consecutive failure (2x each time, capped at
+        1h). Without this, a key that times out on every call was retried
+        every 60s and each attempt cost a ~60s API deadline - measured live:
+        refinement crawled at ~1 job/100s because dead/slow keys sat at the
+        front of the rotation.
+        """
+        fails = self.consecutive_failures.get(key_index, 0) + 1
+        self.consecutive_failures[key_index] = fails
+        backoff = min(cooldown_seconds * (2 ** (fails - 1)), 3600)
+        self.cooldowns[key_index] = time.time() + backoff
+        if fails >= 3:
+            print(f"[LLMRouter] {provider} key #{key_index} failing repeatedly "
+                  f"({fails}x) - cooling down {int(backoff)}s")
 
     def get_quota_status(self):
         self.config = self._load()
