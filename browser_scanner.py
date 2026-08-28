@@ -112,7 +112,7 @@ class BrowserScanner:
         self._playwright = None
         self._owner_thread = None
 
-    def scan_company(self, company: dict, stored_pattern: dict = None):
+    def scan_company(self, company: dict, stored_pattern: dict = None, allow_browser: bool = True):
         """
         Scans a company's career page using Workday REST API, Playwright with HTTP/1.1 fallback, iframe ATS resolution, and JS widget waiting.
         Returns tuple: (jobs_list, used_pattern_dict, extraction_method, error_message)
@@ -181,6 +181,15 @@ class BrowserScanner:
         if ats_error:
             print(f"[BrowserScanner] {company.get('name')}: declared ATS "
                   f"'{ats_type or 'auto'}' failed ({str(ats_error)[:70]}) - falling back to page scan")
+
+        # Parallel API-lane workers must not drive Playwright. Lane assignment
+        # sends only requests-based ATS companies to the worker pool, but a
+        # failed API extraction falls through to this page scan, which put the
+        # browser in a worker thread - 12 workers then contended over one
+        # browser (or would each launch their own Chromium). Instead, tell the
+        # coordinator to re-run this company on the sequential browser lane.
+        if not allow_browser:
+            return [], None, "deferred_needs_browser", None
 
         self.start()
 

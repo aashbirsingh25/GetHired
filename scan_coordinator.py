@@ -139,6 +139,9 @@ class ScanCoordinator:
 
         state_lock = threading.Lock()
 
+        # API-lane companies that turned out to need a page scan
+        deferred_to_browser_lane = []
+
         def scan_one(company, in_worker_thread):
             cid = company["id"]
             cname = company["name"]
@@ -150,13 +153,23 @@ class ScanCoordinator:
             stored_pattern = self.pattern_store.get_pattern(cid)
 
             # Network scan: outside the lock (this is the parallel part).
-            # Worker threads only ever reach the requests-based ATS
-            # extractors (guaranteed by lane assignment via _is_api_scannable).
+            # Worker threads must not touch Playwright, so they run with
+            # allow_browser=False; a company whose API extraction fails is
+            # deferred to the sequential browser lane rather than opening a
+            # browser here.
             try:
-                jobs, learned_pattern, method, error_msg = self.scanner.scan_company(company, stored_pattern)
+                jobs, learned_pattern, method, error_msg = self.scanner.scan_company(
+                    company, stored_pattern, allow_browser=not in_worker_thread)
             except Exception as scan_err:
                 print(f"Error scanning [{cid}]: {cname}: {scan_err}")
                 jobs, learned_pattern, method, error_msg = [], None, "heuristic", str(scan_err)
+
+            if method == "deferred_needs_browser":
+                # Record nothing: this is not a failed scan, just a lane change.
+                with state_lock:
+                    deferred_to_browser_lane.append(company)
+                print(f"Deferring [{cid}]: {cname} to sequential browser lane.")
+                return
 
             now_iso = datetime.now().isoformat()
             is_success = len(jobs) > 0 and error_msg is None
@@ -366,6 +379,14 @@ class ScanCoordinator:
             # not thread-safe and the browser belongs to this thread.
             for company in browser_lane:
                 scan_one(company, False)
+
+            # API-lane companies whose API extraction failed need a page scan;
+            # run them here, on the browser-owning thread.
+            if deferred_to_browser_lane:
+                print(f"[ScanCoordinator] {len(deferred_to_browser_lane)} API-lane "
+                      f"companies deferred to browser lane; scanning sequentially.")
+                for company in list(deferred_to_browser_lane):
+                    scan_one(company, False)
 
         finally:
             self.scanner.close()
