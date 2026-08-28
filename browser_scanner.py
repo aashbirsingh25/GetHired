@@ -5,6 +5,7 @@ import hashlib
 from datetime import datetime
 from typing import Tuple, List, Dict, Any
 from bs4 import BeautifulSoup
+import threading
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 from store_integrity_checker import check_job_posting_validity
 
@@ -37,12 +38,34 @@ class BrowserScanner:
         self.headless = headless
         self._playwright = None
         self._browser = None
+        # thread that created the browser; sync Playwright objects are bound to it
+        self._owner_thread = None
         # LLM page-structure learning (last-resort fallback for arbitrary
         # career pages). One call per company; result persisted as a pattern.
         self.enable_llm_learning = enable_llm_learning
         self._llm_router = None
 
     def start(self):
+        # Playwright's sync API binds a browser to the thread that created it.
+        # This scanner instance outlives a single scan cycle, and each cycle can
+        # run on a NEW background thread, so a cached browser may belong to a
+        # thread that has already exited. Using it then fails every company with
+        # "cannot switch to a different thread (which happens to have exited)",
+        # and close() fails the same way, leaving the instance permanently
+        # poisoned.
+        #
+        # We compare Thread OBJECTS, not threading.get_ident(): CPython reuses
+        # thread idents after a thread exits, so a fresh scan thread frequently
+        # reports the same ident as the dead one and an ident check silently
+        # passes while the browser is in fact orphaned (observed live).
+        current = threading.current_thread()
+        if self._playwright and self._owner_thread is not current:
+            prev = getattr(self._owner_thread, "name", "unknown")
+            print(f"[BrowserScanner] Browser belongs to thread {prev} (alive="
+                  f"{getattr(self._owner_thread, 'is_alive', lambda: '?')()}); "
+                  f"scan is on {current.name}. Relaunching for this thread.")
+            self._discard_stale()
+
         if not self._playwright:
             self._playwright = sync_playwright().start()
             self._browser = self._playwright.chromium.launch(
@@ -54,14 +77,40 @@ class BrowserScanner:
                     "--disable-http2"
                 ]
             )
+            self._owner_thread = current
+
+    def _discard_stale(self):
+        """Drop references to a browser owned by another (likely dead) thread.
+
+        Deliberately does NOT call close() - that would raise the very
+        thread-affinity error we are recovering from. The orphaned Chromium
+        process exits when its pipe closes.
+        """
+        self._browser = None
+        self._playwright = None
+        self._owner_thread = None
 
     def close(self):
-        if self._browser:
-            self._browser.close()
-            self._browser = None
-        if self._playwright:
-            self._playwright.stop()
-            self._playwright = None
+        # Only the owning thread can close these handles. From any other thread
+        # just drop them, and never let a close failure propagate into the
+        # caller's finally block (that turned one bad cycle into a permanently
+        # poisoned scanner).
+        if self._owner_thread is not None and self._owner_thread is not threading.current_thread():
+            self._discard_stale()
+            return
+        try:
+            if self._browser:
+                self._browser.close()
+        except Exception as e:
+            print(f"[BrowserScanner] Ignoring browser close error: {str(e)[:100]}")
+        try:
+            if self._playwright:
+                self._playwright.stop()
+        except Exception as e:
+            print(f"[BrowserScanner] Ignoring playwright stop error: {str(e)[:100]}")
+        self._browser = None
+        self._playwright = None
+        self._owner_thread = None
 
     def scan_company(self, company: dict, stored_pattern: dict = None):
         """
