@@ -11,7 +11,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:23:52.597248",
+      "last_parsed": "2026-08-28T22:35:23.747032",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -25,7 +25,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 44,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:23:53.227309",
+      "last_parsed": "2026-08-28T22:35:25.218374",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -38,8 +38,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 534,
-      "parsing_accuracy": 0.86,
-      "last_parsed": "2026-08-24T21:30:51.194475",
+      "parsing_accuracy": 0.83,
+      "last_parsed": "2026-08-28T22:35:22.050100",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -51,9 +51,9 @@
       "your_preference_score": 0.9,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 610,
+      "parsed_count": 652,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:06:21.850714",
+      "last_parsed": "2026-08-28T19:41:49.968274",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -67,7 +67,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:07:26.419870",
+      "last_parsed": "2026-08-28T19:41:49.975204",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -81,7 +81,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:23:53.848949",
+      "last_parsed": "2026-08-28T22:35:26.706290",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -93,9 +93,9 @@
       "your_preference_score": 0.9,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 45,
-      "parsing_accuracy": 0.23,
-      "last_parsed": "2026-08-24T21:06:20.106726",
+      "parsed_count": 61,
+      "parsing_accuracy": 0.33,
+      "last_parsed": "2026-08-28T19:41:50.545824",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -107,9 +107,9 @@
       "your_preference_score": 0.9,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1558,
+      "parsed_count": 1684,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:06:18.925440",
+      "last_parsed": "2026-08-28T19:41:47.519300",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -121,9 +121,9 @@
       "your_preference_score": 0.9,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 5075,
+      "parsed_count": 5527,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:06:21.431548",
+      "last_parsed": "2026-08-28T19:41:54.827752",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -135,9 +135,9 @@
       "your_preference_score": 0.9,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 254,
-      "parsing_accuracy": 0.95,
-      "last_parsed": "2026-08-24T21:06:19.423771",
+      "parsed_count": 282,
+      "parsing_accuracy": 0.96,
+      "last_parsed": "2026-08-28T19:41:49.040055",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -149,9 +149,9 @@
       "your_preference_score": 0.9,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 545,
-      "parsing_accuracy": 0.58,
-      "last_parsed": "2026-08-24T21:06:20.267197",
+      "parsed_count": 641,
+      "parsing_accuracy": 0.62,
+      "last_parsed": "2026-08-28T19:41:49.801186",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -165,7 +165,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 249,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:07:25.856185",
+      "last_parsed": "2026-08-28T19:41:48.473384",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -179,7 +179,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 40,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:23:54.475230",
+      "last_parsed": "2026-08-28T22:35:27.898537",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -193,7 +193,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:17.838448",
+      "last_parsed": "2026-08-28T20:09:07.216308",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -207,7 +207,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:49:09.108312",
+      "last_parsed": "2026-08-28T22:38:15.623884",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -221,7 +221,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:49:14.421756",
+      "last_parsed": "2026-08-28T22:38:16.821597",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -234,8 +234,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 29,
-      "parsing_accuracy": 0.64,
-      "last_parsed": "2026-08-24T21:31:13.681055",
+      "parsing_accuracy": 0.58,
+      "last_parsed": "2026-08-28T22:38:17.670602",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -247,9 +247,9 @@
       "your_preference_score": 0.5,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 256,
-      "parsing_accuracy": 0.38,
-      "last_parsed": "2026-08-24T21:30:18.189572",
+      "parsed_count": 316,
+      "parsing_accuracy": 0.44,
+      "last_parsed": "2026-08-28T22:35:03.537547",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -263,7 +263,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:23:55.100880",
+      "last_parsed": "2026-08-28T22:35:29.774526",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -277,7 +277,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 5,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:23:55.703441"
+      "last_parsed": "2026-08-28T22:35:30.893172"
     },
     {
       "id": "apple-india",
@@ -289,8 +289,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 65,
-      "parsing_accuracy": 0.86,
-      "last_parsed": "2026-08-24T21:30:51.966817"
+      "parsing_accuracy": 0.82,
+      "last_parsed": "2026-08-28T22:35:31.946124"
     },
     {
       "id": "adobe-india",
@@ -301,9 +301,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 838,
+      "parsed_count": 893,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:29:33.413146"
+      "last_parsed": "2026-08-28T20:11:05.121747"
     },
     {
       "id": "salesforce-india",
@@ -314,9 +314,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 587,
-      "parsing_accuracy": 0.61,
-      "last_parsed": "2026-08-24T21:29:36.351040"
+      "parsed_count": 631,
+      "parsing_accuracy": 0.63,
+      "last_parsed": "2026-08-28T20:11:29.982260"
     },
     {
       "id": "uber-india",
@@ -329,7 +329,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:23:56.933602"
+      "last_parsed": "2026-08-28T22:35:33.023003"
     },
     {
       "id": "atlassian-india",
@@ -341,8 +341,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 50,
-      "parsing_accuracy": 0.86,
-      "last_parsed": "2026-08-24T21:30:52.636670"
+      "parsing_accuracy": 0.82,
+      "last_parsed": "2026-08-28T22:35:34.124334"
     },
     {
       "id": "stripe-india",
@@ -354,8 +354,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 29,
-      "parsing_accuracy": 0.85,
-      "last_parsed": "2026-08-24T21:30:53.333883"
+      "parsing_accuracy": 0.81,
+      "last_parsed": "2026-08-28T22:35:35.355848"
     },
     {
       "id": "linkedin-india",
@@ -368,7 +368,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 10,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:23:58.819952"
+      "last_parsed": "2026-08-28T22:35:36.699284"
     },
     {
       "id": "airbnb-india",
@@ -379,9 +379,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 413,
-      "parsing_accuracy": 0.69,
-      "last_parsed": "2026-08-24T21:28:57.392798"
+      "parsed_count": 441,
+      "parsing_accuracy": 0.71,
+      "last_parsed": "2026-08-28T20:10:54.653561"
     },
     {
       "id": "servicenow-india",
@@ -392,9 +392,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 962,
-      "parsing_accuracy": 0.69,
-      "last_parsed": "2026-08-24T21:29:44.199411"
+      "parsed_count": 1049,
+      "parsing_accuracy": 0.71,
+      "last_parsed": "2026-08-28T20:12:26.090942"
     },
     {
       "id": "workday-india",
@@ -405,9 +405,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1414,
+      "parsed_count": 1490,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:07:30.410905"
+      "last_parsed": "2026-08-28T19:42:57.730296"
     },
     {
       "id": "snowflake-india",
@@ -419,8 +419,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 33,
-      "parsing_accuracy": 0.84,
-      "last_parsed": "2026-08-24T21:30:54.016281"
+      "parsing_accuracy": 0.8,
+      "last_parsed": "2026-08-28T22:35:38.098551"
     },
     {
       "id": "nvidia-india",
@@ -431,9 +431,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 569,
-      "parsing_accuracy": 0.69,
-      "last_parsed": "2026-08-24T21:30:05.994939"
+      "parsed_count": 606,
+      "parsing_accuracy": 0.65,
+      "last_parsed": "2026-08-28T20:12:41.005042"
     },
     {
       "id": "qualcomm-india",
@@ -445,8 +445,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 24,
-      "parsing_accuracy": 0.63,
-      "last_parsed": "2026-08-24T21:30:54.741344"
+      "parsing_accuracy": 0.6,
+      "last_parsed": "2026-08-28T22:35:39.179174"
     },
     {
       "id": "intel-india",
@@ -457,9 +457,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1235,
-      "parsing_accuracy": 0.36,
-      "last_parsed": "2026-08-24T21:06:17.009101"
+      "parsed_count": 1351,
+      "parsing_accuracy": 0.42,
+      "last_parsed": "2026-08-28T19:43:06.004890"
     },
     {
       "id": "cisco-india",
@@ -471,8 +471,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 83,
-      "parsing_accuracy": 0.84,
-      "last_parsed": "2026-08-24T21:30:55.449082"
+      "parsing_accuracy": 0.8,
+      "last_parsed": "2026-08-28T22:35:40.268819"
     },
     {
       "id": "vmware-india",
@@ -484,8 +484,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 114,
-      "parsing_accuracy": 0.3,
-      "last_parsed": "2026-08-24T21:30:26.482515"
+      "parsing_accuracy": 0.27,
+      "last_parsed": "2026-08-28T20:12:40.488531"
     },
     {
       "id": "sap-labs-india",
@@ -497,8 +497,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 28,
-      "parsing_accuracy": 0.84,
-      "last_parsed": "2026-08-24T21:30:56.122229"
+      "parsing_accuracy": 0.8,
+      "last_parsed": "2026-08-28T22:35:41.390637"
     },
     {
       "id": "oracle-india",
@@ -511,7 +511,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 15,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:01.945176"
+      "last_parsed": "2026-08-28T22:35:42.541564"
     },
     {
       "id": "ibm-india",
@@ -524,7 +524,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 5,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:02.566457"
+      "last_parsed": "2026-08-28T22:35:43.704532"
     },
     {
       "id": "dell-technologies-india",
@@ -536,8 +536,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 60,
-      "parsing_accuracy": 0.84,
-      "last_parsed": "2026-08-24T21:30:56.799918"
+      "parsing_accuracy": 0.8,
+      "last_parsed": "2026-08-28T22:35:44.731865"
     },
     {
       "id": "autodesk-india",
@@ -550,7 +550,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:03.809893"
+      "last_parsed": "2026-08-28T22:35:45.985126"
     },
     {
       "id": "intuit-india",
@@ -563,7 +563,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 60,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:04.432125"
+      "last_parsed": "2026-08-28T22:35:47.309851"
     },
     {
       "id": "paypal-india",
@@ -575,8 +575,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 25,
-      "parsing_accuracy": 0.83,
-      "last_parsed": "2026-08-24T21:30:57.501851"
+      "parsing_accuracy": 0.79,
+      "last_parsed": "2026-08-28T22:35:48.378469"
     },
     {
       "id": "visa-india",
@@ -589,7 +589,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:05.679058"
+      "last_parsed": "2026-08-28T22:35:49.602966"
     },
     {
       "id": "goldman-sachs-india",
@@ -602,7 +602,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 10,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:06.296790"
+      "last_parsed": "2026-08-28T22:35:50.457355"
     },
     {
       "id": "jpmorgan-chase-india",
@@ -615,7 +615,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 5,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:06.923364"
+      "last_parsed": "2026-08-28T22:35:51.795849"
     },
     {
       "id": "morgan-stanley-india",
@@ -628,7 +628,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:07.553507"
+      "last_parsed": "2026-08-28T22:35:52.799695"
     },
     {
       "id": "barclays-india",
@@ -640,8 +640,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 449,
-      "parsing_accuracy": 0.94,
-      "last_parsed": "2026-08-24T21:30:02.697804"
+      "parsing_accuracy": 0.89,
+      "last_parsed": "2026-08-28T20:48:29.200080"
     },
     {
       "id": "deutsche-bank-india",
@@ -654,7 +654,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 10,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:08.184751"
+      "last_parsed": "2026-08-28T22:35:53.833516"
     },
     {
       "id": "walmart-global-tech-india",
@@ -667,7 +667,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:08.835326"
+      "last_parsed": "2026-08-28T22:35:55.681394"
     },
     {
       "id": "american-express-india",
@@ -680,7 +680,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:09.499355"
+      "last_parsed": "2026-08-28T22:35:56.488063"
     },
     {
       "id": "nutanix-india",
@@ -692,8 +692,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 26,
-      "parsing_accuracy": 0.78,
-      "last_parsed": "2026-08-24T21:30:58.181656"
+      "parsing_accuracy": 0.74,
+      "last_parsed": "2026-08-28T22:35:57.866928"
     },
     {
       "id": "databricks-india",
@@ -704,9 +704,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 5571,
-      "parsing_accuracy": 0.69,
-      "last_parsed": "2026-08-24T21:29:25.344370"
+      "parsed_count": 6102,
+      "parsing_accuracy": 0.71,
+      "last_parsed": "2026-08-28T21:59:19.981680"
     },
     {
       "id": "mongodb-india",
@@ -719,7 +719,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 15,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:10.741977"
+      "last_parsed": "2026-08-28T22:35:58.857038"
     },
     {
       "id": "confluent-india",
@@ -732,7 +732,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:11.389624"
+      "last_parsed": "2026-08-28T22:35:59.818748"
     },
     {
       "id": "hashicorp-india",
@@ -745,7 +745,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:12.118023"
+      "last_parsed": "2026-08-28T22:36:00.847609"
     },
     {
       "id": "hcl-technologies",
@@ -758,7 +758,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:12.763705"
+      "last_parsed": "2026-08-28T22:36:02.194218"
     },
     {
       "id": "tech-mahindra",
@@ -771,7 +771,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:13.397910"
+      "last_parsed": "2026-08-28T22:36:03.538638"
     },
     {
       "id": "cognizant",
@@ -783,8 +783,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 25,
-      "parsing_accuracy": 0.78,
-      "last_parsed": "2026-08-24T21:30:59.065992"
+      "parsing_accuracy": 0.74,
+      "last_parsed": "2026-08-28T22:36:04.808290"
     },
     {
       "id": "mphasis",
@@ -797,7 +797,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 8,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:14.658849"
+      "last_parsed": "2026-08-28T22:36:06.081742"
     },
     {
       "id": "ltimindtree",
@@ -810,7 +810,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 4,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:15.285260"
+      "last_parsed": "2026-08-28T22:36:07.394644"
     },
     {
       "id": "persistent-systems",
@@ -837,7 +837,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:15.927004"
+      "last_parsed": "2026-08-28T22:36:08.469798"
     },
     {
       "id": "zensar",
@@ -850,7 +850,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 11,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:16.551034"
+      "last_parsed": "2026-08-28T22:36:09.956112"
     },
     {
       "id": "birlasoft",
@@ -862,8 +862,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 29,
-      "parsing_accuracy": 0.78,
-      "last_parsed": "2026-08-24T21:30:59.758645"
+      "parsing_accuracy": 0.74,
+      "last_parsed": "2026-08-28T22:36:11.175145"
     },
     {
       "id": "coforge",
@@ -876,7 +876,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:17.807160"
+      "last_parsed": "2026-08-28T22:36:12.654675"
     },
     {
       "id": "l&t-infotech",
@@ -889,7 +889,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 4,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:18.430405"
+      "last_parsed": "2026-08-28T22:36:14.047729"
     },
     {
       "id": "capgemini-india",
@@ -902,7 +902,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 17,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:19.058438"
+      "last_parsed": "2026-08-28T22:36:15.992047"
     },
     {
       "id": "deloitte-india",
@@ -914,8 +914,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 41,
-      "parsing_accuracy": 0.78,
-      "last_parsed": "2026-08-24T21:31:00.433145"
+      "parsing_accuracy": 0.74,
+      "last_parsed": "2026-08-28T22:36:17.282406"
     },
     {
       "id": "ey-india",
@@ -927,8 +927,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 24,
-      "parsing_accuracy": 0.76,
-      "last_parsed": "2026-08-24T21:31:01.099448"
+      "parsing_accuracy": 0.72,
+      "last_parsed": "2026-08-28T22:36:18.837606"
     },
     {
       "id": "kpmg-india",
@@ -941,7 +941,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 16,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:20.955205"
+      "last_parsed": "2026-08-28T22:36:19.983512"
     },
     {
       "id": "myntra",
@@ -954,7 +954,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:21.584792"
+      "last_parsed": "2026-08-28T22:36:21.426231"
     },
     {
       "id": "zerodha",
@@ -967,7 +967,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:22.206458"
+      "last_parsed": "2026-08-28T22:36:22.506683"
     },
     {
       "id": "groww",
@@ -978,9 +978,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 55,
-      "parsing_accuracy": 0.69,
-      "last_parsed": "2026-08-24T21:29:24.594132"
+      "parsed_count": 60,
+      "parsing_accuracy": 0.71,
+      "last_parsed": "2026-08-28T22:00:23.214544"
     },
     {
       "id": "zoho",
@@ -992,8 +992,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 82,
-      "parsing_accuracy": 0.76,
-      "last_parsed": "2026-08-24T21:31:01.773036"
+      "parsing_accuracy": 0.72,
+      "last_parsed": "2026-08-28T22:36:23.913078"
     },
     {
       "id": "freshworks",
@@ -1004,9 +1004,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 301,
-      "parsing_accuracy": 0.3,
-      "last_parsed": "2026-08-24T21:30:13.365311"
+      "parsed_count": 400,
+      "parsing_accuracy": 0.36,
+      "last_parsed": "2026-08-28T22:03:52.733802"
     },
     {
       "id": "postman",
@@ -1017,9 +1017,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 360,
-      "parsing_accuracy": 0.27,
-      "last_parsed": "2026-08-24T21:29:27.521075"
+      "parsed_count": 425,
+      "parsing_accuracy": 0.33,
+      "last_parsed": "2026-08-28T22:03:52.251844"
     },
     {
       "id": "nykaa",
@@ -1046,7 +1046,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:23.470507"
+      "last_parsed": "2026-08-28T22:36:25.517092"
     },
     {
       "id": "bigbasket",
@@ -1059,7 +1059,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:24:24.096262"
+      "last_parsed": "2026-08-28T22:36:26.766465"
     },
     {
       "id": "lenskart",
@@ -1071,8 +1071,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 309,
-      "parsing_accuracy": 0.76,
-      "last_parsed": "2026-08-24T21:31:02.437555"
+      "parsing_accuracy": 0.72,
+      "last_parsed": "2026-08-28T22:36:27.841769"
     },
     {
       "id": "policybazaar",
@@ -1085,7 +1085,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:41:54.663751"
+      "last_parsed": "2026-08-28T22:36:29.459165"
     },
     {
       "id": "makemytrip",
@@ -1097,8 +1097,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 26,
-      "parsing_accuracy": 0.5,
-      "last_parsed": "2026-08-24T21:31:03.120611"
+      "parsing_accuracy": 0.47,
+      "last_parsed": "2026-08-28T22:36:30.474764"
     },
     {
       "id": "ola",
@@ -1111,7 +1111,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:42:09.645265"
+      "last_parsed": "2026-08-28T22:36:31.524086"
     },
     {
       "id": "ola-electric",
@@ -1124,7 +1124,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:42:21.603540"
+      "last_parsed": "2026-08-28T22:36:32.612598"
     },
     {
       "id": "inmobi",
@@ -1136,8 +1136,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 23,
-      "parsing_accuracy": 0.8,
-      "last_parsed": "2026-08-24T21:31:03.822484"
+      "parsing_accuracy": 0.75,
+      "last_parsed": "2026-08-28T22:36:34.006360"
     },
     {
       "id": "cars24",
@@ -1150,7 +1150,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:42:35.957003"
+      "last_parsed": "2026-08-28T22:36:35.394539"
     },
     {
       "id": "cultfit",
@@ -1163,7 +1163,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:42:45.033890"
+      "last_parsed": "2026-08-28T22:36:36.835855"
     },
     {
       "id": "dream11",
@@ -1176,7 +1176,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:42:50.821228"
+      "last_parsed": "2026-08-28T22:36:38.236281"
     },
     {
       "id": "games24x7",
@@ -1189,7 +1189,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:42:57.032434"
+      "last_parsed": "2026-08-28T22:36:39.223944"
     },
     {
       "id": "juspay",
@@ -1202,7 +1202,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 11,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:30.790452"
+      "last_parsed": "2026-08-28T22:05:17.823787"
     },
     {
       "id": "rapido",
@@ -1215,7 +1215,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:43:05.389358"
+      "last_parsed": "2026-08-28T22:36:40.298689"
     },
     {
       "id": "chargebee",
@@ -1228,7 +1228,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:29.247831"
+      "last_parsed": "2026-08-28T22:06:28.294499"
     },
     {
       "id": "rocketlane",
@@ -1241,7 +1241,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 4,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:30.615845"
+      "last_parsed": "2026-08-28T22:08:52.509612"
     },
     {
       "id": "everstage",
@@ -1254,7 +1254,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 10,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:31.062427"
+      "last_parsed": "2026-08-28T22:08:57.020535"
     },
     {
       "id": "uniphore",
@@ -1265,9 +1265,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 117,
-      "parsing_accuracy": 0.3,
-      "last_parsed": "2026-08-24T21:30:05.733811"
+      "parsed_count": 154,
+      "parsing_accuracy": 0.36,
+      "last_parsed": "2026-08-28T22:10:51.169750"
     },
     {
       "id": "yubi",
@@ -1280,7 +1280,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 4,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:43:19.453478"
+      "last_parsed": "2026-08-28T22:36:41.575247"
     },
     {
       "id": "m2p-fintech",
@@ -1293,7 +1293,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:43:26.090872"
+      "last_parsed": "2026-08-28T22:36:42.671444"
     },
     {
       "id": "innovaccer",
@@ -1306,7 +1306,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:33.244021"
+      "last_parsed": "2026-08-28T22:10:59.640068"
     },
     {
       "id": "highradius",
@@ -1318,8 +1318,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 36,
-      "parsing_accuracy": 0.8,
-      "last_parsed": "2026-08-24T21:31:04.516926"
+      "parsing_accuracy": 0.75,
+      "last_parsed": "2026-08-28T22:36:43.936970"
     },
     {
       "id": "whatfix",
@@ -1332,7 +1332,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 8,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:33.723482"
+      "last_parsed": "2026-08-28T22:12:20.147281"
     },
     {
       "id": "darwinbox",
@@ -1345,7 +1345,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:43:47.011486"
+      "last_parsed": "2026-08-28T22:36:45.029368"
     },
     {
       "id": "icertis",
@@ -1358,7 +1358,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 20,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:43:51.829019"
+      "last_parsed": "2026-08-28T22:36:46.462302"
     },
     {
       "id": "zenoti",
@@ -1369,9 +1369,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 246,
+      "parsed_count": 293,
       "parsing_accuracy": 0.94,
-      "last_parsed": "2026-08-24T21:29:28.660478"
+      "last_parsed": "2026-08-28T22:13:24.425019"
     },
     {
       "id": "leadsquared",
@@ -1383,8 +1383,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 46,
-      "parsing_accuracy": 0.8,
-      "last_parsed": "2026-08-24T21:31:05.221495"
+      "parsing_accuracy": 0.75,
+      "last_parsed": "2026-08-28T22:36:47.869762"
     },
     {
       "id": "hasura",
@@ -1397,7 +1397,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 20,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:36.765192"
+      "last_parsed": "2026-08-28T22:14:36.046009"
     },
     {
       "id": "fyle",
@@ -1410,7 +1410,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:44:13.387005"
+      "last_parsed": "2026-08-28T22:36:48.993175"
     },
     {
       "id": "cleartax",
@@ -1422,8 +1422,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 26,
-      "parsing_accuracy": 0.79,
-      "last_parsed": "2026-08-24T21:31:05.934025"
+      "parsing_accuracy": 0.73,
+      "last_parsed": "2026-08-28T22:36:50.096916"
     },
     {
       "id": "slice",
@@ -1436,7 +1436,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:44:28.449556"
+      "last_parsed": "2026-08-28T22:36:51.175004"
     },
     {
       "id": "jupiter-money",
@@ -1447,9 +1447,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 36,
-      "parsing_accuracy": 0.33,
-      "last_parsed": "2026-08-24T21:29:28.850669"
+      "parsed_count": 48,
+      "parsing_accuracy": 0.4,
+      "last_parsed": "2026-08-28T22:17:16.041072"
     },
     {
       "id": "fi-money",
@@ -1460,9 +1460,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 33,
-      "parsing_accuracy": 0.33,
-      "last_parsed": "2026-08-24T21:29:32.261084"
+      "parsed_count": 44,
+      "parsing_accuracy": 0.4,
+      "last_parsed": "2026-08-28T22:19:25.608841"
     },
     {
       "id": "onecard",
@@ -1475,7 +1475,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:44:46.968528"
+      "last_parsed": "2026-08-28T22:36:52.235961"
     },
     {
       "id": "bharatpe",
@@ -1488,7 +1488,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:44:53.586528"
+      "last_parsed": "2026-08-28T22:36:53.262099"
     },
     {
       "id": "pine-labs",
@@ -1501,7 +1501,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 3,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:45:00.150814"
+      "last_parsed": "2026-08-28T22:36:54.207588"
     },
     {
       "id": "cashfree",
@@ -1514,7 +1514,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 18,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:40.286360"
+      "last_parsed": "2026-08-28T22:20:36.639827"
     },
     {
       "id": "setu",
@@ -1527,7 +1527,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:40.492114"
+      "last_parsed": "2026-08-28T22:22:07.825378"
     },
     {
       "id": "open-financial-technologies",
@@ -1538,9 +1538,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 6,
-      "parsing_accuracy": 0.33,
-      "last_parsed": "2026-08-24T21:29:30.191278"
+      "parsed_count": 7,
+      "parsing_accuracy": 0.4,
+      "last_parsed": "2026-08-28T22:23:31.745149"
     },
     {
       "id": "blinkit",
@@ -1553,7 +1553,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:45:10.663840"
+      "last_parsed": "2026-08-28T22:36:55.188217"
     },
     {
       "id": "dunzo",
@@ -1566,7 +1566,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:45:11.534365"
+      "last_parsed": "2026-08-28T22:36:56.121107"
     },
     {
       "id": "udaan",
@@ -1579,7 +1579,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:45:27.211059"
+      "last_parsed": "2026-08-28T22:36:57.116040"
     },
     {
       "id": "shiprocket",
@@ -1592,7 +1592,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 6,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:45:32.715546"
+      "last_parsed": "2026-08-28T22:36:58.370545"
     },
     {
       "id": "delhivery",
@@ -1605,7 +1605,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 13,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:45:40.009488"
+      "last_parsed": "2026-08-28T22:36:59.480577"
     },
     {
       "id": "purplle",
@@ -1618,7 +1618,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 18,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:45:48.426974"
+      "last_parsed": "2026-08-28T22:37:00.691113"
     },
     {
       "id": "firstcry",
@@ -1631,7 +1631,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:46:04.105921"
+      "last_parsed": "2026-08-28T22:37:02.245724"
     },
     {
       "id": "licious",
@@ -1644,7 +1644,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:46:15.448021"
+      "last_parsed": "2026-08-28T22:37:03.364609"
     },
     {
       "id": "upstox",
@@ -1657,7 +1657,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:46:21.615651"
+      "last_parsed": "2026-08-28T22:37:04.482792"
     },
     {
       "id": "smallcase",
@@ -1670,7 +1670,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:46:30.257188"
+      "last_parsed": "2026-08-28T22:37:05.486212"
     },
     {
       "id": "indmoney",
@@ -1682,8 +1682,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 25,
-      "parsing_accuracy": 0.69,
-      "last_parsed": "2026-08-24T21:31:06.631553"
+      "parsing_accuracy": 0.64,
+      "last_parsed": "2026-08-28T22:37:06.491594"
     },
     {
       "id": "angel-one",
@@ -1695,8 +1695,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 20,
-      "parsing_accuracy": 0.77,
-      "last_parsed": "2026-08-24T21:31:07.361562"
+      "parsing_accuracy": 0.71,
+      "last_parsed": "2026-08-28T22:37:07.496536"
     },
     {
       "id": "coindcx",
@@ -1709,7 +1709,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:46:50.237842"
+      "last_parsed": "2026-08-28T22:37:08.459218"
     },
     {
       "id": "coinswitch",
@@ -1722,7 +1722,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:42.555177"
+      "last_parsed": "2026-08-28T22:24:47.793109"
     },
     {
       "id": "unacademy",
@@ -1735,7 +1735,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:46:57.111464"
+      "last_parsed": "2026-08-28T22:37:09.486223"
     },
     {
       "id": "vedantu",
@@ -1748,7 +1748,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:47:03.096852"
+      "last_parsed": "2026-08-28T22:37:10.727073"
     },
     {
       "id": "physicswallah",
@@ -1761,7 +1761,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 6,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:47:08.719646"
+      "last_parsed": "2026-08-28T22:37:12.451549"
     },
     {
       "id": "upgrad",
@@ -1774,7 +1774,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 46,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:47:15.487588"
+      "last_parsed": "2026-08-28T22:37:14.027604"
     },
     {
       "id": "simplilearn",
@@ -1787,7 +1787,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:47:25.368752"
+      "last_parsed": "2026-08-28T22:37:15.658167"
     },
     {
       "id": "scaler",
@@ -1799,8 +1799,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 29,
-      "parsing_accuracy": 0.77,
-      "last_parsed": "2026-08-24T21:31:08.090225"
+      "parsing_accuracy": 0.71,
+      "last_parsed": "2026-08-28T22:37:16.965321"
     },
     {
       "id": "coding-ninjas",
@@ -1813,7 +1813,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 6,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:47:42.061246"
+      "last_parsed": "2026-08-28T22:37:18.009223"
     },
     {
       "id": "practo",
@@ -1826,7 +1826,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:47:47.733029"
+      "last_parsed": "2026-08-28T22:37:19.000164"
     },
     {
       "id": "pristyn-care",
@@ -1838,8 +1838,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 23,
-      "parsing_accuracy": 0.77,
-      "last_parsed": "2026-08-24T21:31:09.483600"
+      "parsing_accuracy": 0.71,
+      "last_parsed": "2026-08-28T22:37:20.002070"
     },
     {
       "id": "1mg",
@@ -1852,7 +1852,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:48:01.191491"
+      "last_parsed": "2026-08-28T22:37:21.689834"
     },
     {
       "id": "healthifyme",
@@ -1865,7 +1865,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:48:06.722871"
+      "last_parsed": "2026-08-28T22:37:23.031690"
     },
     {
       "id": "browserstack",
@@ -1876,9 +1876,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 160,
-      "parsing_accuracy": 0.27,
-      "last_parsed": "2026-08-24T21:30:07.240646"
+      "parsed_count": 212,
+      "parsing_accuracy": 0.33,
+      "last_parsed": "2026-08-28T22:26:54.329604"
     },
     {
       "id": "clevertap",
@@ -1891,7 +1891,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 23,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:44.672016"
+      "last_parsed": "2026-08-28T22:27:35.336476"
     },
     {
       "id": "webengage",
@@ -1903,8 +1903,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 234,
-      "parsing_accuracy": 0.69,
-      "last_parsed": "2026-08-24T21:31:10.154252"
+      "parsing_accuracy": 0.64,
+      "last_parsed": "2026-08-28T22:37:24.047246"
     },
     {
       "id": "moengage",
@@ -1917,7 +1917,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 16,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:47.005213"
+      "last_parsed": "2026-08-28T22:29:14.600252"
     },
     {
       "id": "netcore-cloud",
@@ -1930,7 +1930,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 13,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:48:34.976090"
+      "last_parsed": "2026-08-28T22:37:25.602832"
     },
     {
       "id": "wingify-(vwo)",
@@ -1941,9 +1941,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 63,
-      "parsing_accuracy": 0.33,
-      "last_parsed": "2026-08-24T21:29:32.091890"
+      "parsed_count": 85,
+      "parsing_accuracy": 0.4,
+      "last_parsed": "2026-08-28T22:30:27.790548"
     },
     {
       "id": "locussh",
@@ -1956,7 +1956,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 13,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-24T02:22:50.042111"
+      "last_parsed": "2026-08-28T22:32:02.756839"
     },
     {
       "id": "shipsy",
@@ -1969,7 +1969,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 6,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:48:50.954217"
+      "last_parsed": "2026-08-28T22:37:26.909857"
     },
     {
       "id": "signzy",
@@ -1980,9 +1980,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 476,
-      "parsing_accuracy": 0.86,
-      "last_parsed": "2026-08-24T21:29:33.055759"
+      "parsed_count": 513,
+      "parsing_accuracy": 0.87,
+      "last_parsed": "2026-08-28T22:33:27.966262"
     },
     {
       "id": "hyperface",
@@ -1995,7 +1995,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:49:07.228544"
+      "last_parsed": "2026-08-28T22:37:28.095595"
     },
     {
       "id": "fractal-analytics",
@@ -2006,9 +2006,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1260,
-      "parsing_accuracy": 0.36,
-      "last_parsed": "2026-08-24T21:06:17.002478"
+      "parsed_count": 1380,
+      "parsing_accuracy": 0.42,
+      "last_parsed": "2026-08-28T19:43:00.722848"
     },
     {
       "id": "mu-sigma",
@@ -2021,7 +2021,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 6,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T18:49:16.737723"
+      "last_parsed": "2026-08-28T22:37:29.023568"
     },
     {
       "id": "tiger-analytics",
@@ -2033,8 +2033,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 19,
-      "parsing_accuracy": 0.69,
-      "last_parsed": "2026-08-24T21:31:11.003046"
+      "parsing_accuracy": 0.64,
+      "last_parsed": "2026-08-28T22:37:30.146837"
     },
     {
       "id": "latentview-analytics",
@@ -2047,7 +2047,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 6,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:35:02.994669"
+      "last_parsed": "2026-08-28T22:37:30.917167"
     },
     {
       "id": "tredence",
@@ -2060,7 +2060,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 19,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:35:12.842330"
+      "last_parsed": "2026-08-28T22:37:31.886974"
     },
     {
       "id": "sigmoid",
@@ -2073,7 +2073,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 8,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:35:21.342519"
+      "last_parsed": "2026-08-28T22:37:32.913439"
     },
     {
       "id": "thoughtworks-india",
@@ -2086,7 +2086,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 14,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:35:29.090034"
+      "last_parsed": "2026-08-28T22:37:34.038195"
     },
     {
       "id": "epam-systems-india",
@@ -2099,7 +2099,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:35:33.531995"
+      "last_parsed": "2026-08-28T22:37:35.098716"
     },
     {
       "id": "globant-india",
@@ -2112,7 +2112,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:35:38.309852"
+      "last_parsed": "2026-08-28T22:37:36.302513"
     },
     {
       "id": "nazara-technologies",
@@ -2125,7 +2125,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:35:46.058770"
+      "last_parsed": "2026-08-28T22:37:37.352933"
     },
     {
       "id": "zupee",
@@ -2138,7 +2138,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:35:52.992576"
+      "last_parsed": "2026-08-28T22:37:38.461655"
     },
     {
       "id": "winzo",
@@ -2151,7 +2151,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:35:57.597111"
+      "last_parsed": "2026-08-28T22:37:39.615699"
     },
     {
       "id": "porter",
@@ -2164,7 +2164,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:36:05.501126"
+      "last_parsed": "2026-08-28T22:37:40.839341"
     },
     {
       "id": "blackbuck",
@@ -2177,7 +2177,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:36:06.272451"
+      "last_parsed": "2026-08-28T22:37:41.834998"
     },
     {
       "id": "shadowfax",
@@ -2190,7 +2190,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:36:10.778335"
+      "last_parsed": "2026-08-28T22:37:42.814518"
     },
     {
       "id": "tower-research-capital-india",
@@ -2201,9 +2201,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 226,
-      "parsing_accuracy": 0.38,
-      "last_parsed": "2026-08-24T21:29:34.158802"
+      "parsed_count": 299,
+      "parsing_accuracy": 0.44,
+      "last_parsed": "2026-08-28T22:34:13.742943"
     },
     {
       "id": "de-shaw-india",
@@ -2216,7 +2216,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 8,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:36:21.895844"
+      "last_parsed": "2026-08-28T22:37:43.963266"
     },
     {
       "id": "optiver-india",
@@ -2229,7 +2229,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:36:26.989652"
+      "last_parsed": "2026-08-28T22:37:45.160182"
     },
     {
       "id": "graviton-research-capital",
@@ -2242,7 +2242,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:36:34.521153"
+      "last_parsed": "2026-08-28T22:37:46.205316"
     },
     {
       "id": "quadeye",
@@ -2254,8 +2254,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 172,
-      "parsing_accuracy": 0.64,
-      "last_parsed": "2026-08-24T21:31:11.667125"
+      "parsing_accuracy": 0.58,
+      "last_parsed": "2026-08-28T22:37:47.278475"
     },
     {
       "id": "worldquant-india",
@@ -2266,9 +2266,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 487,
-      "parsing_accuracy": 0.83,
-      "last_parsed": "2026-08-24T21:29:34.727451"
+      "parsed_count": 577,
+      "parsing_accuracy": 0.85,
+      "last_parsed": "2026-08-28T22:34:15.795813"
     },
     {
       "id": "zscaler-india",
@@ -2281,7 +2281,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 15,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:45:21.213442"
+      "last_parsed": "2026-08-28T22:37:48.350062"
     },
     {
       "id": "crowdstrike-india",
@@ -2292,9 +2292,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 161,
-      "parsing_accuracy": 0.83,
-      "last_parsed": "2026-08-24T21:30:43.563656"
+      "parsed_count": 194,
+      "parsing_accuracy": 0.85,
+      "last_parsed": "2026-08-28T22:35:18.181934"
     },
     {
       "id": "sentinelone-india",
@@ -2307,7 +2307,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 2,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:45:37.120620"
+      "last_parsed": "2026-08-28T22:37:49.386194"
     },
     {
       "id": "rapid7-india",
@@ -2320,7 +2320,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 6,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:45:53.231904"
+      "last_parsed": "2026-08-28T22:37:50.544066"
     },
     {
       "id": "qualys-india",
@@ -2331,9 +2331,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 178,
-      "parsing_accuracy": 0.38,
-      "last_parsed": "2026-08-24T21:30:50.632011"
+      "parsed_count": 238,
+      "parsing_accuracy": 0.44,
+      "last_parsed": "2026-08-28T22:35:21.053020"
     },
     {
       "id": "dehaat",
@@ -2346,7 +2346,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:46:06.791908"
+      "last_parsed": "2026-08-28T22:37:51.585729"
     },
     {
       "id": "ninjacart",
@@ -2359,7 +2359,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:46:11.076684"
+      "last_parsed": "2026-08-28T22:37:52.668494"
     },
     {
       "id": "ecozen",
@@ -2372,7 +2372,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:46:11.845205"
+      "last_parsed": "2026-08-28T22:37:53.686467"
     },
     {
       "id": "skyroot-aerospace",
@@ -2385,7 +2385,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:46:17.089224"
+      "last_parsed": "2026-08-28T22:37:54.704750"
     },
     {
       "id": "agnikul-cosmos",
@@ -2398,7 +2398,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:46:23.229795"
+      "last_parsed": "2026-08-28T22:37:55.715572"
     },
     {
       "id": "pixxel",
@@ -2411,7 +2411,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:46:28.649776"
+      "last_parsed": "2026-08-28T22:37:56.871388"
     },
     {
       "id": "mamaearth",
@@ -2424,7 +2424,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:46:34.477974"
+      "last_parsed": "2026-08-28T22:37:57.858346"
     },
     {
       "id": "boat",
@@ -2437,7 +2437,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:46:40.398943"
+      "last_parsed": "2026-08-28T22:37:58.857266"
     },
     {
       "id": "ather-energy",
@@ -2450,7 +2450,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:46:45.400238"
+      "last_parsed": "2026-08-28T22:37:59.828026"
     },
     {
       "id": "sarvam-ai",
@@ -2461,9 +2461,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 729,
-      "parsing_accuracy": 0.83,
-      "last_parsed": "2026-08-24T21:29:36.592084"
+      "parsed_count": 792,
+      "parsing_accuracy": 0.85,
+      "last_parsed": "2026-08-28T22:34:19.483679"
     },
     {
       "id": "krutrim",
@@ -2476,7 +2476,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:47:20.112295"
+      "last_parsed": "2026-08-28T22:38:01.095832"
     },
     {
       "id": "nobroker",
@@ -2489,7 +2489,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:47:24.875963"
+      "last_parsed": "2026-08-28T22:38:01.919563"
     },
     {
       "id": "housingcom",
@@ -2502,7 +2502,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:47:29.754710"
+      "last_parsed": "2026-08-28T22:38:03.135809"
     },
     {
       "id": "moglix",
@@ -2515,7 +2515,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:47:36.284765"
+      "last_parsed": "2026-08-28T22:38:04.146712"
     },
     {
       "id": "ofbusiness",
@@ -2528,7 +2528,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:47:40.683240"
+      "last_parsed": "2026-08-28T22:38:05.355200"
     },
     {
       "id": "zetwerk",
@@ -2540,8 +2540,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 444,
-      "parsing_accuracy": 0.64,
-      "last_parsed": "2026-08-24T21:31:12.347934"
+      "parsing_accuracy": 0.58,
+      "last_parsed": "2026-08-28T22:38:06.719336"
     },
     {
       "id": "khatabook",
@@ -2553,8 +2553,8 @@
       "success_rate": 0,
       "avg_salary_inr": 0,
       "parsed_count": 13,
-      "parsing_accuracy": 0.55,
-      "last_parsed": "2026-08-24T21:31:13.009969"
+      "parsing_accuracy": 0.5,
+      "last_parsed": "2026-08-28T22:38:07.603329"
     },
     {
       "id": "vyapar",
@@ -2565,9 +2565,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2388,
+      "parsed_count": 2538,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:06:18.558172"
+      "last_parsed": "2026-08-28T19:41:47.319600"
     },
     {
       "id": "digit-insurance",
@@ -2580,7 +2580,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:48:29.213410"
+      "last_parsed": "2026-08-28T22:38:08.695247"
     },
     {
       "id": "acko",
@@ -2593,7 +2593,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 1,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:48:34.235021"
+      "last_parsed": "2026-08-28T22:38:09.884987"
     },
     {
       "id": "hdfc-bank",
@@ -2606,7 +2606,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:48:40.059148"
+      "last_parsed": "2026-08-28T22:38:11.239243"
     },
     {
       "id": "icici-bank",
@@ -2619,7 +2619,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 0,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:48:47.918232"
+      "last_parsed": "2026-08-28T22:38:12.417854"
     },
     {
       "id": "axis-bank",
@@ -2632,7 +2632,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 1,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:48:56.328926"
+      "last_parsed": "2026-08-28T22:38:13.487735"
     },
     {
       "id": "kotak-mahindra-bank",
@@ -2645,7 +2645,7 @@
       "avg_salary_inr": 0,
       "parsed_count": 3,
       "parsing_accuracy": 0.0,
-      "last_parsed": "2026-08-23T16:49:02.146230"
+      "last_parsed": "2026-08-28T22:38:14.584729"
     },
     {
       "id": "zeta",
@@ -2656,9 +2656,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 321,
+      "parsed_count": 361,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:06:20.364732",
+      "last_parsed": "2026-08-28T19:41:50.966505",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2670,9 +2670,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 252,
+      "parsed_count": 284,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:06:18.231125",
+      "last_parsed": "2026-08-28T19:41:49.323501",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2684,9 +2684,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 685,
+      "parsed_count": 783,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:06:48.616244",
+      "last_parsed": "2026-08-28T19:41:50.920800",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2698,9 +2698,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 70,
+      "parsed_count": 80,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:07:21.082941",
+      "last_parsed": "2026-08-28T19:41:51.326467",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2712,9 +2712,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 588,
+      "parsed_count": 674,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:07:54.800016",
+      "last_parsed": "2026-08-28T19:42:01.223618",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2726,9 +2726,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 273,
+      "parsed_count": 299,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:08:18.457077",
+      "last_parsed": "2026-08-28T19:41:53.629235",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2740,9 +2740,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 42,
+      "parsed_count": 48,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:08:52.854840",
+      "last_parsed": "2026-08-28T19:41:54.816467",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2754,9 +2754,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 531,
+      "parsed_count": 613,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:09:25.013108",
+      "last_parsed": "2026-08-28T19:41:58.987256",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2768,9 +2768,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1524,
+      "parsed_count": 1780,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:09:52.845067",
+      "last_parsed": "2026-08-28T19:41:55.775379",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2782,9 +2782,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 490,
+      "parsed_count": 562,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:10:15.922666",
+      "last_parsed": "2026-08-28T19:41:56.076725",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2796,9 +2796,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 224,
+      "parsed_count": 256,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:10:43.521010",
+      "last_parsed": "2026-08-28T19:41:57.270329",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2810,9 +2810,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 3491,
+      "parsed_count": 4161,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:11:29.403363",
+      "last_parsed": "2026-08-28T19:42:03.833403",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2824,9 +2824,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2044,
+      "parsed_count": 2318,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:11:53.640210",
+      "last_parsed": "2026-08-28T19:42:22.132038",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2838,9 +2838,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 196,
+      "parsed_count": 224,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:12:16.685753",
+      "last_parsed": "2026-08-28T19:43:04.705490",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2852,9 +2852,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 473,
+      "parsed_count": 539,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:12:46.245118",
+      "last_parsed": "2026-08-28T19:43:46.275045",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2866,9 +2866,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2406,
+      "parsed_count": 2772,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:13:15.791590",
+      "last_parsed": "2026-08-28T19:44:31.336060",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2880,9 +2880,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 3005,
+      "parsed_count": 3456,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:13:19.111363",
+      "last_parsed": "2026-08-28T19:45:18.548735",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2894,9 +2894,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 280,
+      "parsed_count": 326,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:13:20.253831",
+      "last_parsed": "2026-08-28T19:46:07.110599",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2908,9 +2908,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 378,
+      "parsed_count": 428,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:13:22.941809",
+      "last_parsed": "2026-08-28T19:46:51.578963",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2922,9 +2922,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 3068,
+      "parsed_count": 3505,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:13:26.375485",
+      "last_parsed": "2026-08-28T19:47:36.765090",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2936,9 +2936,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 771,
+      "parsed_count": 883,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:13:27.854878",
+      "last_parsed": "2026-08-28T19:48:17.744260",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2950,9 +2950,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2040,
+      "parsed_count": 2332,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:13:30.053711",
+      "last_parsed": "2026-08-28T19:49:11.155216",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2964,9 +2964,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 4713,
+      "parsed_count": 5407,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:13:34.565106",
+      "last_parsed": "2026-08-28T19:49:52.614117",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2978,9 +2978,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 6233,
+      "parsed_count": 7130,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:14:07.029843",
+      "last_parsed": "2026-08-28T19:50:31.685424",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -2992,9 +2992,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2858,
+      "parsed_count": 3292,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:14:38.671594",
+      "last_parsed": "2026-08-28T19:51:20.231141",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3006,9 +3006,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 406,
+      "parsed_count": 468,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:15:10.515854",
+      "last_parsed": "2026-08-28T19:52:20.699147",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3020,9 +3020,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2296,
+      "parsed_count": 2638,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:15:41.277393",
+      "last_parsed": "2026-08-28T19:52:53.289499",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3034,9 +3034,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1488,
+      "parsed_count": 1708,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:16:13.357920",
+      "last_parsed": "2026-08-28T19:53:32.583855",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3048,9 +3048,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1260,
+      "parsed_count": 1448,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:16:41.555836",
+      "last_parsed": "2026-08-28T19:54:13.731192",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3062,9 +3062,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2619,
+      "parsed_count": 3009,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:17:09.337070",
+      "last_parsed": "2026-08-28T19:54:52.967139",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3076,9 +3076,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 3166,
+      "parsed_count": 3634,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:17:44.469838",
+      "last_parsed": "2026-08-28T19:55:37.904151",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3090,9 +3090,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1147,
+      "parsed_count": 1329,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:18:15.154532",
+      "last_parsed": "2026-08-28T19:56:20.965693",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3104,9 +3104,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 797,
+      "parsed_count": 854,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:18:42.986153",
+      "last_parsed": "2026-08-28T19:57:07.200661",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3118,9 +3118,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2465,
+      "parsed_count": 2642,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:19:14.271731",
+      "last_parsed": "2026-08-28T19:57:51.797289",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3132,9 +3132,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 3161,
+      "parsed_count": 3364,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:19:46.185537",
+      "last_parsed": "2026-08-28T19:58:37.156480",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3146,9 +3146,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1331,
+      "parsed_count": 1429,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:21:03.280035",
+      "last_parsed": "2026-08-28T20:00:20.668613",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3160,9 +3160,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 7119,
+      "parsed_count": 7672,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:20:42.042073",
+      "last_parsed": "2026-08-28T20:00:07.821598",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3174,9 +3174,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 10348,
+      "parsed_count": 11830,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:21:15.293156",
+      "last_parsed": "2026-08-28T20:00:56.591309",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3188,9 +3188,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2885,
+      "parsed_count": 3102,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:21:35.401935",
+      "last_parsed": "2026-08-28T20:01:33.264705",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3202,9 +3202,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1766,
+      "parsed_count": 1898,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:22:00.649096",
+      "last_parsed": "2026-08-28T20:01:45.722377",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3216,9 +3216,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2240,
+      "parsed_count": 2400,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:22:27.228484",
+      "last_parsed": "2026-08-28T20:01:47.110820",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3230,9 +3230,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 4304,
+      "parsed_count": 4615,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:22:55.449554",
+      "last_parsed": "2026-08-28T20:01:48.373425",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3244,9 +3244,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 2041,
+      "parsed_count": 2182,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:23:18.058438",
+      "last_parsed": "2026-08-28T20:01:48.431324",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3258,9 +3258,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 559,
+      "parsed_count": 603,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:23:44.671979",
+      "last_parsed": "2026-08-28T20:01:48.792050",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3272,9 +3272,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1471,
+      "parsed_count": 1579,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:24:13.638028",
+      "last_parsed": "2026-08-28T20:01:50.195173",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3286,9 +3286,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 3988,
+      "parsed_count": 4267,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:24:46.524317",
+      "last_parsed": "2026-08-28T20:01:51.283504",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3300,9 +3300,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1232,
+      "parsed_count": 1314,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:25:11.608597",
+      "last_parsed": "2026-08-28T20:01:51.040145",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3314,9 +3314,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 6453,
+      "parsed_count": 6923,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:25:43.339774",
+      "last_parsed": "2026-08-28T20:01:53.373583",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3328,9 +3328,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 730,
+      "parsed_count": 789,
       "parsing_accuracy": 0.93,
-      "last_parsed": "2026-08-24T21:27:26.587707",
+      "last_parsed": "2026-08-28T20:03:02.763609",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3342,9 +3342,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 718,
+      "parsed_count": 776,
       "parsing_accuracy": 0.93,
-      "last_parsed": "2026-08-24T21:28:01.424800",
+      "last_parsed": "2026-08-28T20:02:59.492054",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3356,9 +3356,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 669,
+      "parsed_count": 714,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:31.362965",
+      "last_parsed": "2026-08-28T20:02:59.454755",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3370,9 +3370,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 826,
+      "parsed_count": 886,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:58.163378",
+      "last_parsed": "2026-08-28T20:03:03.796906",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3384,9 +3384,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 798,
+      "parsed_count": 852,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:29:12.053881",
+      "last_parsed": "2026-08-28T20:03:00.053275",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3398,9 +3398,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 645,
+      "parsed_count": 687,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:55.469425",
+      "last_parsed": "2026-08-28T20:02:44.374753",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3412,9 +3412,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 627,
+      "parsed_count": 683,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:29:17.536595",
+      "last_parsed": "2026-08-28T20:03:01.661042",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3426,9 +3426,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 4166,
+      "parsed_count": 4481,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:15.516483",
+      "last_parsed": "2026-08-28T20:01:59.772620",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3440,9 +3440,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 434,
+      "parsed_count": 469,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:14.221455",
+      "last_parsed": "2026-08-28T20:01:59.450831",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3454,9 +3454,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1344,
+      "parsed_count": 1435,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:14.984446",
+      "last_parsed": "2026-08-28T20:02:00.327427",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3468,9 +3468,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1092,
+      "parsed_count": 1173,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:15.568638",
+      "last_parsed": "2026-08-28T20:02:01.529734",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3482,9 +3482,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 1806,
+      "parsed_count": 1950,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:20.438769",
+      "last_parsed": "2026-08-28T20:02:02.250558",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3496,9 +3496,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 390,
+      "parsed_count": 417,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:17.889691",
+      "last_parsed": "2026-08-28T20:02:02.842533",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3510,9 +3510,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 234,
+      "parsed_count": 257,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:17.402049",
+      "last_parsed": "2026-08-28T20:02:03.439712",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3524,9 +3524,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 116,
+      "parsed_count": 124,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:29:23.278228",
+      "last_parsed": "2026-08-28T20:03:09.815656",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3538,9 +3538,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 300,
+      "parsed_count": 333,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:29:24.935761",
+      "last_parsed": "2026-08-28T20:03:11.417352",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3552,9 +3552,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 661,
+      "parsed_count": 713,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:29:26.534219",
+      "last_parsed": "2026-08-28T20:03:09.991484",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3566,9 +3566,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 780,
+      "parsed_count": 839,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:29:25.916334",
+      "last_parsed": "2026-08-28T20:03:17.708256",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3580,9 +3580,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 470,
+      "parsed_count": 516,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:29:22.062111",
+      "last_parsed": "2026-08-28T20:03:09.936805",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3594,9 +3594,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 741,
+      "parsed_count": 797,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:29:24.937168",
+      "last_parsed": "2026-08-28T20:04:45.860211",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3608,9 +3608,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 10,
+      "parsed_count": 13,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:22.029972",
+      "last_parsed": "2026-08-28T20:04:29.328755",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3622,9 +3622,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 35,
+      "parsed_count": 41,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:23.336608",
+      "last_parsed": "2026-08-28T20:05:18.561980",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3636,9 +3636,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 50,
+      "parsed_count": 60,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:24.408859",
+      "last_parsed": "2026-08-28T20:06:06.400372",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3650,9 +3650,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 155,
+      "parsed_count": 185,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:25.572063",
+      "last_parsed": "2026-08-28T20:07:00.127886",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3664,9 +3664,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 49,
+      "parsed_count": 59,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:26.634519",
+      "last_parsed": "2026-08-28T20:07:52.506052",
       "monitoring_status": "Active Monitoring"
     },
     {
@@ -3678,9 +3678,9 @@
       "your_preference_score": 0.7,
       "success_rate": 0,
       "avg_salary_inr": 0,
-      "parsed_count": 26,
+      "parsed_count": 52,
       "parsing_accuracy": 1.0,
-      "last_parsed": "2026-08-24T21:28:38.397907",
+      "last_parsed": "2026-08-28T20:08:43.871861",
       "monitoring_status": "Active Monitoring",
       "discovered_at": "2026-08-24T10:10:31.948527+00:00",
       "discovery_fresher_jobs": 2

@@ -635,3 +635,24 @@ rejections were "no public ATS endpoint" -> steer LLM proposals toward
 categories that use public ATS platforms.
 NEXT: threshold recalibration (refinement state to re-check), ~85 dead
 company sweeps, list growth with the corrected gate, merge sign-off pending.
+
+## 2026-08-28 (20:05) — App restarted; feed is alive; refinement resumed
+
+FEED NOW HAS 96 JOBS (was 1 last session). Top: Springer Capital Tech Intern
+82%, Deel Backend Node/AWS 80%, Vercel Backend 79%, Pure Storage 79%,
+Point72 78%, HP India Full Stack 78%, Vyapar Data Analyst FRESHER 75%,
+Signzy SDE-1 Fullstack 73%. Sources visibly mixed (cutshort, linkedin,
+career pages) - the multi-source work is paying off.
+Store 13.3k -> 14.1k jobs after restart scans. Filter breakdown shows the
+role filter is still the big gate (9,004 dropped) then staleness (1,886) and
+location (1,346).
+Refinement had been interrupted by the laptop shutdown (only 72 jobs had
+tier-1 LLM scores, status stuck at in_progress). Re-triggered: cheap pass
+re-scored 14,108, then LLM refinement started on 3,110 feed candidates
+(~40-60 min at paced RPM). Gemini usage 304 calls today - still ~1.7% of
+daily pool.
+company-health: 276 companies, 141 producing, 51 fresher-active (18.5%),
+watchlist 5.
+NEXT: after refinement completes, recalibrate min_match_score against the
+LLM-tier distribution (the current 55 was tuned on local-tier scores);
+then ~85 dead-company sweeps and list growth with the corrected gate.
