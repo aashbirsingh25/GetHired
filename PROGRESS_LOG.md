@@ -615,3 +615,23 @@ Ola converted; its TurboHire portal legitimately has 0 open jobs today.
 RECURRING TRAP (twice now): truncated URLs - the LLM hint truncated
 /sites/CX_1 and my detector truncated a UUID at 120 chars. Always extract
 full identifiers from the live page before storing.
+
+## 2026-08-28 (19:15) — WEEKLY REVIEW #1 (5-day gap; app ran until Aug 24 21:31)
+
+State on return: data intact (12,067 jobs, 276 companies, watchlist 5),
+git safety PASS, app was stopped (laptop off ~4 days), 2 stale temp files
+cleaned.
+Review found TWO REAL DEFECTS - both fixed and verified:
+1. Gate counted India-jobs and fresher-jobs independently => Jitterbit
+   admitted with 14 senior India jobs + 2 Brazil interns = 0 applicable
+   roles. Now requires fresher AND India in the SAME job
+   (fresher_india_jobs). Jitterbit now rejected; Hevo/CloudSEK still pass.
+2. ScanCoordinator overwrote companies.json from a stale snapshot, deleting
+   worker-added rows (Jitterbit "added" 3x, 1 row survived). Both writes now
+   merge-safe (_merge_save_companies), proven by simulation.
+Worker judgement otherwise sound: all 6 parked/added calls verified correct
+live. Taught: force_watch Kellton/Iris/InfoBeans; note that 207/227
+rejections were "no public ATS endpoint" -> steer LLM proposals toward
+categories that use public ATS platforms.
+NEXT: threshold recalibration (refinement state to re-check), ~85 dead
+company sweeps, list growth with the corrected gate, merge sign-off pending.
