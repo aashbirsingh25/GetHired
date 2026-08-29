@@ -254,6 +254,14 @@ def execute_authoritative_pipeline(
     # indicator; the background rescorer will give them real scores shortly,
     # after which they flow through the normal filter on the next load.
     min_score = filters.get("min_match_score", 0)
+    # Tier-aware bar (recalibrated 2026-08-29 on n=464 LLM vs n=2896 local
+    # scores): local tier-5 scores compress into 50-69 (median 57, inflated),
+    # while LLM tier-1/2 scores are honest and spread 0-98 (median 35) - the
+    # LLM demotes ~43% of local-approved jobs below 30. The same numeric bar
+    # therefore means different things per tier: an honest LLM 48 is a better
+    # bet than an unverified local 57. Give LLM-verified jobs a 10-point
+    # lower bar; unverified jobs keep the configured bar until the daily
+    # refinement pass verifies them.
     score_filtered = []
     pending_jobs = []
     for job in scored_jobs:
@@ -263,7 +271,9 @@ def execute_authoritative_pipeline(
             pending_jobs.append(job)
             continue
         score = match_obj.get("score", 50) if isinstance(match_obj, dict) else 50
-        if score >= min_score:
+        is_llm_verified = isinstance(match_obj, dict) and match_obj.get("tier") in (1, 2)
+        bar = max(0, min_score - 10) if is_llm_verified else min_score
+        if score >= bar:
             score_filtered.append(job)
 
     # 10. EXCLUDE APPLIED JOBS (Phase 9: Applied jobs must not pollute feed)
