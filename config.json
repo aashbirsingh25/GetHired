@@ -4,17 +4,17 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 2,
-        "used_today": 48,
+        "quota_remaining": 44,
+        "used_today": 6,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "groq",
         "api_key": "YOUR_GROQ_API_KEY",
-        "quota_remaining": 276,
+        "quota_remaining": 400,
         "rpm_limit": 30,
-        "used_today": 124,
+        "used_today": 0,
         "daily_limit": 400
       },
       {
@@ -34,72 +34,72 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 0,
-        "used_today": 52,
+        "quota_remaining": 49,
+        "used_today": 1,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 17,
-        "used_today": 33,
+        "quota_remaining": 50,
+        "used_today": 0,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 27,
-        "used_today": 23,
+        "quota_remaining": 50,
+        "used_today": 0,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 6,
-        "used_today": 44,
+        "quota_remaining": 50,
+        "used_today": 0,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 7,
-        "used_today": 43,
+        "quota_remaining": 50,
+        "used_today": 0,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 7,
-        "used_today": 43,
+        "quota_remaining": 50,
+        "used_today": 0,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 7,
-        "used_today": 43,
+        "quota_remaining": 50,
+        "used_today": 0,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 7,
-        "used_today": 43,
+        "quota_remaining": 50,
+        "used_today": 0,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 8,
-        "used_today": 42,
+        "quota_remaining": 50,
+        "used_today": 0,
         "rpm_limit": 8,
         "daily_limit": 50
       }

@@ -126,14 +126,22 @@ class LLMRouter:
     DAILY_LIMITS = {"gemini": 50, "groq": 400, "claude": 100000, "openai": 3000}
 
     def _apply_daily_rollover(self, cfg):
-        """Reset per-key daily counters when the date changes.
+        """Reset per-key daily counters when the provider's day changes.
 
         used_today only ever incremented, and quota_remaining only ever
         decremented, so once a key hit its cap it stayed 'exhausted' forever
         even though Google/Groq reset quotas every day. That silently shrank
         the usable key pool to nothing over time.
+
+        The day boundary is midnight US-Pacific - Google's quota clock - which
+        is 12:30 PM IST. Using the local (IST) date reset our counters 11
+        hours early (harmless, cooldowns absorb the 429s) but also failed to
+        reset them when the real refill landed mid-day, leaving fresh quota
+        invisible until the next local midnight (observed 2026-08-29: keys
+        refilled at 12:30 PM, config still showed them nearly spent at 2 PM).
         """
-        today = datetime.now().strftime("%Y-%m-%d")
+        from zoneinfo import ZoneInfo
+        today = datetime.now(ZoneInfo("America/Los_Angeles")).strftime("%Y-%m-%d")
         if cfg.get("llm", {}).get("quota_date") == today:
             return cfg
         for k in cfg.get("llm", {}).get("keys", []):
