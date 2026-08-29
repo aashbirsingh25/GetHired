@@ -726,3 +726,31 @@ IST). Silent fallback is now loud (needs a restart to take effect).
   GoKwik (19 India roles, keka), Skyflow parked with India presence ->
   watchlist 12. GoKwik is the likeliest near-term promotion.
 - Store: 15,281 jobs.
+
+## 2026-08-29 (16:15) — Queue cleared: recalibration, learner fix, growth
+
+- **Quota rollover corrected to Google's clock.** Refill is midnight
+  US-Pacific = 12:30 PM IST; rolling on the IST date left fresh quota
+  invisible for hours (observed live). Verified: a key dead at 429 last
+  night scores again.
+- **Refinement pass completed on fresh quota: 150/150, tier-1/2 scores
+  314 -> 464.** Only 92/500 Gemini calls used.
+- **Feed threshold recalibrated with real data** (n=464 LLM vs n=2896
+  local): local scores compress into 50-69 (median 57, inflated); LLM
+  scores spread 0-98 (median 35) and demote 43% of local-approved jobs
+  below 30. Gate is now tier-aware: LLM-verified jobs get a 10-point lower
+  bar. 20 honest LLM 45-54% jobs entered the feed.
+- **Page learner now rotates up to 3 keys** instead of giving up on the
+  first 429. A standalone zero-yield sweep script was built, then
+  deliberately discarded: dormancy tiering already retries zero-yield
+  companies with the learner every 4th cycle, and a second process would
+  race pattern_store.json.
+- **Growth:** LambdaTest ADMITTED (10 India, 1 fresher-India, keka) -> 280
+  companies. NK Securities (16 India), Testsigma, DevRev (23 India), ZF
+  Group (successfactors) parked -> watchlist 16. Learned: verify_candidate
+  rejects names whose slug is <3 chars (ZF) before probing - probe manually
+  for short names.
+- **All 28 tests pass.** Feed 158, LLM-verified 30, 0 scan errors.
+- Monitor: one "Unterminated string" store read hit a TEST process; store
+  parses fine, app log clean, production writers verified atomic
+  (tmp+fsync+replace). Not reproduced.

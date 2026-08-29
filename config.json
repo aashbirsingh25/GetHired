@@ -4,8 +4,8 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 44,
-        "used_today": 6,
+        "quota_remaining": 37,
+        "used_today": 13,
         "rpm_limit": 8,
         "daily_limit": 50
       },
@@ -34,56 +34,56 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 49,
-        "used_today": 1,
+        "quota_remaining": 36,
+        "used_today": 14,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 50,
-        "used_today": 0,
+        "quota_remaining": 35,
+        "used_today": 15,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 50,
-        "used_today": 0,
+        "quota_remaining": 35,
+        "used_today": 15,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 50,
-        "used_today": 0,
+        "quota_remaining": 37,
+        "used_today": 13,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 50,
-        "used_today": 0,
+        "quota_remaining": 39,
+        "used_today": 11,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 50,
-        "used_today": 0,
+        "quota_remaining": 38,
+        "used_today": 12,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 50,
-        "used_today": 0,
+        "quota_remaining": 48,
+        "used_today": 2,
         "rpm_limit": 8,
         "daily_limit": 50
       },
