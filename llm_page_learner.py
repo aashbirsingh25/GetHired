@@ -93,38 +93,47 @@ def learn_page_structure(html: str, url: str, company_name: str, llm_router) -> 
     if hasattr(llm_router, "has_headroom") and not llm_router.has_headroom(0.25):
         return None
 
-    provider, api_key, key_idx = llm_router.get_best_available_key()
-    if not provider or not api_key:
-        return None
-
-    try:
-        if provider == "gemini":
-            import google.generativeai as genai
-            genai.configure(api_key=api_key)
-            try:
-                model = genai.GenerativeModel("gemini-flash-latest")
-            except Exception:
-                model = genai.GenerativeModel("gemini-2.0-flash")
-            raw = model.generate_content(prompt).text
-        elif provider == "groq":
-            from groq import Groq
-            client = Groq(api_key=api_key)
-            resp = client.chat.completions.create(
-                model="openai/gpt-oss-20b",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.1,
-            )
-            raw = resp.choices[0].message.content
-        else:
+    # Try up to 3 keys: a single per-minute 429 on one key should not skip
+    # this company's one learning chance while other keys sit idle. Same
+    # cooldown accounting as before, per failed key.
+    raw = None
+    for _attempt in range(3):
+        provider, api_key, key_idx = llm_router.get_best_available_key()
+        if not provider or not api_key:
             return None
-        llm_router.mark_used(provider, key_idx)
-    except Exception as e:
-        err = str(e).lower()
-        if "429" in err or "quota" in err or "rate" in err:
-            llm_router.on_rate_limit(provider, key_idx, cooldown_seconds=300)
-        else:
-            llm_router.on_rate_limit(provider, key_idx, cooldown_seconds=60)
-        print(f"[LLMPageLearner] {provider} error: {str(e)[:120]}")
+
+        try:
+            if provider == "gemini":
+                import google.generativeai as genai
+                genai.configure(api_key=api_key)
+                try:
+                    model = genai.GenerativeModel("gemini-flash-latest")
+                except Exception:
+                    model = genai.GenerativeModel("gemini-2.0-flash")
+                raw = model.generate_content(prompt).text
+            elif provider == "groq":
+                from groq import Groq
+                client = Groq(api_key=api_key)
+                resp = client.chat.completions.create(
+                    model="openai/gpt-oss-20b",
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.1,
+                )
+                raw = resp.choices[0].message.content
+            else:
+                return None
+            llm_router.mark_used(provider, key_idx)
+            break
+        except Exception as e:
+            err = str(e).lower()
+            if "429" in err or "quota" in err or "rate" in err:
+                llm_router.on_rate_limit(provider, key_idx, cooldown_seconds=300)
+            else:
+                llm_router.on_rate_limit(provider, key_idx, cooldown_seconds=60)
+            print(f"[LLMPageLearner] {provider}[{key_idx}] error (attempt {_attempt + 1}/3): {str(e)[:120]}")
+            raw = None
+
+    if raw is None:
         return None
 
     parsed = _parse_llm_json(raw)
