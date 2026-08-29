@@ -33,6 +33,42 @@ def compute_parse_confidence_score(company: dict, jobs: list, method: str, histo
 
     return max(0.00, min(1.00, round(base_score, 2)))
 
+_GLUED_COUNTRIES = (
+    "United States", "United Kingdom", "United Arab Emirates", "India", "Canada",
+    "Germany", "Ireland", "Australia", "Japan", "China", "Singapore", "Netherlands",
+    "France", "Israel", "Brazil", "Mexico", "Poland", "Romania", "Estonia", "Spain",
+    "Sweden", "Norway", "Finland", "Denmark", "Switzerland", "Austria", "Belgium",
+    "Portugal", "Hungary", "Taiwan", "Korea", "Costa Rica", "Colombia", "Argentina",
+    "Chile", "Serbia", "Ukraine", "Egypt", "Kenya", "Nigeria", "South Africa",
+    "New Zealand", "Vietnam", "Thailand", "Indonesia", "Philippines", "Malaysia",
+    "Hong Kong", "Saudi Arabia", "Qatar", "Turkey", "Greece", "Italy", "Czechia",
+)
+_GLUED_LOC_RE = re.compile(
+    r"(?<=[a-z0-9)\]])(" + "|".join(re.escape(c) for c in _GLUED_COUNTRIES) + r")\b(.*)$")
+_POSTED_RE = re.compile(r"\s*Posted\s+(\d+\s+days?\s+ago|today|yesterday).*$", re.IGNORECASE)
+
+
+def split_glued_title(raw_title: str):
+    """Split card text where title, location, and 'Posted N days ago' were
+    concatenated without separators by get_text(strip=True) on nested markup
+    (seen on Microsoft careers: 'Principal Software EngineerIndia, Telangana,
+    HyderabadPosted 19 days ago').
+
+    Returns (clean_title, glued_location_or_None). The glued location matters
+    beyond cosmetics: the pattern extractor defaults location to 'India' when
+    its selector misses, which put US/UK roles into the India-filtered feed.
+    """
+    t = (raw_title or "").strip()
+    t = _POSTED_RE.sub("", t)
+    m = _GLUED_LOC_RE.search(t)
+    if not m:
+        return t, None
+    location = (m.group(1) + m.group(2)).strip().rstrip(",")
+    location = _POSTED_RE.sub("", location).strip()
+    title = t[:m.start()].strip(" ,-|")
+    return (title or t), (location or None)
+
+
 class BrowserScanner:
     def __init__(self, headless=True, enable_llm_learning=True):
         self.headless = headless
@@ -346,7 +382,16 @@ class BrowserScanner:
             link_el = card.select_one(link_sel) if link_sel else None
 
             title = title_el.get_text(strip=True) if title_el else None
-            location = loc_el.get_text(strip=True) if loc_el else "India"
+            location = loc_el.get_text(strip=True) if loc_el else None
+
+            if title:
+                # De-glue titles like "...EngineerIndia, Telangana, HyderabadPosted
+                # 19 days ago" and recover the location embedded in them. Never
+                # default a missing location to "India" - that mislabeled US/UK
+                # Microsoft roles into the India feed.
+                title, glued_loc = split_glued_title(title)
+                if not location:
+                    location = glued_loc or "Unknown"
 
             href = None
             if link_el and link_el.has_attr("href"):

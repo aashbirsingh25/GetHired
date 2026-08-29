@@ -65,6 +65,30 @@ from store_integrity_checker import validate_jobs_store_integrity, enforce_jobs_
 
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 
+# Clean up orphaned atomic-write temp files (*.json.tmp_<pid>_<tid>) left
+# behind when the process was killed mid-write. save_json normally removes
+# them, but a kill between write and os.replace strands them; two were found
+# after the Aug 24 shutdown and two more after Aug 29 restarts.
+def _cleanup_stale_tmp_files():
+    base = os.path.dirname(os.path.abspath(__file__))
+    removed = 0
+    now = time.time()
+    for fn in os.listdir(base):
+        if ".json.tmp_" in fn:
+            path = os.path.join(base, fn)
+            try:
+                # Age guard: an in-flight write from a live process is
+                # milliseconds old; only reap files that are clearly orphans.
+                if now - os.path.getmtime(path) > 3600:
+                    os.remove(path)
+                    removed += 1
+            except OSError:
+                pass
+    if removed:
+        print(f"[App] Removed {removed} orphaned .tmp_* file(s) from interrupted writes.")
+
+_cleanup_stale_tmp_files()
+
 BASE_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(BASE_DIR, "config.json")
 COMPANIES_FILE = os.path.join(BASE_DIR, "companies.json")
