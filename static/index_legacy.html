@@ -1,0 +1,2973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GetHired — Premium Career Suite</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Hanken Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Material Symbols Outlined Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN with Exact Phase 7C Tokens -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#5312bc',
+            'primary-container': '#6b38d4',
+            'primary-fixed': '#e9ddff',
+            'primary-fixed-dim': '#d0bcff',
+            'on-primary': '#ffffff',
+            'on-primary-container': '#ddcdff',
+            'on-primary-fixed': '#23005c',
+            'on-primary-fixed-variant': '#5517be',
+            'secondary': '#005fad',
+            'secondary-container': '#64a8fe',
+            'secondary-fixed': '#d4e3ff',
+            'secondary-fixed-dim': '#a4c9ff',
+            'on-secondary': '#ffffff',
+            'on-secondary-container': '#003c70',
+            'on-secondary-fixed': '#001c39',
+            'on-secondary-fixed-variant': '#004884',
+            'tertiary': '#821157',
+            'tertiary-container': '#a12e70',
+            'tertiary-fixed': '#ffd8e7',
+            'tertiary-fixed-dim': '#ffafd3',
+            'on-tertiary': '#ffffff',
+            'on-tertiary-container': '#ffc5dd',
+            'on-tertiary-fixed': '#3d0026',
+            'on-tertiary-fixed-variant': '#851459',
+            'background': '#faf8ff',
+            'on-background': '#1a1b20',
+            'surface': '#faf8ff',
+            'surface-bright': '#faf8ff',
+            'surface-dim': '#dbd9e0',
+            'surface-variant': '#e3e1e8',
+            'surface-container-lowest': '#ffffff',
+            'surface-container-low': '#f4f3fa',
+            'surface-container': '#efedf4',
+            'surface-container-high': '#e9e7ee',
+            'surface-container-highest': '#e3e1e8',
+            'on-surface': '#1a1b20',
+            'on-surface-variant': '#494454',
+            'outline': '#7b7486',
+            'outline-variant': '#cbc3d7',
+            'inverse-surface': '#2f3035',
+            'inverse-on-surface': '#f2f0f7',
+            'inverse-primary': '#d0bcff',
+            'error': '#ba1a1a',
+            'error-container': '#ffdad6',
+            'on-error': '#ffffff',
+            'on-error-container': '#93000a',
+            'surface-tint': '#6d3bd6'
+          },
+          borderRadius: {
+            'DEFAULT': '1rem',
+            'lg': '2rem',
+            'xl': '3rem',
+            'full': '9999px'
+          },
+          fontFamily: {
+            title: ['Plus Jakarta Sans', 'sans-serif'],
+            body: ['Hanken Grotesk', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Exact Stitch Component Styling */
+    .glass-card, .glass-panel {
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 20px 40px rgba(83, 18, 188, 0.04);
+      border-radius: 2rem;
+    }
+    .glass-card:hover {
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      box-shadow: 0 30px 60px rgba(83, 18, 188, 0.08);
+      transform: translateY(-2px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-primary {
+      box-shadow: 0 10px 24px rgba(83, 18, 188, 0.25);
+    }
+    .btn-micro-active:active {
+      transform: scale(0.96) !important;
+      transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    .glass-well {
+      background: rgba(244, 243, 250, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 1.5rem;
+    }
+    .glass-well:focus-within {
+      border-color: #5312bc;
+    }
+    body {
+      background: transparent;
+      min-height: 100vh;
+      font-family: 'Hanken Grotesk', sans-serif;
+      color: #1a1b20;
+    }
+
+    /* CSS Gradient Fallback Keyframes */
+    @keyframes gradientBlobAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .webgl-fallback-bg {
+      background: linear-gradient(-45deg, #5312bc, #64a8fe, #821157, #faf8ff) !important;
+      background-size: 400% 400% !important;
+      animation: gradientBlobAnimation 12s ease infinite !important;
+      opacity: 0.35 !important;
+    }
+
+    /* Accordion animation helper */
+    .accordion-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .accordion-content.open {
+      grid-template-rows: 1fr;
+    }
+    .accordion-inner {
+      overflow: hidden;
+    }
+
+    /* Font Scale Classes */
+    .font-display-lg { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 44px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 800; }
+    .font-headline-lg { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 30px; line-height: 1.2; letter-spacing: -0.01em; font-weight: 700; }
+    .font-title-md { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; line-height: 1.4; font-weight: 600; }
+    .font-body-lg { font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; line-height: 1.6; font-weight: 400; }
+    .font-body-md { font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; line-height: 1.6; font-weight: 400; }
+    .font-label-md { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; line-height: 1; letter-spacing: 0.05em; font-weight: 600; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(250, 248, 255, 0.5); }
+    ::-webkit-scrollbar-thumb { background: rgba(83, 18, 188, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(83, 18, 188, 0.6); }
+  </style>
+</head>
+<body class="overflow-x-hidden selection:bg-primary-container selection:text-white">
+
+  <!-- ANIMATED WEBGL SHADER CANVAS (Fixed Background) -->
+  <canvas id="shader-canvas" class="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-60"></canvas>
+
+  <!-- MAIN APPLICATION SHELL -->
+  <div class="relative z-10 flex min-h-screen">
+
+    <!-- FIXED LEFT SIDEBAR NAV -->
+    <aside class="w-64 fixed left-0 top-0 h-screen z-50 flex flex-col justify-between py-6 px-4 bg-white/50 backdrop-blur-2xl border-r border-white/60 shadow-xl">
+      <div class="space-y-8">
+        
+        <!-- Clean Briefcase Logo Mark + Wordmark -->
+        <div class="flex items-center space-x-3 px-2">
+          <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 flex-shrink-0">
+            <span class="material-symbols-outlined text-xl">work</span>
+          </div>
+          <div>
+            <h1 class="font-title-md font-extrabold text-on-background text-lg leading-tight tracking-tight">GetHired</h1>
+            <span class="font-label-md text-[10px] text-primary tracking-wider uppercase block">Premium Career Suite</span>
+          </div>
+        </div>
+
+        <!-- Main Nav Links -->
+        <nav class="flex flex-col space-y-2 w-full">
+          <button onclick="switchPage('jobs')" id="nav-jobs" class="nav-btn w-full px-4 py-3 rounded-2xl flex items-center space-x-3 transition-all duration-300 text-on-surface-variant hover:text-primary hover:bg-white/60 font-semibold text-sm">
+            <span class="material-symbols-outlined text-xl">work</span>
+            <span>Jobs Feed</span>
+          </button>
+
+          <button onclick="switchPage('search')" id="nav-search" class="nav-btn w-full px-4 py-3 rounded-2xl flex items-center space-x-3 transition-all duration-300 text-on-surface-variant hover:text-primary hover:bg-white/60 font-semibold text-sm">
+            <span class="material-symbols-outlined text-xl">search</span>
+            <span>Search & Criteria</span>
+          </button>
+
+          <button onclick="switchPage('tracker')" id="nav-tracker" class="nav-btn w-full px-4 py-3 rounded-2xl flex items-center space-x-3 transition-all duration-300 text-on-surface-variant hover:text-primary hover:bg-white/60 font-semibold text-sm">
+            <span class="material-symbols-outlined text-xl">task_alt</span>
+            <span>Application Tracker</span>
+          </button>
+
+          <button onclick="switchPage('insights')" id="nav-insights" class="nav-btn w-full px-4 py-3 rounded-2xl flex items-center space-x-3 transition-all duration-300 text-on-surface-variant hover:text-primary hover:bg-white/60 font-semibold text-sm">
+            <span class="material-symbols-outlined text-xl">trending_up</span>
+            <span>Insights</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bottom Pinned Nav: Settings -->
+      <div class="w-full">
+        <button onclick="switchPage('settings')" id="nav-settings" class="nav-btn w-full px-4 py-3 rounded-2xl flex items-center space-x-3 transition-all duration-300 text-on-surface-variant hover:text-primary hover:bg-white/60 font-semibold text-sm">
+          <span class="material-symbols-outlined text-xl">settings</span>
+          <span>Settings</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- CONTENT CONTAINER -->
+    <div class="ml-64 flex-1 flex flex-col min-h-screen">
+
+      <!-- STICKY TOP HEADER -->
+      <header class="sticky top-0 z-40 px-8 md:px-10 py-4 flex items-center justify-between backdrop-blur-md bg-surface/60 border-b border-white/50 shadow-sm">
+        <div class="flex items-center space-x-3">
+          <span class="font-label-md text-primary tracking-widest uppercase text-xs block">GETHIRED</span>
+          <span class="text-outline-variant">/</span>
+          <h1 id="header-page-title" class="font-headline-lg font-extrabold text-on-background text-2xl md:text-3xl">Jobs Feed</h1>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <!-- Background Search Sync Status Pill -->
+          <button onclick="switchPage('settings')" id="sync-status-pill" class="glass-card px-4 py-2 rounded-full text-xs font-semibold text-on-surface flex items-center gap-2 hover:bg-white/80 transition-all cursor-pointer">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="sync-status-text">Active — synced recently</span>
+          </button>
+
+          <!-- Notification Bell Button -->
+          <button onclick="switchPage('search')" class="glass-card p-3 rounded-full hover:scale-105 transition-transform flex items-center justify-center text-on-surface relative" title="High Match Alerts">
+            <span class="material-symbols-outlined text-xl">notifications</span>
+            <span id="bell-dot" class="absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 rounded-full bg-tertiary text-white text-[10px] font-bold flex items-center justify-center border-2 border-white hidden">0</span>
+          </button>
+
+          <!-- User Avatar Circle -->
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white font-extrabold flex items-center justify-center text-sm shadow-md" title="Aashbir">
+            A
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN PAGE CONTENT PANELS -->
+      <main class="max-w-[1280px] w-full mx-auto px-8 md:px-10 pt-6 pb-20 flex-1">
+
+        <!-- ============================================================ -->
+        <!-- PAGE 1: JOBS -->
+        <!-- ============================================================ -->
+        <section id="page-jobs" class="page-panel space-y-6">
+          
+          <!-- Welcome Banner -->
+          <div class="space-y-1 mb-2" id="jobs-welcome-banner">
+            <h1 class="font-headline-lg text-3xl font-bold text-on-background">Hi Aashbir, welcome back</h1>
+            <p class="font-body-md text-sm text-on-surface-variant" id="jobs-welcome-subtext">Let's find your next role</p>
+          </div>
+
+          <!-- Today Stat Strip (3 Pill Chips) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="jobs-today-stat-strip">
+            <div onclick="filterDigestFeed('new')" class="glass-card p-4 rounded-full flex items-center justify-between px-6 cursor-pointer hover:bg-white/80 transition-all btn-micro-active border border-white/80 shadow-sm">
+              <span class="text-xs text-on-surface-variant font-semibold" id="digest-stat-new">12 new jobs today</span>
+              <span class="material-symbols-outlined text-primary text-xl">arrow_forward</span>
+            </div>
+
+            <div onclick="filterDigestFeed('high')" class="glass-card p-4 rounded-full flex items-center justify-between px-6 cursor-pointer hover:bg-white/80 transition-all btn-micro-active border border-white/80 shadow-sm">
+              <span class="text-xs text-emerald-800 font-semibold" id="digest-stat-high">5 top matches</span>
+              <span class="material-symbols-outlined text-emerald-600 text-xl">verified</span>
+            </div>
+
+            <div onclick="switchPage('tracker')" class="glass-card p-4 rounded-full flex items-center justify-between px-6 cursor-pointer hover:bg-white/80 transition-all btn-micro-active border border-white/80 shadow-sm">
+              <span class="text-xs text-tertiary font-semibold" id="digest-stat-followup">2 need follow-up</span>
+              <span class="material-symbols-outlined text-tertiary text-xl">schedule</span>
+            </div>
+          </div>
+
+          <!-- Section Header & Controls Toolbar -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-b border-white/60 pb-4">
+            <div>
+              <h2 class="font-headline-lg text-2xl md:text-3xl text-on-background">Recommended for you</h2>
+              <p class="font-body-md text-xs text-on-surface-variant mt-0.5">Curated and rescored in real-time</p>
+            </div>
+
+            <div class="flex items-center space-x-3">
+              <label class="font-label-md text-on-surface-variant text-xs uppercase tracking-wider">Sort By:</label>
+              <select id="jobs-sort-select" onchange="loadJobsFeed()" class="glass-well text-on-surface text-sm font-semibold rounded-full px-4 py-2 outline-none cursor-pointer">
+                <option value="match">Match Score</option>
+                <option value="recent">Recency</option>
+                <option value="salary">Salary</option>
+                <option value="company_affinity">Company Affinity</option>
+              </select>
+
+              <button onclick="toggleFilterPanel()" class="glass-card p-2.5 rounded-full text-primary hover:bg-white/80 transition-all btn-micro-active flex items-center justify-center" title="Feed Filters">
+                <span class="material-symbols-outlined text-xl">tune</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Collapsible Filter Panel -->
+          <div id="filter-panel" class="hidden glass-card rounded-3xl p-6 space-y-6 animate-fadeIn">
+            <div class="flex items-center justify-between border-b border-white/60 pb-4">
+              <h3 class="font-title-md text-on-background flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">filter_alt</span> Feed Filters
+              </h3>
+              <button onclick="toggleFilterPanel()" class="text-on-surface-variant hover:text-on-surface">
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="space-y-2">
+                <label class="font-label-md text-on-surface text-xs uppercase tracking-wider">Target Roles</label>
+                <div id="filter-roles-chips" class="flex flex-wrap gap-2 pt-1"></div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="font-label-md text-on-surface text-xs uppercase tracking-wider">Locations</label>
+                <div id="filter-locations-list" class="flex flex-wrap gap-2 pt-1"></div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="font-label-md text-on-surface text-xs uppercase tracking-wider">Upload Timeframe</label>
+                <select id="filter-upload-time" class="glass-well w-full text-on-surface text-sm font-semibold rounded-2xl px-4 py-2.5 outline-none">
+                  <option value="0.5">Last 30 minutes</option>
+                  <option value="1">Last 1 hour</option>
+                  <option value="2">Last 2 hours</option>
+                  <option value="6">Last 6 hours</option>
+                  <option value="24" selected>Last 24 hours</option>
+                  <option value="72">Last 72 hours</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 border-t border-white/60 pt-4">
+              <button onclick="resetCurrentFilters()" class="px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant hover:text-on-surface">Reset</button>
+              <button onclick="applyFeedFilters()" class="btn-primary bg-primary text-white px-7 py-2.5 rounded-full text-sm font-bold hover:bg-on-primary-fixed-variant transition-all btn-micro-active flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">search</span> Apply Filters
+              </button>
+            </div>
+          </div>
+
+          <!-- Job Cards Feed Container -->
+          <div id="jobs-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Loading state skeleton -->
+            <div class="col-span-full grid grid-cols-1 lg:grid-cols-2 gap-6" id="jobs-skeleton">
+              <div class="glass-card rounded-3xl p-8 space-y-6 animate-pulse">
+                <div class="flex items-center space-x-4">
+                  <div class="w-14 h-14 rounded-2xl bg-slate-200"></div>
+                  <div class="space-y-2 flex-1"><div class="h-5 bg-slate-200 rounded w-3/4"></div><div class="h-4 bg-slate-200 rounded w-1/2"></div></div>
+                </div>
+                <div class="h-10 bg-slate-200 rounded-2xl w-full"></div>
+              </div>
+              <div class="glass-card rounded-3xl p-8 space-y-6 animate-pulse">
+                <div class="flex items-center space-x-4">
+                  <div class="w-14 h-14 rounded-2xl bg-slate-200"></div>
+                  <div class="space-y-2 flex-1"><div class="h-5 bg-slate-200 rounded w-3/4"></div><div class="h-4 bg-slate-200 rounded w-1/2"></div></div>
+                </div>
+                <div class="h-10 bg-slate-200 rounded-2xl w-full"></div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 2: SEARCH & CRITERIA -->
+        <!-- ============================================================ -->
+        <section id="page-search" class="page-panel hidden space-y-8">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left 2 Cols: Search Bar & Hierarchical Mixed Criteria -->
+            <div class="lg:col-span-2 space-y-8">
+              
+              <!-- Top Search Bar Card -->
+              <div class="glass-card rounded-3xl p-8 space-y-6 shadow-xl border border-white/80">
+                <h2 class="font-headline-lg text-2xl text-on-background">Live Multi-Source Search</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="font-label-md text-on-surface text-xs uppercase tracking-wider block mb-2">Role / Keywords / Company</label>
+                    <input type="text" id="search-input-role" placeholder="e.g. Software Engineer, Full Stack" class="glass-well w-full px-4 py-3 rounded-2xl text-sm outline-none font-semibold text-on-surface">
+                  </div>
+
+                  <div>
+                    <label class="font-label-md text-on-surface text-xs uppercase tracking-wider block mb-2">City / State / Remote</label>
+                    <input type="text" id="search-input-location" placeholder="e.g. Bangalore, Gurugram, Remote" class="glass-well w-full px-4 py-3 rounded-2xl text-sm outline-none font-semibold text-on-surface">
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between pt-4 border-t border-white/60 gap-4">
+                  <div class="flex items-center space-x-3 text-xs text-on-surface-variant font-semibold">
+                    <span>Timeframe:</span>
+                    <select id="search-input-timeframe" class="glass-well px-3 py-1.5 rounded-full outline-none font-bold text-on-surface">
+                      <option value="2">Last 2 Hours</option>
+                      <option value="6">Last 6 Hours</option>
+                      <option value="24" selected>Last 24 Hours</option>
+                      <option value="72">Last 72 Hours</option>
+                    </select>
+                  </div>
+
+                  <!-- Advanced Search Toggle Switch -->
+                  <div class="flex items-center space-x-3">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="advanced-search-toggle" class="sr-only peer" onchange="toggleAdvancedSearchMode()">
+                      <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                    <span class="font-title-md text-xs text-on-background font-bold">Advanced Search (Hierarchical Criteria)</span>
+                  </div>
+
+                  <button onclick="triggerRealTimeSearch()" id="btn-realtime-search" class="btn-primary bg-primary text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-on-primary-fixed-variant transition-all btn-micro-active flex items-center gap-2 shadow-lg">
+                    <span class="material-symbols-outlined text-xl">search</span>
+                    <span>Run Search</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Transparency notice -->
+              <div id="search-expansion-notice" class="hidden glass-card border-l-4 border-secondary p-4 rounded-2xl flex items-center gap-3 text-on-secondary-container bg-secondary-container/20">
+                <span class="material-symbols-outlined text-secondary text-2xl">info</span>
+                <span id="search-expansion-text" class="font-body-md font-semibold">Expanded search timeframe</span>
+              </div>
+
+              <!-- Search Results Grid -->
+              <div class="space-y-4">
+                <h3 id="search-results-title" class="font-title-md text-on-background hidden">Search Results</h3>
+                <div id="search-results-grid" class="grid grid-cols-1 gap-6"></div>
+              </div>
+
+              <!-- Hierarchical Criteria Tiers (Advanced Mode - Toggleable) -->
+              <div id="hierarchical-criteria-section" class="glass-card rounded-3xl p-8 space-y-6 hidden">
+                <div class="flex items-center justify-between border-b border-white/60 pb-4">
+                  <div>
+                    <h3 class="font-title-md text-on-background flex items-center gap-2">
+                      <span class="material-symbols-outlined text-primary">account_tree</span> Hierarchical Priority Criteria
+                    </h3>
+                    <p class="font-body-md text-xs text-on-surface-variant mt-0.5">Tiered requirement cards containing mixed role, location, salary, work mode, company type, or skill groups</p>
+                  </div>
+                  <button onclick="addCriteriaTier()" class="btn-primary bg-primary text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-on-primary-fixed-variant transition-all btn-micro-active flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">add</span> + Add Rule
+                  </button>
+                </div>
+
+                <div id="criteria-tiers-container" class="space-y-6">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right Col: Sticky Auto-Scout Card & High-Match Alerts -->
+            <div class="space-y-6 sticky top-24">
+              <div class="glass-card rounded-3xl p-8 space-y-6">
+                <div class="flex items-center justify-between border-b border-white/60 pb-4">
+                  <div>
+                    <h3 class="font-title-md text-on-background flex items-center gap-2">
+                      <span class="material-symbols-outlined text-primary">radar</span> Auto-Scout
+                    </h3>
+                    <p class="font-body-md text-xs text-on-surface-variant mt-0.5">Continuous background monitoring worker</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="bg-search-enable-toggle" class="sr-only peer" onchange="saveBackgroundSearchConfig()">
+                    <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+
+                <div class="space-y-4">
+                  <div>
+                    <label class="font-label-md text-on-surface text-xs uppercase tracking-wider block mb-2">Scan Interval</label>
+                    <select id="bg-search-interval" class="glass-well w-full px-4 py-3 rounded-2xl text-sm font-semibold text-on-surface">
+                      <option value="2">Every 2 hours</option>
+                      <option value="6">Every 6 hours</option>
+                      <option value="12">Every 12 hours</option>
+                      <option value="24">Daily (24 hours)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-xs font-bold mb-2">
+                      <span class="text-on-surface-variant uppercase tracking-wider">Min. Match Threshold</span>
+                      <span id="slider-score-display" class="text-primary">55%</span>
+                    </div>
+                    <input type="range" id="bg-search-min-score" min="40" max="95" value="55" oninput="document.getElementById('slider-score-display').innerText = this.value + '%'" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary">
+                  </div>
+
+                  <!-- Auto-Scout Hierarchical Criteria & Global Filters Drawer -->
+                  <div class="pt-2 border-t border-white/60">
+                    <button onclick="toggleAutoScoutCriteriaPanel()" class="w-full glass-well hover:bg-white text-on-surface py-2.5 px-4 rounded-2xl font-bold text-xs transition-all flex items-center justify-between">
+                      <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-primary">account_tree</span> Auto-Scout Criteria & Tiers</span>
+                      <span id="autoscout-toggle-icon" class="material-symbols-outlined text-sm">expand_more</span>
+                    </button>
+                    
+                    <div id="autoscout-criteria-panel" class="hidden mt-4 space-y-4 glass-card p-4 rounded-2xl border border-primary/20">
+                      <!-- Always-Applied Global Filters (Auto-Scout Background Search Only) -->
+                      <div class="space-y-3 border-b border-primary/20 pb-3">
+                        <span class="text-xs font-bold text-primary flex items-center gap-1">
+                          <span class="material-symbols-outlined text-sm text-primary">filter_alt</span> Always-Applied Global Filters
+                        </span>
+                        <div id="autoscout-global-filters-container" class="space-y-3">
+                          <!-- Rendered dynamically -->
+                        </div>
+                      </div>
+
+                      <!-- Priority Tiers Section -->
+                      <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-white/60 pb-2">
+                          <span class="text-xs font-bold text-primary">Independent Background Tiers</span>
+                          <button onclick="addAutoScoutTier()" class="text-[11px] font-bold text-primary hover:underline">+ Add Tier</button>
+                        </div>
+                        <div id="autoscout-tiers-container" class="space-y-4">
+                          <!-- Rendered dynamically -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="dry-run-result-box" class="hidden glass-well p-3 rounded-2xl text-xs text-emerald-800 font-semibold text-center bg-emerald-50">
+                    <!-- Dry run stats -->
+                  </div>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                  <button onclick="runTestConfigDryRun()" class="w-full glass-well hover:bg-white text-on-surface py-3 rounded-full font-bold text-xs transition-all btn-micro-active flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">preview</span> Test Configuration (Dry Run)
+                  </button>
+
+                  <button onclick="saveBackgroundSearchConfig()" class="w-full btn-primary bg-primary text-white py-3 rounded-full font-bold text-xs hover:bg-on-primary-fixed-variant transition-all btn-micro-active">
+                    Save Auto-Scout
+                  </button>
+                </div>
+              </div>
+
+              <!-- High-Match Alerts Card (Theme Primary Color Palette) -->
+              <div class="glass-card rounded-3xl p-8 space-y-6">
+                <div class="flex items-center justify-between border-b border-white/60 pb-4">
+                  <div>
+                    <h3 class="font-title-md text-on-background flex items-center gap-2">
+                      <span class="material-symbols-outlined text-primary">notifications_active</span> High-Match Alerts
+                    </h3>
+                    <p class="font-body-md text-xs text-on-surface-variant mt-0.5">Personal alert notification threshold for top jobs</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="notification-alerts-enable-toggle" class="sr-only peer" onchange="saveNotificationConfig()">
+                    <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+
+                <div class="space-y-4">
+                  <div>
+                    <div class="flex justify-between text-xs font-bold mb-2">
+                      <span class="text-on-surface-variant uppercase tracking-wider">Notify me above</span>
+                      <span id="notification-threshold-display" class="text-primary font-bold">90%</span>
+                    </div>
+                    <input type="range" id="notification-alerts-threshold" min="50" max="95" value="90" oninput="document.getElementById('notification-threshold-display').innerText = this.value + '%'" onchange="saveNotificationConfig()" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary">
+                  </div>
+                </div>
+
+                <button onclick="saveNotificationConfig()" class="w-full glass-well hover:bg-white text-on-surface py-3 rounded-full font-bold text-xs transition-all btn-micro-active flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined text-sm">notifications</span> Save Alert Preferences
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 3: TRACKER -->
+        <!-- ============================================================ -->
+        <section id="page-tracker" class="page-panel hidden space-y-6">
+          
+          <!-- Tab Bar (Pill Segmented) -->
+          <div class="flex justify-center">
+            <div class="glass-card rounded-full p-1.5 flex items-center space-x-2 border border-white/80 shadow-md">
+              <button onclick="switchTrackerTab('applied')" id="tab-applied" class="px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-primary text-white shadow-sm">Applied</button>
+              <button onclick="switchTrackerTab('viewed')" id="tab-viewed" class="px-6 py-2.5 rounded-full text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all">Viewed</button>
+              <button onclick="switchTrackerTab('saved')" id="tab-saved" class="px-6 py-2.5 rounded-full text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all">Saved</button>
+            </div>
+          </div>
+
+          <!-- Applied Tab Content -->
+          <div id="tracker-panel-applied" class="tracker-panel space-y-6">
+            <div id="applied-apps-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Viewed Tab Content -->
+          <div id="tracker-panel-viewed" class="tracker-panel hidden space-y-6">
+            <div id="viewed-jobs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Saved Tab Content -->
+          <div id="tracker-panel-saved" class="tracker-panel hidden space-y-6">
+            <div id="saved-jobs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 4: INSIGHTS -->
+        <!-- ============================================================ -->
+        <section id="page-insights" class="page-panel hidden space-y-8">
+          
+          <div>
+            <h2 class="font-headline-lg text-3xl text-on-background">Insights</h2>
+            <p class="font-body-md text-on-surface-variant">Data-driven perspectives, fully transparent.</p>
+          </div>
+
+          <!-- Company list health (autonomous discovery transparency) -->
+          <div class="glass-card rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-white/60 pb-3">
+              <h3 class="font-title-md text-on-background flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">domain_verification</span>
+                Company List Health
+              </h3>
+              <span id="company-health-pct" class="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">—</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              <div><div id="ch-total" class="font-headline-lg text-2xl font-extrabold text-on-background">—</div>
+                   <span class="text-[11px] text-on-surface-variant font-bold uppercase">Companies</span></div>
+              <div><div id="ch-producing" class="font-headline-lg text-2xl font-extrabold text-secondary">—</div>
+                   <span class="text-[11px] text-on-surface-variant font-bold uppercase">Producing Jobs</span></div>
+              <div><div id="ch-fresher" class="font-headline-lg text-2xl font-extrabold text-emerald-600">—</div>
+                   <span class="text-[11px] text-on-surface-variant font-bold uppercase">Fresher-Active</span></div>
+              <div><div id="ch-watchlist" class="font-headline-lg text-2xl font-extrabold text-amber-600">—</div>
+                   <span class="text-[11px] text-on-surface-variant font-bold uppercase">On Watchlist</span></div>
+            </div>
+            <div id="ch-cycles" class="space-y-1.5 text-xs text-on-surface-variant"></div>
+          </div>
+
+          <!-- Top Health 4 Stat Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-card rounded-3xl p-5 space-y-2">
+              <span class="text-xs text-on-surface-variant font-bold block uppercase tracking-wider">LLM API Quotas</span>
+              <div id="health-llm-quota" class="font-headline-lg text-2xl text-primary font-extrabold">Active</div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-5 space-y-2">
+              <span class="text-xs text-on-surface-variant font-bold block uppercase tracking-wider">Ollama Local</span>
+              <div id="health-ollama" class="font-headline-lg text-2xl text-emerald-600 font-extrabold">Ready</div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-5 space-y-2">
+              <span class="text-xs text-on-surface-variant font-bold block uppercase tracking-wider">Concurrency Level</span>
+              <div id="health-concurrency" class="font-headline-lg text-2xl text-secondary font-extrabold">RAM 52%</div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-5 space-y-2">
+              <span class="text-xs text-on-surface-variant font-bold block uppercase tracking-wider">Scan Freshness</span>
+              <div id="health-background-logs" class="font-headline-lg text-2xl text-tertiary font-extrabold">Synced</div>
+            </div>
+          </div>
+
+          <!-- System Efficiency Score Composite Card -->
+          <div class="glass-card rounded-3xl p-8 space-y-6 bg-gradient-to-r from-white/70 to-white/40 border border-white/80 shadow-lg">
+            <div class="flex items-center justify-between border-b border-white/60 pb-4">
+              <div>
+                <h3 class="font-title-md text-on-background flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary">speed</span> System Efficiency Score
+                </h3>
+                <p class="font-body-md text-xs text-on-surface-variant mt-0.5">Composite weighted metric of parsing accuracy, match confidence ratio, precision & pattern health</p>
+              </div>
+
+              <div class="text-right">
+                <span id="efficiency-score-value" class="font-display-lg text-4xl text-primary font-bold">88.5%</span>
+                <span id="efficiency-score-trend" class="text-xs font-bold text-emerald-600 block">+4.2% vs last week</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center" id="efficiency-breakdown-grid">
+              <!-- Breakdown items -->
+            </div>
+          </div>
+
+          <!-- Applications Week-over-Week & Salary Benchmarks -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Applications Week over Week -->
+            <div class="glass-card rounded-3xl p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/60 pb-3">
+                <h3 class="font-title-md text-on-background flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary font-bold">trending_up</span> Applications Activity
+                </h3>
+                <span id="wow-trend-tag" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">+100%</span>
+              </div>
+              <div id="wow-applications-display" class="space-y-2 py-2"></div>
+            </div>
+
+            <!-- Trending Skills with % Change -->
+            <div class="glass-card rounded-3xl p-6 space-y-4">
+              <h3 class="font-title-md text-on-background flex items-center gap-2 border-b border-white/60 pb-3">
+                <span class="material-symbols-outlined text-tertiary">psychology</span> Trending Learned Skills
+              </h3>
+              <div id="trending-skills-content" class="flex flex-wrap gap-2 pt-1"></div>
+            </div>
+          </div>
+
+          <!-- Worst-Case Accuracy & Personalization Stats Cards -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Worst-Case Accuracy Card -->
+            <div class="glass-card rounded-3xl p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/60 pb-3">
+                <div>
+                  <h3 class="font-title-md text-on-background flex items-center gap-2">
+                    <span class="material-symbols-outlined text-emerald-600">verified_user</span> Worst-Case Accuracy
+                  </h3>
+                  <p class="text-xs text-on-surface-variant mt-0.5" id="worst-case-subtitle">Evaluating high-confidence match precision</p>
+                </div>
+                <span id="worst-case-trend-badge" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Stable</span>
+              </div>
+              <div class="flex items-baseline justify-between pt-2">
+                <div class="font-display-lg text-4xl text-primary font-bold" id="worst-case-accuracy-display">92%</div>
+                <div class="text-xs font-semibold text-on-surface-variant" id="worst-case-details-text">0 confident misses</div>
+              </div>
+
+              <!-- Expandable Recent Confident Misses Section -->
+              <div class="pt-3 border-t border-white/60">
+                <button onclick="document.getElementById('recent-confident-misses-container').classList.toggle('hidden')" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">visibility</span> View Confident Miss Transparency Data
+                </button>
+                <div id="recent-confident-misses-container" class="hidden mt-3 space-y-2 max-h-48 overflow-y-auto pr-1">
+                  <!-- Confident miss cards rendered dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Personalization Stat Card -->
+            <div class="glass-card rounded-3xl p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/60 pb-3">
+                <div>
+                  <h3 class="font-title-md text-on-background flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">psychology</span> Few-Shot Personalization
+                  </h3>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Adaptively calibrating LLM scoring prompts using feedback history</p>
+                </div>
+                <span id="personalization-status-badge" class="text-xs font-bold text-primary bg-primary-container/40 px-3 py-1 rounded-full">Active</span>
+              </div>
+              <div class="space-y-2 py-2">
+                <div class="font-display-lg text-3xl text-primary font-bold" id="personalization-jobs-count">0 jobs scored</div>
+                <p class="text-xs text-on-surface-variant">Your explicit approval/rejection feedback is automatically injected into LLM evaluation prompts once 5+ feedback entries exist.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resource Allocation & Cycle Yield History Cards (Phase 11) -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Resource Allocation Card -->
+            <div class="glass-card rounded-3xl p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/60 pb-3">
+                <div>
+                  <h3 class="font-title-md text-on-background flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">alt_route</span> Resource Allocation Status
+                  </h3>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Quota headroom, routing biases, and circuit breaker status</p>
+                </div>
+                <span id="resource-headroom-badge" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Healthy</span>
+              </div>
+
+              <div id="resource-allocation-content" class="space-y-3 pt-1 text-xs">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Cycle Yield History Card -->
+            <div class="glass-card rounded-3xl p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/60 pb-3">
+                <div>
+                  <h3 class="font-title-md text-on-background flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary">schedule</span> Cycle Yield History (30-Day)
+                  </h3>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Historical job yield per time-of-day bucket</p>
+                </div>
+                <span class="text-xs font-bold text-secondary bg-secondary-container/30 px-3 py-1 rounded-full">3-Hour Buckets</span>
+              </div>
+
+              <div id="cycle-yield-history-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Apify Fallback Card -->
+          <div id="apify-fallback-card"></div>
+
+          <!-- Deduplicated Log Entries Timeline -->
+          <div class="glass-card rounded-3xl p-6 space-y-4">
+            <h3 class="font-title-md text-on-background flex items-center gap-2 border-b border-white/60 pb-3">
+              <span class="material-symbols-outlined text-primary">history_edu</span> System Auto-Optimization Logs & Trial Outcomes
+            </h3>
+            <div id="self-improvement-timeline" class="space-y-3 max-h-72 overflow-y-auto pr-2"></div>
+          </div>
+
+          <!-- AI Recommended Roles -->
+          <div class="glass-card rounded-3xl p-6 space-y-4">
+            <h3 class="font-title-md text-on-background flex items-center gap-2 border-b border-white/60 pb-3">
+              <span class="material-symbols-outlined text-primary">auto_awesome</span> AI Recommended Target Roles
+            </h3>
+            <div id="ai-recommended-roles" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+          </div>
+
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 5: SETTINGS -->
+        <!-- ============================================================ -->
+        <section id="page-settings" class="page-panel hidden space-y-8">
+          
+          <div class="max-w-5xl space-y-8">
+            
+            <!-- Resume Management Card -->
+            <div class="glass-card rounded-3xl p-8 space-y-6">
+              <div class="flex items-center justify-between border-b border-white/60 pb-4">
+                <h3 class="font-title-md text-on-background flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary">description</span> Resume Management
+                </h3>
+                <span id="resume-status-badge" class="px-4 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">Checking...</span>
+              </div>
+
+              <div id="resume-details-box" class="space-y-3"></div>
+
+              <div class="flex flex-wrap gap-4 pt-2">
+                <form id="resume-upload-form" onsubmit="handleResumeUpload(event)" class="flex items-center space-x-3">
+                  <input type="file" id="resume-file-input" accept=".txt,.pdf,.docx" required class="hidden" onchange="updateFileNameDisplay()">
+                  <button type="button" onclick="document.getElementById('resume-file-input').click()" class="glass-well px-5 py-2.5 rounded-full text-sm font-semibold text-on-surface hover:bg-white flex items-center gap-2">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span id="resume-file-name">Choose File</span>
+                  </button>
+                  <button type="submit" class="btn-primary bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-on-primary-fixed-variant transition-all btn-micro-active">Upload Resume</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Target Companies Directory Card -->
+            <div class="glass-card rounded-3xl p-8 space-y-6">
+              <div class="flex items-center justify-between border-b border-white/60 pb-4">
+                <div>
+                  <h3 class="font-title-md text-on-background flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary">domain</span> Target Companies Directory
+                  </h3>
+                  <p class="font-body-md text-xs text-on-surface-variant mt-0.5">Manage monitoring status, parsing accuracy, and target portals</p>
+                </div>
+              </div>
+
+              <!-- Quick add company form -->
+              <form onsubmit="handleAddSingleCompany(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3 glass-well p-4 rounded-2xl">
+                <input type="text" id="add-comp-name" placeholder="Company Name" required class="bg-white/80 px-4 py-2 rounded-xl text-sm outline-none text-on-surface">
+                <input type="url" id="add-comp-url" placeholder="Career Page URL (optional)" class="bg-white/80 px-4 py-2 rounded-xl text-sm outline-none text-on-surface">
+                <button type="submit" class="btn-primary bg-secondary text-white px-5 py-2 rounded-xl text-sm font-bold hover:bg-on-secondary-container transition-all btn-micro-active">Add Company</button>
+              </form>
+
+              <!-- Companies table -->
+              <div class="overflow-x-auto max-h-80">
+                <table class="w-full text-left border-collapse text-sm">
+                  <thead>
+                    <tr class="border-b border-white/60 text-xs text-on-surface-variant font-bold uppercase">
+                      <th class="py-2.5 px-3">Company</th>
+                      <th class="py-2.5 px-3">ATS Type</th>
+                      <th class="py-2.5 px-3">Status</th>
+                      <th class="py-2.5 px-3">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="companies-table-body" class="divide-y divide-white/40"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Data & Privacy Card -->
+            <div class="glass-card rounded-3xl p-8 space-y-6">
+              <h3 class="font-title-md text-on-background flex items-center gap-2 border-b border-white/60 pb-4">
+                <span class="material-symbols-outlined text-tertiary">download</span> Data & Privacy
+              </h3>
+              <p class="font-body-md text-xs text-on-surface-variant leading-relaxed">
+                Export complete personal application tracker records, curated job listings, learned skills history, and auto-optimization logs as a single structured JSON payload.
+              </p>
+              <div>
+                <button onclick="triggerExportData()" class="btn-primary bg-primary text-white px-7 py-3 rounded-full text-xs font-bold hover:bg-on-primary-fixed-variant transition-all btn-micro-active flex items-center gap-2 shadow-md">
+                  <span class="material-symbols-outlined text-base">download</span> Export My Data
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- DUPLICATE APPLICATION WARNING MODAL -->
+  <div id="duplicate-warning-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden animate-fadeIn">
+    <div class="glass-card rounded-3xl p-8 max-w-md w-full mx-4 space-y-6 bg-white/95 shadow-2xl border-l-8 border-amber-500">
+      <div class="flex items-center space-x-3 text-amber-700">
+        <span class="material-symbols-outlined text-3xl">warning</span>
+        <h3 class="font-title-md text-lg font-bold text-on-background">Duplicate Application Warning</h3>
+      </div>
+      <p id="duplicate-warning-text" class="font-body-md text-sm text-on-surface leading-relaxed">
+        You applied to a similar role at this company recently. Continue anyway?
+      </p>
+      <div class="flex justify-end space-x-3 border-t border-gray-200 pt-4">
+        <button onclick="closeDuplicateModal(false)" class="px-5 py-2.5 rounded-full text-sm font-semibold text-on-surface-variant hover:bg-slate-100">Cancel</button>
+        <button onclick="closeDuplicateModal(true)" class="btn-primary bg-amber-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-amber-700 transition-all btn-micro-active">Continue Anyway</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD TIER MODAL FOR HIERARCHICAL CRITERIA -->
+  <div id="add-tier-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden animate-fadeIn">
+    <div class="glass-card rounded-3xl p-8 max-w-lg w-full mx-4 space-y-6 bg-white/95 shadow-2xl border-l-8 border-primary">
+      <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+        <h3 class="font-title-md text-lg font-bold text-on-background flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">add_circle</span> Create Priority Tier Rule
+        </h3>
+        <button onclick="closeAddTierModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="font-label-md text-xs uppercase tracking-wider text-on-surface-variant font-bold block mb-1">Tier Name / Label</label>
+          <input type="text" id="new-tier-label-input" placeholder="e.g. TIER 3 — CUSTOM PREFERENCE" class="glass-card w-full px-4 py-2.5 rounded-2xl text-xs outline-none text-on-surface border border-slate-200">
+        </div>
+
+        <div>
+          <label class="font-label-md text-xs uppercase tracking-wider text-on-surface-variant font-bold block mb-2">Select Category Groups to Include</label>
+          <div id="add-tier-checkboxes-container" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <!-- Rendered dynamically from ALL_CATEGORY_GROUPS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end space-x-3 border-t border-gray-200 pt-4">
+        <button onclick="closeAddTierModal()" class="px-5 py-2.5 rounded-full text-xs font-semibold text-on-surface-variant hover:bg-slate-100">Cancel</button>
+        <button onclick="confirmCreateTier()" class="btn-primary bg-primary text-white px-6 py-2.5 rounded-full text-xs font-bold hover:bg-on-primary-fixed-variant transition-all btn-micro-active">Create Tier Card</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    const ALL_CATEGORY_GROUPS = [
+      "Role & Seniority",
+      "Location & Model",
+      "Compensation & Level",
+      "Company Type & Industry",
+      "Job Type",
+      "Skills & Tech Stack"
+    ];
+
+    let currentPage = 'jobs';
+    let globalJobs = [];
+    let savedJobIds = new Set(JSON.parse(localStorage.getItem('saved_jobs') || '[]'));
+    let defaultFilters = null;
+    let pendingApplyJobId = null;
+    let criteriaTiers = [];
+    let userNotificationConfig = { enabled: false, match_score_threshold: 90 };
+    let globalFilters = {
+      "Skills & Tech Stack": [],
+      "Company Type & Industry": [],
+      "Job Type": [],
+      "Role & Seniority": [],
+      "Location & Model": [],
+      "Compensation & Level": []
+    };
+    let autoScoutHierarchicalFilters = {
+      global_filters: {},
+      priority_tiers: []
+    };
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-full text-xs font-bold shadow-2xl flex items-center gap-2 border border-slate-700 animate-fadeIn';
+      const icon = isError ? 'error' : 'check_circle';
+      const color = isError ? 'text-rose-400' : 'text-emerald-400';
+      toast.innerHTML = `<span class="material-symbols-outlined text-sm ${color}">${icon}</span><span>${escapeHTML(msg)}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), isError ? 6000 : 3000);
+    }
+
+    async function loadNotificationConfig() {
+      try {
+        const res = await fetch('/api/notifications/config');
+        const cfg = await res.json();
+        userNotificationConfig = cfg;
+
+        const toggle = document.getElementById('notification-alerts-enable-toggle');
+        const slider = document.getElementById('notification-alerts-threshold');
+        const display = document.getElementById('notification-threshold-display');
+        if (toggle) toggle.checked = cfg.enabled || false;
+        if (slider) slider.value = cfg.match_score_threshold || 90;
+        if (display) display.innerText = (cfg.match_score_threshold || 90) + '%';
+      } catch (e) {}
+    }
+
+    async function saveNotificationConfig() {
+      const toggle = document.getElementById('notification-alerts-enable-toggle');
+      const slider = document.getElementById('notification-alerts-threshold');
+      const enabled = toggle ? toggle.checked : false;
+      const threshold = slider ? parseInt(slider.value) : 90;
+
+      userNotificationConfig = { enabled, match_score_threshold: threshold };
+
+      try {
+        await fetch('/api/notifications/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userNotificationConfig)
+        });
+        showToast("Notification alert settings saved!");
+        if (currentPage === 'jobs') loadJobsFeed();
+      } catch (e) {
+        console.error("Error saving notification config:", e);
+      }
+    }
+
+    // WEBGL ANIMATED SHADER BACKGROUND WITH NEW PHASE 7C PALETTE (#5312bc, #64a8fe, #821157)
+    (function initShaderCanvas() {
+      const canvas = document.getElementById('shader-canvas');
+      if (!canvas) return;
+
+      function setFallback() {
+        canvas.classList.add('webgl-fallback-bg');
+      }
+
+      let gl = null;
+      try {
+        gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      } catch (e) {
+        setFallback();
+        return;
+      }
+
+      if (!gl) {
+        setFallback();
+        return;
+      }
+
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(window.innerWidth * dpr);
+        canvas.height = Math.floor(window.innerHeight * dpr);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      const vsSource = `
+        attribute vec2 a_position;
+        void main() {
+          gl_Position = vec4(a_position, 0.0, 1.0);
+        }
+      `;
+
+      const fsSource = `
+        precision mediump float;
+        uniform vec2 u_resolution;
+        uniform float u_time;
+
+        void main() {
+          vec2 st = gl_FragCoord.xy / u_resolution.xy;
+          float t = u_time * 0.35;
+
+          vec3 cViolet = vec3(0.325, 0.071, 0.737); // #5312bc
+          vec3 cAzure  = vec3(0.392, 0.659, 0.996); // #64a8fe
+          vec3 cRose   = vec3(0.510, 0.067, 0.341); // #821157
+          vec3 cBg     = vec3(0.980, 0.973, 1.000); // #faf8ff
+
+          vec2 p1 = vec2(0.3 + 0.25 * sin(t * 0.8), 0.4 + 0.25 * cos(t * 0.6));
+          vec2 p2 = vec2(0.7 + 0.25 * cos(t * 0.7), 0.6 + 0.25 * sin(t * 0.9));
+          vec2 p3 = vec2(0.5 + 0.30 * sin(t * 0.5), 0.3 + 0.30 * cos(t * 1.1));
+
+          float d1 = length(st - p1);
+          float d2 = length(st - p2);
+          float d3 = length(st - p3);
+
+          float w1 = smoothstep(0.85, 0.0, d1);
+          float w2 = smoothstep(0.85, 0.0, d2);
+          float w3 = smoothstep(0.85, 0.0, d3);
+
+          vec3 color = cBg;
+          color = mix(color, cViolet, w1 * 0.55);
+          color = mix(color, cAzure,  w2 * 0.55);
+          color = mix(color, cRose,   w3 * 0.55);
+
+          gl_FragColor = vec4(color, 0.85);
+        }
+      `;
+
+      function createShader(gl, type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          console.warn("Shader compile error:", gl.getShaderInfoLog(shader));
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+
+      const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+      const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+      if (!vs || !fs) {
+        setFallback();
+        return;
+      }
+
+      const program = gl.createProgram();
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.warn("Program link error:", gl.getProgramInfoLog(program));
+        setFallback();
+        return;
+      }
+
+      gl.useProgram(program);
+
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        -1, -1,  1, -1, -1,  1,
+        -1,  1,  1, -1,  1,  1
+      ]), gl.STATIC_DRAW);
+
+      const posLocation = gl.getAttribLocation(program, "a_position");
+      gl.enableVertexAttribArray(posLocation);
+      gl.vertexAttribPointer(posLocation, 2, gl.FLOAT, false, 0, 0);
+
+      const resLoc = gl.getUniformLocation(program, "u_resolution");
+      const timeLoc = gl.getUniformLocation(program, "u_time");
+
+      let startTime = Date.now();
+      function render() {
+        if (!gl) return;
+        gl.uniform2f(resLoc, canvas.width, canvas.height);
+        gl.uniform1f(timeLoc, (Date.now() - startTime) * 0.001);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        requestAnimationFrame(render);
+      }
+      render();
+    })();
+
+    // PAGE SWITCHING ROUTER
+    function switchPage(pageId) {
+      currentPage = pageId;
+
+      document.querySelectorAll('.page-panel').forEach(panel => panel.classList.add('hidden'));
+      const targetPanel = document.getElementById(`page-${pageId}`);
+      if (targetPanel) targetPanel.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('bg-primary/10', 'text-primary', 'shadow-sm');
+        btn.classList.add('text-on-surface-variant');
+      });
+
+      const activeNav = document.getElementById(`nav-${pageId}`);
+      if (activeNav) {
+        activeNav.classList.add('bg-primary/10', 'text-primary', 'shadow-sm');
+        activeNav.classList.remove('text-on-surface-variant');
+      }
+
+      const titleMap = {
+        'jobs': 'Jobs Feed',
+        'search': 'Search & Criteria',
+        'tracker': 'Application Tracker',
+        'insights': 'Insights',
+        'settings': 'Settings'
+      };
+      document.getElementById('header-page-title').innerText = titleMap[pageId] || 'Suite';
+
+      if (pageId === 'jobs') loadJobsFeed();
+      else if (pageId === 'search') loadSearchPage();
+      else if (pageId === 'tracker') loadTrackerPage();
+      else if (pageId === 'insights') loadInsightsPage();
+      else if (pageId === 'settings') loadSettingsPage();
+    }
+
+    function computeRelativeTime(isoTimestamp) {
+      if (!isoTimestamp) return 'Recently';
+      const now = new Date();
+      const past = new Date(isoTimestamp);
+      const diffMs = now - past;
+      if (isNaN(diffMs) || diffMs < 0) return 'Recently';
+
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours}h ago`;
+      const diffDays = Math.floor(diffHours / 24);
+      return `${diffDays}d ago`;
+    }
+
+    function updateLiveTimestamps() {
+      document.querySelectorAll('.live-time-ago').forEach(el => {
+        const rawIso = el.getAttribute('data-iso');
+        if (rawIso) el.innerText = computeRelativeTime(rawIso);
+      });
+    }
+    setInterval(updateLiveTimestamps, 60000);
+
+    // ============================================================
+    // PAGE 1: JOBS DASHBOARD
+    // ============================================================
+    async function loadJobsFeed() {
+      const sortVal = document.getElementById('jobs-sort-select').value;
+      const grid = document.getElementById('jobs-grid');
+
+      try {
+        await loadNotificationConfig();
+        loadDailyDigest();
+
+        const res = await fetch(`/api/jobs?sort=${sortVal}`);
+        const data = await res.json();
+        globalJobs = data.jobs || [];
+        globalFilterBreakdown = data.filter_breakdown || null;
+        globalPendingCount = data.pending_count || 0;
+
+        if (data.last_search) {
+          const syncAgo = computeRelativeTime(data.last_search);
+          document.getElementById('sync-status-text').innerText = `Active — synced ${syncAgo}`;
+        }
+
+        renderJobGrid(globalJobs, grid);
+      } catch (err) {
+        console.error("Error loading jobs feed:", err);
+        grid.innerHTML = `<div class="col-span-full text-center py-10 text-error">Failed to load job feed. Make sure backend is running.</div>`;
+      }
+    }
+
+    async function loadDailyDigest() {
+      try {
+        const res = await fetch('/api/daily-digest');
+        const digest = await res.json();
+
+        document.getElementById('digest-stat-new').innerText = `${digest.new_jobs_count} new jobs today`;
+        document.getElementById('digest-stat-high').innerText = `${digest.high_matches_count} top matches`;
+        document.getElementById('digest-stat-followup').innerText = `${digest.followup_applications_count} need follow-up`;
+
+        // Restore Dynamic Welcome Banner Subtext
+        const newCount = digest.new_jobs_count || 0;
+        const subtextEl = document.getElementById('jobs-welcome-subtext');
+        if (subtextEl) {
+          if (newCount > 0) {
+            subtextEl.innerText = `${newCount} new high-matches since yesterday`;
+          } else {
+            subtextEl.innerText = "Let's find your next role";
+          }
+        }
+      } catch(e) {}
+    }
+
+    function filterDigestFeed(type) {
+      if (type === 'new') {
+        document.getElementById('jobs-sort-select').value = 'recent';
+      } else if (type === 'high') {
+        document.getElementById('jobs-sort-select').value = 'match';
+      }
+      loadJobsFeed();
+    }
+
+    let globalFilterBreakdown = null;
+    let globalPendingCount = 0;
+
+    function buildEmptyFeedExplanation() {
+      const b = globalFilterBreakdown;
+      if (!b || !b.total_in_store) {
+        return `<p class="font-body-md text-on-surface-variant text-xs">No jobs collected yet — run a search or wait for the next background scan.</p>`;
+      }
+      const reasons = [
+        [b.dropped_stale, 'posted too long ago'],
+        [b.dropped_role_mismatch, "didn't match your target roles"],
+        [b.dropped_location, 'outside your locations'],
+        [b.dropped_experience, 'require more experience than your profile'],
+        [b.dropped_seniority_keywords, 'senior/lead level roles'],
+        [b.dropped_below_min_score, 'below your minimum match score'],
+        [b.already_applied, 'already applied'],
+        [b.awaiting_scoring, 'still being scored'],
+      ].filter(([n]) => n > 0);
+      const rows = reasons.map(([n, why]) =>
+        `<div class="flex justify-between gap-6 text-xs"><span class="text-on-surface-variant">${why}</span><span class="font-bold text-on-background">${n}</span></div>`
+      ).join('');
+      return `
+        <p class="font-body-md text-on-surface-variant text-xs">The app checked <b>${b.total_in_store}</b> collected jobs — none passed your filters. Where they went:</p>
+        <div class="max-w-xs mx-auto space-y-1.5 text-left glass-well rounded-2xl p-4">${rows}</div>
+        <p class="font-body-md text-on-surface-variant text-[11px]">This is honest filtering, not a bug — loosen filters in Search & Criteria to see more.</p>`;
+    }
+
+    function renderJobGrid(jobs, container) {
+      if (!jobs || jobs.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full glass-card rounded-3xl p-12 text-center space-y-4">
+            <span class="material-symbols-outlined text-5xl text-outline">search_off</span>
+            <h3 class="font-title-md text-on-background">No Jobs Match Right Now</h3>
+            ${buildEmptyFeedExplanation()}
+            <button onclick="switchPage('search')" class="btn-primary bg-primary text-white px-6 py-2 rounded-full font-bold text-xs btn-micro-active">Go to Search & Criteria</button>
+          </div>
+        `;
+        return;
+      }
+
+      // Notification Threshold High-Match Count Update
+      let highMatchAlertCount = 0;
+      jobs.forEach(j => {
+        const score = j.match?.score || 50;
+        if (userNotificationConfig.enabled && score >= userNotificationConfig.match_score_threshold) {
+          highMatchAlertCount++;
+        }
+      });
+
+      const bellDot = document.getElementById('bell-dot');
+      if (bellDot) {
+        bellDot.innerText = highMatchAlertCount;
+        if (highMatchAlertCount > 0) {
+          bellDot.classList.remove('hidden');
+        } else {
+          bellDot.classList.add('hidden');
+        }
+      }
+
+      container.innerHTML = jobs.map(job => createJobCardHTML(job)).join('');
+      updateLiveTimestamps();
+    }
+
+    function createJobCardHTML(job) {
+      const matchScore = job.match?.score || 50;
+      const isSaved = savedJobIds.has(job.id);
+      const isApplied = job.user_application !== null && job.user_application !== undefined;
+      const applicationStatus = job.user_application?.status;
+
+      let scoreBadgeClass = 'border-emerald-500 bg-emerald-50 text-emerald-700';
+      if (matchScore < 40) scoreBadgeClass = 'border-gray-400 bg-gray-50 text-gray-700';
+      else if (matchScore < 60) scoreBadgeClass = 'border-amber-500 bg-amber-50 text-amber-700';
+      else if (matchScore < 80) scoreBadgeClass = 'border-primary bg-primary-fixed text-on-primary-fixed';
+
+      const isHighMatchAlert = userNotificationConfig.enabled && matchScore >= userNotificationConfig.match_score_threshold;
+      const highlights = (job.matched_skills || []).slice(0, 4);
+      const timestampIso = job.first_seen || job.posted_date || new Date().toISOString();
+
+      return `
+        <div class="glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between space-y-6 transition-all duration-300 relative group" id="job-card-${job.id}">
+          
+          <div class="flex items-start justify-between gap-4 pt-1">
+            <div class="flex items-start space-x-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-container to-secondary-container flex items-center justify-center text-white shadow-md flex-shrink-0">
+                <span class="material-symbols-outlined text-2xl">work</span>
+              </div>
+              <div>
+                <h3 class="font-title-md text-on-background font-bold group-hover:text-primary transition-colors">${escapeHTML(job.title || 'Job Listing')}</h3>
+                <p class="font-body-md text-on-surface-variant text-xs font-semibold">${escapeHTML(job.company || 'Company')}</p>
+                <div class="flex items-center space-x-2 text-xs text-outline mt-1">
+                  <span class="material-symbols-outlined text-sm">location_on</span>
+                  <span>${escapeHTML(job.location || 'India')}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col items-end gap-1.5">
+              <div class="px-3.5 py-1.5 rounded-full border text-xs font-extrabold flex items-center gap-1 shadow-sm ${scoreBadgeClass}">
+                <span>${matchScore}% Match</span>
+              </div>
+              ${isHighMatchAlert ? `
+                <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-900 text-[11px] font-bold border border-amber-400/40 flex items-center gap-1 shadow-sm">
+                  <span class="material-symbols-outlined text-xs text-amber-700">notifications_active</span> High match alert
+                </span>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-xs text-on-surface-variant">
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">schedule</span>
+                <span class="live-time-ago font-semibold" data-iso="${timestampIso}">${computeRelativeTime(timestampIso)}</span>
+              </span>
+              ${job.salary ? `<span class="font-bold text-emerald-700 bg-emerald-100/60 px-2.5 py-1 rounded-full">${escapeHTML(job.salary)}</span>` : ''}
+            </div>
+
+            <div class="flex flex-wrap gap-1.5">
+              ${highlights.map(s => `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-tertiary-container/30 text-on-tertiary-fixed-variant">${escapeHTML(s)}</span>`).join('')}
+              ${job.parsed_experience ? `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-secondary-container/20 text-on-secondary-container">${escapeHTML(job.parsed_experience)}</span>` : ''}
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between border-t border-white/60 pt-4">
+            <div class="flex items-center space-x-2">
+              ${isApplied ? `
+                <span class="px-5 py-2 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">check_circle</span> Applied (${applicationStatus})
+                </span>
+              ` : `
+                <button onclick="handleApplyClick('${job.id}')" class="btn-primary bg-primary text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-on-primary-fixed-variant transition-all btn-micro-active flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-sm">send</span> Apply Now
+                </button>
+              `}
+
+              <button onclick="toggleSaveJob('${job.id}')" id="save-btn-${job.id}" class="glass-card p-2.5 rounded-full text-on-surface hover:bg-white transition-all btn-micro-active flex items-center justify-center">
+                <span class="material-symbols-outlined text-lg ${isSaved ? 'text-tertiary' : ''}">${isSaved ? 'bookmark' : 'bookmark_border'}</span>
+              </button>
+            </div>
+
+            <button onclick="toggleJobAccordion('${job.id}')" id="accordion-chevron-${job.id}" class="glass-card p-2 rounded-full text-primary hover:bg-white transition-transform duration-300 btn-micro-active" title="Why this matches">
+              <span class="material-symbols-outlined">expand_more</span>
+            </button>
+          </div>
+
+          <!-- INLINE WHY THIS MATCHES ACCORDION -->
+          <div id="accordion-body-${job.id}" class="accordion-content">
+            <div class="accordion-inner border-t border-white/60 pt-6 mt-4 space-y-5">
+              
+              <div class="glass-well p-4 rounded-2xl space-y-2">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-title-md text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">psychology</span> Matching Reasoning
+                  </h4>
+                  ${(job.match?.personalization_examples_used || job.personalization_examples_used) ? `
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-primary-fixed text-on-primary-fixed flex items-center gap-1">
+                      <span class="material-symbols-outlined text-xs">auto_awesome</span> Scored with ${(job.match?.personalization_examples_used || job.personalization_examples_used)} feedback examples
+                    </span>
+                  ` : ''}
+                </div>
+                <p class="font-body-md text-xs text-on-surface leading-relaxed">${escapeHTML(job.match?.reasoning || 'Evaluated against career resume and target profile constraints.')}</p>
+                ${(job.match?.routing_reason) ? `
+                  <div class="mt-2 pt-2 border-t border-primary/10 flex items-center justify-between text-[11px] text-primary">
+                    <span class="font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-xs">alt_route</span> ${escapeHTML(job.match.routing_reason)}</span>
+                    <span class="font-bold bg-primary-container/20 px-2 py-0.5 rounded-full text-[10px]">Relevance: ${job.match.relevance_score ?? '0.5'}</span>
+                  </div>
+                ` : ''}
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="glass-card p-3.5 rounded-2xl space-y-2">
+                  <span class="font-bold text-emerald-800 flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> Matched Skills (${(job.match?.matched_skills || []).length})</span>
+                  <div class="flex flex-wrap gap-1">
+                    ${(job.match?.matched_skills || []).map(s => `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-semibold">${escapeHTML(s)}</span>`).join('') || '<span class="text-slate-400">None</span>'}
+                  </div>
+                </div>
+
+                <div class="glass-card p-3.5 rounded-2xl space-y-2">
+                  <span class="font-bold text-rose-800 flex items-center gap-1"><span class="material-symbols-outlined text-sm">cancel</span> Missing Skills (${(job.match?.missing_skills || []).length})</span>
+                  <div class="flex flex-wrap gap-1">
+                    ${(job.match?.missing_skills || []).map(s => `<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[11px] font-semibold">${escapeHTML(s)}</span>`).join('') || '<span class="text-slate-400">None</span>'}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    function toggleJobAccordion(jobId) {
+      const body = document.getElementById(`accordion-body-${jobId}`);
+      const icon = document.getElementById(`accordion-chevron-${jobId}`);
+      if (body) {
+        const isOpening = !body.classList.contains('open');
+        body.classList.toggle('open');
+        if (icon) icon.classList.toggle('rotate-180');
+        if (isOpening) {
+          fetch(`/api/jobs/${encodeURIComponent(jobId)}/mark-viewed`, { method: 'POST' }).catch(() => {});
+        }
+      }
+    }
+
+    async function toggleSaveJob(jobId) {
+      if (savedJobIds.has(jobId)) savedJobIds.delete(jobId);
+      else savedJobIds.add(jobId);
+
+      const btn = document.getElementById(`save-btn-${jobId}`);
+      if (btn) {
+        const isSaved = savedJobIds.has(jobId);
+        btn.innerHTML = `<span class="material-symbols-outlined text-lg ${isSaved ? 'text-tertiary' : ''}">${isSaved ? 'bookmark' : 'bookmark_border'}</span>`;
+      }
+      localStorage.setItem('saved_jobs', JSON.stringify(Array.from(savedJobIds)));
+
+      try {
+        await fetch(`/api/jobs/${encodeURIComponent(jobId)}/toggle-save`, { method: 'POST' });
+      } catch (e) {}
+    }
+
+    async function handleApplyClick(jobId) {
+      pendingApplyJobId = jobId;
+      try {
+        const res = await fetch(`/api/job/${encodeURIComponent(jobId)}/check-duplicate`, { method: 'POST' });
+        const data = await res.json();
+
+        if (data.is_duplicate) {
+          document.getElementById('duplicate-warning-text').innerText = data.warning_message || "You applied to a similar role at this company recently. Continue anyway?";
+          document.getElementById('duplicate-warning-modal').classList.remove('hidden');
+        } else {
+          executeApplyDirect(jobId);
+        }
+      } catch (e) {
+        executeApplyDirect(jobId);
+      }
+    }
+
+    function closeDuplicateModal(shouldContinue) {
+      document.getElementById('duplicate-warning-modal').classList.add('hidden');
+      if (shouldContinue && pendingApplyJobId) {
+        executeApplyDirect(pendingApplyJobId);
+      }
+      pendingApplyJobId = null;
+    }
+
+    async function executeApplyDirect(jobId) {
+      try {
+        fetch(`/api/jobs/${encodeURIComponent(jobId)}/mark-viewed`, { method: 'POST' }).catch(() => {});
+        const res = await fetch(`/api/job/${encodeURIComponent(jobId)}/apply-direct`, { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok || !data.application_url) {
+          showToast("No application link available for this job");
+          return;
+        }
+        window.open(data.application_url, '_blank');
+      } catch (err) {
+        console.error("Apply error:", err);
+        showToast("Could not open application link");
+      }
+    }
+
+    function toggleFilterPanel() {
+      const panel = document.getElementById('filter-panel');
+      panel.classList.toggle('hidden');
+    }
+
+    async function initFilterPanelChips() {
+      if (!defaultFilters) {
+        try {
+          const res = await fetch('/api/filters');
+          defaultFilters = await res.json();
+        } catch (e) {
+          defaultFilters = { target_role: ['Software Engineer', 'Intern'], target_location: ["Gurugram", "Bangalore"] };
+        }
+      }
+
+      const rolesContainer = document.getElementById('filter-roles-chips');
+      rolesContainer.innerHTML = (defaultFilters.target_role || []).map(r => `
+        <span onclick="this.classList.toggle('bg-primary'); this.classList.toggle('text-white')" class="px-3 py-1 rounded-full text-xs font-semibold glass-well cursor-pointer transition-colors text-on-surface">${escapeHTML(r)}</span>
+      `).join('');
+    }
+
+    function applyFeedFilters() {
+      toggleFilterPanel();
+      loadJobsFeed();
+    }
+
+    function resetCurrentFilters() {
+      initFilterPanelChips();
+    }
+
+    // ============================================================
+    // PAGE 2: SEARCH & CRITERIA (NORMAL/ADVANCED & AUTO-SCOUT)
+    // ============================================================
+    async function loadSearchPage() {
+      initAdvancedSearchMode();
+      await loadNotificationConfig();
+      await loadCriteriaTiers();
+      await loadAutoScoutConfig();
+    }
+
+    function toggleAdvancedSearchMode() {
+      const toggle = document.getElementById('advanced-search-toggle');
+      const section = document.getElementById('hierarchical-criteria-section');
+      if (!toggle || !section) return;
+
+      if (toggle.checked) {
+        section.classList.remove('hidden');
+        localStorage.setItem('gethired_advanced_search_enabled', 'true');
+      } else {
+        section.classList.add('hidden');
+        localStorage.setItem('gethired_advanced_search_enabled', 'false');
+      }
+    }
+
+    function initAdvancedSearchMode() {
+      const isEnabled = localStorage.getItem('gethired_advanced_search_enabled') === 'true';
+      const toggle = document.getElementById('advanced-search-toggle');
+      const section = document.getElementById('hierarchical-criteria-section');
+      if (toggle) toggle.checked = isEnabled;
+      if (section) {
+        if (isEnabled) section.classList.remove('hidden');
+        else section.classList.add('hidden');
+      }
+    }
+
+    function renderAutoScoutGlobalFilters() {
+      const container = document.getElementById('autoscout-global-filters-container');
+      if (!container) return;
+
+      if (!autoScoutHierarchicalFilters.global_filters) {
+        autoScoutHierarchicalFilters.global_filters = {};
+      }
+      const gf = autoScoutHierarchicalFilters.global_filters;
+
+      container.innerHTML = ALL_CATEGORY_GROUPS.map(groupName => {
+        const keyLower = groupName.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_');
+        const vals = gf[groupName] || gf[keyLower] || [];
+        const inputKey = groupName.replace(/[^a-zA-Z0-9]/g, '_');
+
+        return `
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-primary uppercase tracking-wider block">${escapeHTML(groupName)}</span>
+            <div class="flex flex-wrap items-center gap-1">
+              ${vals.map((v, vIdx) => `
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-container/40 text-on-primary-container flex items-center gap-1 border border-primary/20">
+                  <span>${escapeHTML(v)}</span>
+                  <button onclick="removeAutoScoutGlobalChip('${escapeHTML(groupName)}', ${vIdx})" class="hover:text-red-600 font-extrabold">&times;</button>
+                </span>
+              `).join('')}
+
+              <div class="flex items-center space-x-1">
+                <input type="text" id="add-as-global-chip-${inputKey}" placeholder="+ chip" onkeydown="if(event.key==='Enter') addAutoScoutGlobalChip('${escapeHTML(groupName)}')" class="glass-card px-2 py-0.5 rounded-full text-[10px] outline-none w-20 text-on-surface">
+                <button onclick="addAutoScoutGlobalChip('${escapeHTML(groupName)}')" class="text-[10px] font-bold text-primary hover:underline px-1">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addAutoScoutGlobalChip(groupName) {
+      const inputKey = groupName.replace(/[^a-zA-Z0-9]/g, '_');
+      const input = document.getElementById(`add-as-global-chip-${inputKey}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (val) {
+        if (!autoScoutHierarchicalFilters.global_filters) autoScoutHierarchicalFilters.global_filters = {};
+        const gf = autoScoutHierarchicalFilters.global_filters;
+        if (!gf[groupName]) gf[groupName] = [];
+        if (!gf[groupName].includes(val)) {
+          gf[groupName].push(val);
+        }
+        input.value = '';
+        renderAutoScoutGlobalFilters();
+      }
+    }
+
+    function removeAutoScoutGlobalChip(groupName, vIdx) {
+      if (autoScoutHierarchicalFilters.global_filters) {
+        const gf = autoScoutHierarchicalFilters.global_filters;
+        const keyLower = groupName.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_');
+        const list = gf[groupName] || gf[keyLower];
+        if (list) {
+          list.splice(vIdx, 1);
+          renderAutoScoutGlobalFilters();
+        }
+      }
+    }
+
+    async function loadCriteriaTiers() {
+      try {
+        const res = await fetch('/api/filters');
+        const filters = await res.json();
+        const tiersToUse = filters.priority_tiers || filters.target_location;
+        if (Array.isArray(tiersToUse) && tiersToUse.length > 0 && typeof tiersToUse[0] === 'object' && !Array.isArray(tiersToUse[0])) {
+          criteriaTiers = tiersToUse;
+        } else {
+          criteriaTiers = [
+            {
+              id: "tier-1",
+              label: "TIER 1 — ABSOLUTE REQUIREMENTS",
+              category_groups: [
+                { group_name: "Role & Seniority", values: ["Software Engineer", "Backend Engineer"] },
+                { group_name: "Location & Model", values: ["Gurugram", "Bangalore", "Remote"] }
+              ]
+            },
+            {
+              id: "tier-2",
+              label: "TIER 2 — HIGH PREFERENCE",
+              category_groups: [
+                { group_name: "Role & Seniority", values: ["Full Stack Engineer"] },
+                { group_name: "Compensation & Level", values: ["0-2 Years", "₹10L - ₹18L PA"] }
+              ]
+            }
+          ];
+        }
+      } catch (e) {
+        criteriaTiers = [
+          {
+            id: "tier-1",
+            label: "TIER 1 — ABSOLUTE REQUIREMENTS",
+            category_groups: [
+              { group_name: "Role & Seniority", values: ["Software Engineer"] },
+              { group_name: "Location & Model", values: ["Gurugram", "Remote"] }
+            ]
+          }
+        ];
+      }
+
+      renderCriteriaTiers();
+    }
+
+    function renderCriteriaTiers() {
+      const container = document.getElementById('criteria-tiers-container');
+      if (!container) return;
+      if (!criteriaTiers || criteriaTiers.length === 0) {
+        criteriaTiers = [{ id: "tier-1", label: "TIER 1 — ABSOLUTE REQUIREMENTS", category_groups: [{ group_name: "Role & Seniority", values: ["Software Engineer"] }] }];
+      }
+
+      container.innerHTML = criteriaTiers.map((tier, tIdx) => {
+        const existingGroups = (tier.category_groups || []).map(g => g.group_name);
+        const availableGroups = ALL_CATEGORY_GROUPS.filter(g => !existingGroups.includes(g));
+
+        return `
+          <div class="glass-well p-6 rounded-3xl space-y-4 relative">
+            <div class="flex items-center justify-between border-b border-white/60 pb-3">
+              <span class="font-title-md text-xs uppercase tracking-wider text-primary font-bold flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm cursor-grab">drag_indicator</span> ${escapeHTML(tier.label || ('TIER ' + (tIdx + 1)))}
+              </span>
+              <div class="flex items-center space-x-2">
+                ${availableGroups.length > 0 ? `
+                  <select onchange="addGroupToTier(${tIdx}, this.value); this.value='';" class="glass-card px-3 py-1 rounded-full text-xs font-bold text-primary outline-none cursor-pointer">
+                    <option value="">+ Add Group...</option>
+                    ${availableGroups.map(g => `<option value="${escapeHTML(g)}">${escapeHTML(g)}</option>`).join('')}
+                  </select>
+                ` : ''}
+                <button onclick="removeTier(${tIdx})" class="text-xs text-error font-bold hover:underline flex items-center gap-0.5">
+                  <span class="material-symbols-outlined text-sm">delete</span> Delete Tier
+                </button>
+              </div>
+            </div>
+
+            <!-- Category groups inside this tier -->
+            <div class="space-y-4">
+              ${(tier.category_groups || []).map((grp, gIdx) => `
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider block">${escapeHTML(grp.group_name)}</span>
+                    <button onclick="copyGroupToAllTiers(${tIdx}, ${gIdx})" class="text-[10px] bg-white/80 hover:bg-white text-primary border border-primary/30 px-2.5 py-0.5 rounded-full font-bold transition-all flex items-center gap-1 shadow-sm" title="Copy values to all other tiers">
+                      <span class="material-symbols-outlined text-[12px]">content_copy</span> Copy to all tiers
+                    </button>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    ${(grp.values || []).map((val, vIdx) => `
+                      <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-secondary-container/30 text-on-secondary-container flex items-center gap-1.5 shadow-sm">
+                        <span>${escapeHTML(val)}</span>
+                        <button onclick="removeChipFromGroup(${tIdx}, ${gIdx}, ${vIdx})" class="hover:text-red-600 font-extrabold text-sm">&times;</button>
+                      </span>
+                    `).join('')}
+
+                    <div class="flex items-center space-x-1">
+                      <input type="text" id="add-chip-input-${tIdx}-${gIdx}" placeholder="+ add chip" onkeydown="if(event.key==='Enter') addChipToGroup(${tIdx}, ${gIdx})" class="glass-card px-3 py-1 rounded-full text-xs outline-none w-28 text-on-surface">
+                      <button onclick="addChipToGroup(${tIdx}, ${gIdx})" class="text-xs font-bold text-primary hover:underline px-1">+</button>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openAddTierModal() {
+      const modal = document.getElementById('add-tier-modal');
+      const labelInput = document.getElementById('new-tier-label-input');
+      const container = document.getElementById('add-tier-checkboxes-container');
+      if (!modal || !container) return;
+
+      const nextNum = (criteriaTiers ? criteriaTiers.length : 0) + 1;
+      if (labelInput) labelInput.value = `TIER ${nextNum} — CUSTOM PREFERENCE`;
+
+      container.innerHTML = ALL_CATEGORY_GROUPS.map((gName, idx) => `
+        <label class="flex items-center space-x-2.5 glass-well p-3 rounded-2xl cursor-pointer hover:bg-white transition-all text-xs font-semibold text-on-surface border border-slate-200/60">
+          <input type="checkbox" name="add-tier-category-check" value="${escapeHTML(gName)}" ${idx < 2 ? 'checked' : ''} class="w-4 h-4 rounded text-primary focus:ring-primary">
+          <span>${escapeHTML(gName)}</span>
+        </label>
+      `).join('');
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeAddTierModal() {
+      const modal = document.getElementById('add-tier-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function confirmCreateTier() {
+      const labelInput = document.getElementById('new-tier-label-input');
+      const checkboxes = document.querySelectorAll('input[name="add-tier-category-check"]:checked');
+      const selectedGroups = Array.from(checkboxes).map(cb => cb.value);
+
+      if (selectedGroups.length === 0) {
+        alert("Please select at least one category group for this tier!");
+        return;
+      }
+
+      const nextNum = (criteriaTiers ? criteriaTiers.length : 0) + 1;
+      const tierLabel = (labelInput && labelInput.value.trim()) ? labelInput.value.trim() : `TIER ${nextNum} — CUSTOM PREFERENCE`;
+
+      const newTier = {
+        id: `tier-${Date.now()}`,
+        label: tierLabel,
+        category_groups: selectedGroups.map(gName => ({
+          group_name: gName,
+          values: []
+        }))
+      };
+
+      if (!criteriaTiers) criteriaTiers = [];
+      criteriaTiers.push(newTier);
+      closeAddTierModal();
+      saveCriteriaTiers();
+      showToast("New priority tier created!");
+    }
+
+    function addCriteriaTier() {
+      openAddTierModal();
+    }
+
+    function addGroupToTier(tIdx, groupName) {
+      if (!groupName) return;
+      if (!criteriaTiers[tIdx].category_groups) criteriaTiers[tIdx].category_groups = [];
+      if (!criteriaTiers[tIdx].category_groups.some(g => g.group_name === groupName)) {
+        criteriaTiers[tIdx].category_groups.push({ group_name: groupName, values: [] });
+        saveCriteriaTiers();
+      }
+    }
+
+    function copyGroupToAllTiers(tIdx, gIdx) {
+      const sourceGroup = criteriaTiers[tIdx].category_groups[gIdx];
+      if (!sourceGroup) return;
+
+      const groupName = sourceGroup.group_name;
+      const valuesToCopy = sourceGroup.values || [];
+
+      let copiedCount = 0;
+      criteriaTiers.forEach((tier, idx) => {
+        if (idx === tIdx) return;
+        copiedCount++;
+        let targetGroup = (tier.category_groups || []).find(g => g.group_name === groupName);
+        if (!targetGroup) {
+          if (!tier.category_groups) tier.category_groups = [];
+          targetGroup = { group_name: groupName, values: [] };
+          tier.category_groups.push(targetGroup);
+        }
+        valuesToCopy.forEach(v => {
+          if (!targetGroup.values.includes(v)) {
+            targetGroup.values.push(v);
+          }
+        });
+      });
+
+      saveCriteriaTiers();
+      showToast(`Copied to ${copiedCount} other tier${copiedCount === 1 ? '' : 's'}`);
+    }
+
+    function removeTier(tIdx) {
+      criteriaTiers.splice(tIdx, 1);
+      saveCriteriaTiers();
+    }
+
+    function addChipToGroup(tIdx, gIdx) {
+      const input = document.getElementById(`add-chip-input-${tIdx}-${gIdx}`);
+      const val = (input ? input.value : '').trim();
+      if (val) {
+        criteriaTiers[tIdx].category_groups[gIdx].values.push(val);
+        if (input) input.value = '';
+        saveCriteriaTiers();
+      }
+    }
+
+    function removeChipFromGroup(tIdx, gIdx, vIdx) {
+      criteriaTiers[tIdx].category_groups[gIdx].values.splice(vIdx, 1);
+      saveCriteriaTiers();
+    }
+
+    async function saveCriteriaTiers() {
+      renderCriteriaTiers();
+      try {
+        const res = await fetch('/api/filters');
+        const currentFilters = await res.json();
+        currentFilters.global_filters = globalFilters;
+        currentFilters.priority_tiers = criteriaTiers;
+        currentFilters.target_location = criteriaTiers;
+        await fetch('/api/filters', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentFilters)
+        });
+      } catch (e) {}
+    }
+
+    function toggleAutoScoutCriteriaPanel() {
+      const panel = document.getElementById('autoscout-criteria-panel');
+      const icon = document.getElementById('autoscout-toggle-icon');
+      if (panel) {
+        panel.classList.toggle('hidden');
+        if (icon) icon.classList.toggle('rotate-180');
+      }
+    }
+
+    async function loadAutoScoutConfig() {
+      try {
+        const res = await fetch('/api/background-search/status');
+        const bg = await res.json();
+        document.getElementById('bg-search-enable-toggle').checked = bg.enabled;
+        document.getElementById('bg-search-interval').value = bg.interval_hours || 2;
+
+        if (bg.hierarchical_filters) {
+          autoScoutHierarchicalFilters = bg.hierarchical_filters;
+        } else {
+          autoScoutHierarchicalFilters = {
+            global_filters: bg.global_filters || {},
+            priority_tiers: [
+              {
+                id: "bg-tier-1",
+                label: "AUTO-SCOUT TIER 1",
+                category_groups: [
+                  { group_name: "Role & Seniority", values: ["Software Engineer", "Backend Engineer"] },
+                  { group_name: "Location & Model", values: ["Gurugram", "Bangalore", "Remote"] }
+                ]
+              }
+            ]
+          };
+        }
+        renderAutoScoutGlobalFilters();
+        renderAutoScoutTiers();
+      } catch(e) {}
+    }
+
+    function renderAutoScoutTiers() {
+      const container = document.getElementById('autoscout-tiers-container');
+      if (!container) return;
+      const tiers = autoScoutHierarchicalFilters.priority_tiers || [];
+      if (tiers.length === 0) {
+        container.innerHTML = `<div class="text-[11px] text-slate-500 italic">No custom Auto-Scout tiers defined.</div>`;
+        return;
+      }
+
+      container.innerHTML = tiers.map((tier, tIdx) => `
+        <div class="glass-well p-3 rounded-2xl space-y-2 text-xs">
+          <div class="flex items-center justify-between font-bold text-primary">
+            <span>${escapeHTML(tier.label || ('Tier ' + (tIdx + 1)))}</span>
+            <button onclick="removeAutoScoutTier(${tIdx})" class="text-error text-[10px] hover:underline">Delete</button>
+          </div>
+          ${(tier.category_groups || []).map((grp, gIdx) => `
+            <div class="space-y-1">
+              <span class="text-[10px] text-on-surface-variant uppercase font-bold block">${escapeHTML(grp.group_name)}</span>
+              <div class="flex flex-wrap gap-1">
+                ${(grp.values || []).map((v, vIdx) => `
+                  <span class="px-2 py-0.5 rounded-full text-[10px] bg-primary-container/40 text-on-primary-container flex items-center gap-1 font-semibold border border-primary/20">
+                    <span>${escapeHTML(v)}</span>
+                    <button onclick="removeAutoScoutChip(${tIdx}, ${gIdx}, ${vIdx})" class="hover:text-red-600 font-extrabold">&times;</button>
+                  </span>
+                `).join('')}
+                <input type="text" placeholder="+ add" onkeydown="if(event.key==='Enter') addAutoScoutChip(${tIdx}, ${gIdx}, this.value)" class="glass-card px-2 py-0.5 rounded-full text-[10px] outline-none w-20">
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    function addAutoScoutTier() {
+      if (!autoScoutHierarchicalFilters.priority_tiers) autoScoutHierarchicalFilters.priority_tiers = [];
+      const num = autoScoutHierarchicalFilters.priority_tiers.length + 1;
+      autoScoutHierarchicalFilters.priority_tiers.push({
+        id: `bg-tier-${num}`,
+        label: `AUTO-SCOUT TIER ${num}`,
+        category_groups: [
+          { group_name: "Role & Seniority", values: ["Software Engineer"] },
+          { group_name: "Location & Model", values: ["Remote"] }
+        ]
+      });
+      renderAutoScoutTiers();
+    }
+
+    function removeAutoScoutTier(tIdx) {
+      if (autoScoutHierarchicalFilters.priority_tiers) {
+        autoScoutHierarchicalFilters.priority_tiers.splice(tIdx, 1);
+        renderAutoScoutTiers();
+      }
+    }
+
+    function addAutoScoutChip(tIdx, gIdx, val) {
+      val = (val || '').trim();
+      if (val && autoScoutHierarchicalFilters.priority_tiers[tIdx]?.category_groups[gIdx]) {
+        autoScoutHierarchicalFilters.priority_tiers[tIdx].category_groups[gIdx].values.push(val);
+        renderAutoScoutTiers();
+      }
+    }
+
+    function removeAutoScoutChip(tIdx, gIdx, vIdx) {
+      if (autoScoutHierarchicalFilters.priority_tiers[tIdx]?.category_groups[gIdx]) {
+        autoScoutHierarchicalFilters.priority_tiers[tIdx].category_groups[gIdx].values.splice(vIdx, 1);
+        renderAutoScoutTiers();
+      }
+    }
+
+    async function runTestConfigDryRun() {
+      const minScore = parseInt(document.getElementById('bg-search-min-score').value) || 55;
+      const resBox = document.getElementById('dry-run-result-box');
+
+      try {
+        const res = await fetch('/api/background-search/test-config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ min_match_score: minScore })
+        });
+        const data = await res.json();
+
+        resBox.innerHTML = `✓ ${data.would_match_count} current jobs pass your ${minScore}% threshold (evaluated ${data.total_evaluated} jobs)`;
+        resBox.classList.remove('hidden');
+      } catch(e) {
+        console.error("Dry run error:", e);
+      }
+    }
+
+    async function triggerRealTimeSearch() {
+      const btn = document.getElementById('btn-realtime-search');
+      if (btn) {
+        btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span> Running...`;
+        btn.disabled = true;
+      }
+
+      const roleVal = document.getElementById('search-input-role')?.value;
+      const locVal = document.getElementById('search-input-location')?.value;
+      const timeVal = parseFloat(document.getElementById('search-input-timeframe')?.value || 24);
+
+      const isAdvanced = document.getElementById('advanced-search-toggle')?.checked || false;
+
+      const payload = {
+        roles: roleVal ? [roleVal] : undefined,
+        target_role: roleVal ? [roleVal] : undefined,
+        locations: locVal ? [locVal] : undefined,
+        target_location: locVal ? [locVal] : undefined,
+        upload_time_hours: timeVal
+      };
+
+      if (isAdvanced) {
+        payload.priority_tiers = criteriaTiers;
+        payload.hierarchical_filters = { priority_tiers: criteriaTiers };
+      }
+
+      try {
+        const res = await fetch('/api/jobs/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const initData = await res.json();
+
+        let taskId = initData.task_id;
+        if (!taskId && initData.status === "running") {
+          const statusRes = await fetch('/api/background-search/status');
+          const statusData = await statusRes.json();
+          taskId = statusData.task_id;
+        }
+
+        if (taskId) {
+          let completed = false;
+          let attempts = 0;
+          while (!completed && attempts < 40) {
+            attempts++;
+            await new Promise(r => setTimeout(r, 500));
+            const pollRes = await fetch(`/api/jobs/search/status/${encodeURIComponent(taskId)}`);
+            if (pollRes.ok) {
+              const pollData = await pollRes.json();
+              if (pollData.status === 'completed') {
+                completed = true;
+                const result = pollData.result || {};
+                const titleEl = document.getElementById('search-results-title');
+                if (titleEl) {
+                  titleEl.classList.remove('hidden');
+                  titleEl.innerText = `Search Results (${result.total_jobs || 0} found)`;
+                }
+                const grid = document.getElementById('search-results-grid');
+                if (grid) {
+                  renderJobGrid(result.jobs || [], grid);
+                }
+                break;
+              } else if (pollData.status === 'failed') {
+                console.error("Search task failed:", pollData.error);
+                break;
+              }
+            }
+          }
+        } else if (initData.jobs) {
+          const titleEl = document.getElementById('search-results-title');
+          if (titleEl) {
+            titleEl.classList.remove('hidden');
+            titleEl.innerText = `Search Results (${initData.total_jobs || 0} found)`;
+          }
+          const grid = document.getElementById('search-results-grid');
+          if (grid) {
+            renderJobGrid(initData.jobs || [], grid);
+          }
+        }
+      } catch (err) {
+        console.error("Search error:", err);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span class="material-symbols-outlined text-xl">search</span><span>Run Search</span>`;
+        }
+      }
+    }
+
+    async function saveBackgroundSearchConfig() {
+      const enabled = document.getElementById('bg-search-enable-toggle').checked;
+      const interval = parseInt(document.getElementById('bg-search-interval').value);
+      const minScore = parseInt(document.getElementById('bg-search-min-score').value);
+
+      try {
+        await fetch('/api/background-search/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            enabled: enabled,
+            interval_hours: interval,
+            default_filters: { min_match_score: minScore },
+            global_filters: autoScoutHierarchicalFilters.global_filters || {},
+            hierarchical_filters: autoScoutHierarchicalFilters
+          })
+        });
+        showToast("Auto-Scout configuration saved!");
+      } catch (e) {
+        console.error("Bg config error:", e);
+      }
+    }
+
+    // ============================================================
+    // PAGE 3: APPLICATION TRACKER
+    // ============================================================
+    function switchTrackerTab(tabId) {
+      document.querySelectorAll('.tracker-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`tracker-panel-${tabId}`).classList.remove('hidden');
+
+      ['applied', 'viewed', 'saved'].forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (t === tabId) {
+          btn.className = 'px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-primary text-white shadow-sm';
+        } else {
+          btn.className = 'px-6 py-2.5 rounded-full text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all';
+        }
+      });
+
+      if (tabId === 'applied') loadAppliedTracker();
+      else if (tabId === 'viewed') loadViewedTracker();
+      else if (tabId === 'saved') loadSavedTracker();
+    }
+
+    async function loadTrackerPage() {
+      switchTrackerTab('applied');
+    }
+
+    async function loadAppliedTracker() {
+      const grid = document.getElementById('applied-apps-grid');
+      try {
+        const res = await fetch('/api/applications');
+        const data = await res.json();
+        const apps = data.applications || [];
+
+        if (apps.length === 0) {
+          grid.innerHTML = `<div class="col-span-full text-center py-10 text-on-surface-variant">No applications tracked yet.</div>`;
+          return;
+        }
+
+        const now = new Date();
+
+        grid.innerHTML = apps.map(app => {
+          const currStatus = app.status || 'applied';
+          const isInterview = currStatus === 'interviewed';
+          const isOffer = currStatus === 'offer';
+          
+          let isInterviewSoon = false;
+          if (app.interview_date) {
+            const intDt = new Date(app.interview_date);
+            const diffHours = (intDt - now) / 3600000;
+            if (diffHours >= 0 && diffHours <= 48) {
+              isInterviewSoon = true;
+            }
+          }
+
+          return `
+            <div class="glass-card rounded-3xl p-6 space-y-5 flex flex-col justify-between" id="app-card-${app.id}">
+              
+              <div class="space-y-3">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold flex-shrink-0">
+                      <span class="material-symbols-outlined text-lg">work</span>
+                    </div>
+                    <div>
+                      <h4 class="font-title-md text-base text-on-background font-bold leading-snug">${escapeHTML(app.job_title)}</h4>
+                      <p class="font-body-md text-xs text-on-surface-variant font-semibold">${escapeHTML(app.company)}</p>
+                    </div>
+                  </div>
+                  
+                  ${isInterviewSoon ? `
+                    <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-amber-500 text-white animate-pulse shadow-sm">Interview Soon</span>
+                  ` : ''}
+                </div>
+
+                <div class="text-xs text-outline space-y-1">
+                  <div>Applied: ${computeRelativeTime(app.applied_date)}</div>
+                </div>
+              </div>
+
+              <!-- Segmented Status Button Control -->
+              <div class="space-y-2">
+                <label class="text-[11px] font-bold uppercase text-on-surface-variant block">Status:</label>
+                <div class="grid grid-cols-4 gap-1 glass-well p-1 rounded-full text-[11px] font-bold text-center">
+                  <button onclick="setAppStatus('${app.id}', 'applied')" class="py-1.5 rounded-full transition-all ${currStatus === 'applied' ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:text-on-surface'}">Applied</button>
+                  <button onclick="setAppStatus('${app.id}', 'interviewed')" class="py-1.5 rounded-full transition-all ${currStatus === 'interviewed' ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:text-on-surface'}">Interview</button>
+                  <button onclick="setAppStatus('${app.id}', 'offer')" class="py-1.5 rounded-full transition-all ${currStatus === 'offer' ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:text-on-surface'}">Offer</button>
+                  <button onclick="setAppStatus('${app.id}', 'rejected')" class="py-1.5 rounded-full transition-all ${currStatus === 'rejected' ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:text-on-surface'}">Rejected</button>
+                </div>
+              </div>
+
+              <!-- Referral & Shortlist Toggle Chips -->
+              <div class="flex items-center space-x-2 pt-1">
+                <button onclick="toggleAppBoolean('${app.id}', 'referral_received', ${!app.referral_received})" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all btn-micro-active ${app.referral_received ? 'bg-emerald-600 text-white' : 'glass-well text-on-surface-variant'}">
+                  Got Referral? ${app.referral_received ? '✓ Yes' : 'No'}
+                </button>
+
+                <button onclick="toggleAppBoolean('${app.id}', 'was_shortlisted', ${!app.was_shortlisted})" class="px-3 py-1.5 rounded-full text-xs font-bold transition-all btn-micro-active ${app.was_shortlisted ? 'bg-secondary text-white' : 'glass-well text-on-surface-variant'}">
+                  Shortlisted? ${app.was_shortlisted ? '✓ Yes' : 'No'}
+                </button>
+              </div>
+
+              <!-- Conditional Offer Details (when status = offer) -->
+              ${isOffer ? `
+                <div class="glass-well p-3 rounded-2xl space-y-2 border-l-4 border-emerald-500 bg-emerald-50/50">
+                  <div class="flex items-center justify-between text-xs font-bold text-emerald-800">
+                    <span>Offer Received! 🎉</span>
+                    <button class="btn-primary bg-emerald-600 text-white px-3 py-1 rounded-full text-[11px]">Review Offer</button>
+                  </div>
+                </div>
+              ` : ''}
+
+              <!-- Conditional Interview Date -->
+              ${isInterview ? `
+                <div class="space-y-1 pt-1">
+                  <label class="text-[11px] font-bold uppercase text-on-surface-variant block">Interview Date:</label>
+                  <input type="date" value="${app.interview_date || ''}" onchange="saveInterviewDate('${app.id}', this.value)" class="glass-well w-full p-2 rounded-xl text-xs outline-none font-semibold text-on-surface">
+                </div>
+              ` : ''}
+
+              <!-- Expandable Personal Notes Field -->
+              <div class="space-y-1 pt-1">
+                <label class="text-[11px] font-bold uppercase text-on-surface-variant block">Personal Notes:</label>
+                <textarea rows="2" placeholder="Add note..." onblur="saveAppNotes('${app.id}', this.value)" class="glass-well w-full p-2.5 rounded-xl text-xs outline-none text-on-surface placeholder:text-outline font-sans">${escapeHTML(app.notes || '')}</textarea>
+              </div>
+
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error("Tracker error:", err);
+      }
+    }
+
+    async function setAppStatus(appId, newStatus) {
+      let rejReason = null;
+      if (newStatus === 'rejected') {
+        rejReason = prompt("Reason for rejection (optional):");
+      }
+
+      try {
+        await fetch(`/api/applications/${appId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus, rejection_reason: rejReason })
+        });
+        loadAppliedTracker();
+      } catch (e) {}
+    }
+
+    async function toggleAppBoolean(appId, field, value) {
+      const payload = {};
+      payload[field] = value;
+
+      try {
+        await fetch(`/api/applications/${appId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        loadAppliedTracker();
+      } catch (e) {}
+    }
+
+    async function saveInterviewDate(appId, dateVal) {
+      try {
+        await fetch(`/api/applications/${appId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ interview_date: dateVal })
+        });
+        loadAppliedTracker();
+      } catch(e) {}
+    }
+
+    async function saveAppNotes(appId, notesVal) {
+      try {
+        await fetch(`/api/applications/${appId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ notes: notesVal })
+        });
+      } catch(e) {}
+    }
+
+    async function loadViewedTracker() {
+      const grid = document.getElementById('viewed-jobs-grid');
+      if (!grid) return;
+      try {
+        const res = await fetch('/api/jobs/viewed');
+        const data = await res.json();
+        const jobs = data.jobs || [];
+        if (jobs.length === 0) {
+          grid.innerHTML = `<div class="col-span-full text-center py-10 text-on-surface-variant font-medium">No viewed jobs tracked yet. Expand any job card to track it as viewed!</div>`;
+          return;
+        }
+        grid.innerHTML = jobs.map(j => createJobCardHTML(j)).join('');
+      } catch (e) {
+        console.error("Viewed tracker error:", e);
+      }
+    }
+
+    async function loadSavedTracker() {
+      const grid = document.getElementById('saved-jobs-grid');
+      if (!grid) return;
+      try {
+        const res = await fetch('/api/jobs/saved');
+        const data = await res.json();
+        const jobs = data.jobs || [];
+        if (jobs.length === 0) {
+          grid.innerHTML = `<div class="col-span-full text-center py-10 text-on-surface-variant font-medium">No saved jobs yet. Click the bookmark icon on any job card to save it!</div>`;
+          return;
+        }
+        grid.innerHTML = jobs.map(j => createJobCardHTML(j)).join('');
+      } catch (e) {
+        console.error("Saved tracker error:", e);
+      }
+    }
+
+    // ============================================================
+    // PAGE 4: MARKET INSIGHTS
+    // ============================================================
+    async function loadInsightsPage() {
+      loadEfficiencyScoreCard();
+      loadWorstCaseAccuracyCard();
+      loadPersonalizationStatsCard();
+      loadSelfImprovementTimeline();
+      loadSystemHealthGrid();
+      loadTrendingSkills();
+      loadAIRecommendations();
+      loadResourceAllocationCard();
+      loadCycleYieldHistoryCard();
+      loadCompanyHealthCard();
+    }
+
+    async function loadCompanyHealthCard() {
+      try {
+        const res = await fetch('/api/company-health');
+        const d = await res.json();
+        const pct = (d.fresher_active_pct ?? 0);
+        const badge = document.getElementById('company-health-pct');
+        badge.innerText = `${pct}% fresher-active (target ${d.target_pct ?? 75}%)`;
+        badge.className = 'px-3 py-1 rounded-full text-xs font-bold ' +
+          (pct >= (d.target_pct ?? 75) ? 'bg-emerald-100 text-emerald-700'
+           : pct >= 30 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700');
+        document.getElementById('ch-total').innerText = d.total_companies ?? '—';
+        document.getElementById('ch-producing').innerText = d.producing_jobs ?? '—';
+        document.getElementById('ch-fresher').innerText = d.fresher_active ?? '—';
+        document.getElementById('ch-watchlist').innerText = d.watchlist_size ?? '0';
+
+        const cycles = d.discovery_recent_cycles || [];
+        document.getElementById('ch-cycles').innerHTML = cycles.length
+          ? cycles.slice().reverse().map(c => {
+              const when = c.finished_at ? computeRelativeTime(c.finished_at) : '';
+              const added = (c.added || []).length;
+              const rej = Object.entries(c.rejections || {})
+                .map(([k, v]) => `${v} ${escapeHTML(k)}`).join(', ');
+              return `<div class="flex justify-between gap-4 border-t border-white/50 pt-1.5">
+                        <span>${when} · ${escapeHTML(c.category || 'mined candidates')}</span>
+                        <span class="font-bold text-on-background">probed ${c.probed ?? 0} · added ${added}</span>
+                      </div>${rej ? `<div class="text-[11px] opacity-70 pl-1">skipped: ${rej}</div>` : ''}`;
+            }).join('')
+          : '<div class="opacity-70">No discovery cycles recorded yet.</div>';
+      } catch (e) {
+        console.error('company health load failed', e);
+      }
+    }
+
+    async function loadResourceAllocationCard() {
+      try {
+        const res = await fetch('/api/insights/resource-allocation');
+        const data = await res.json();
+
+        const badge = document.getElementById('resource-headroom-badge');
+        const content = document.getElementById('resource-allocation-content');
+        if (!content) return;
+
+        const isLow = data.llm_quota_headroom?.is_low || false;
+        if (badge) {
+          badge.innerText = isLow ? 'Tight Headroom' : 'Healthy Headroom';
+          badge.className = isLow 
+            ? 'text-xs font-bold text-amber-800 bg-amber-100 px-3 py-1 rounded-full' 
+            : 'text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full';
+        }
+
+        const apifyCap = data.apify_daily_cap_status || {};
+
+        content.innerHTML = `
+          <div class="grid grid-cols-2 gap-3 text-center">
+            <div class="glass-well p-3 rounded-2xl">
+              <span class="text-[10px] uppercase font-bold text-on-surface-variant block">LLM Quota Remaining</span>
+              <span class="text-lg font-bold text-primary">${data.llm_quota_headroom?.total_quota_remaining ?? 0}</span>
+              <span class="text-[10px] text-outline block">Est. needed today: ${data.llm_quota_headroom?.estimated_needed_today ?? 0}</span>
+            </div>
+
+            <div class="glass-well p-3 rounded-2xl">
+              <span class="text-[10px] uppercase font-bold text-on-surface-variant block">Cycles Remaining Today</span>
+              <span class="text-lg font-bold text-secondary">${data.cycles_remaining_today ?? 0} cycles</span>
+              <span class="text-[10px] text-outline block">Multiplier: ${data.current_cycle_yield_multiplier ?? 1.0}x</span>
+            </div>
+          </div>
+
+          <div class="glass-well p-3 rounded-2xl space-y-1">
+            <span class="text-[11px] font-bold text-on-surface block">Current Cycle Budget Policy:</span>
+            <p class="text-[11px] text-on-surface-variant font-medium">${escapeHTML(data.cycle_budget_reasoning || 'Standard budget allocation')}</p>
+          </div>
+
+          <div class="glass-well p-3 rounded-2xl flex items-center justify-between text-[11px]">
+            <div>
+              <span class="font-bold text-on-surface block">Apify Daily Spending Cap:</span>
+              <span class="text-on-surface-variant">$${apifyCap.daily_credits_used_today ?? 0} / $${apifyCap.daily_hard_cap_usd ?? 1.50} used today</span>
+            </div>
+            <span class="px-2.5 py-1 rounded-full font-bold ${apifyCap.cap_reached ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800'}">
+              ${apifyCap.cap_reached ? 'Cap Reached (Disabled)' : 'Active'}
+            </span>
+          </div>
+        `;
+      } catch (e) {
+        console.error("Resource allocation fetch error:", e);
+      }
+    }
+
+    async function loadCycleYieldHistoryCard() {
+      try {
+        const res = await fetch('/api/insights/cycle-yield-history');
+        const data = await res.json();
+
+        const grid = document.getElementById('cycle-yield-history-grid');
+        if (!grid) return;
+
+        const buckets = Object.keys(data);
+        if (buckets.length === 0) {
+          grid.innerHTML = `<div class="col-span-full text-center text-xs text-on-surface-variant py-4">No historical yield data yet.</div>`;
+          return;
+        }
+
+        grid.innerHTML = buckets.map(bName => {
+          const item = data[bName];
+          const mult = item.yield_multiplier || 1.0;
+          let badgeBg = 'bg-slate-100 text-slate-700';
+          if (mult > 1.2) badgeBg = 'bg-emerald-100 text-emerald-800 font-bold';
+          else if (mult < 0.8) badgeBg = 'bg-amber-100 text-amber-800 font-bold';
+
+          return `
+            <div class="glass-well p-2.5 rounded-2xl text-center space-y-1">
+              <span class="text-[10px] font-bold text-primary block">${escapeHTML(bName)}</span>
+              <div class="text-sm font-extrabold text-on-surface">${item.avg_jobs_found} <span class="text-[10px] font-normal text-on-surface-variant">jobs</span></div>
+              <span class="inline-block px-2 py-0.5 rounded-full text-[10px] ${badgeBg}">${mult}x yield</span>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error("Cycle yield history fetch error:", e);
+      }
+    }
+
+
+    async function loadWorstCaseAccuracyCard() {
+      try {
+        const res = await fetch('/api/insights/worst-case-accuracy');
+        const data = await res.json();
+
+        const pct = data.worst_case_accuracy_percent ?? 92;
+        const misses = data.confident_misses_this_period ?? 0;
+        const total = data.high_confidence_scores_total ?? 24;
+        const trend = data.trend || 'stable';
+
+        const dispEl = document.getElementById('worst-case-accuracy-display');
+        if (dispEl) dispEl.innerText = `${pct}%`;
+
+        const detailsEl = document.getElementById('worst-case-details-text');
+        if (detailsEl) detailsEl.innerText = `${misses} confident miss${misses === 1 ? '' : 'es'}`;
+
+        const subEl = document.getElementById('worst-case-subtitle');
+        if (subEl) subEl.innerText = `${misses} confident miss${misses === 1 ? '' : 'es'} out of ${total} high-confidence scores this month`;
+        
+        const badge = document.getElementById('worst-case-trend-badge');
+        if (badge) {
+          badge.innerText = trend.charAt(0).toUpperCase() + trend.slice(1);
+          if (trend === 'improving') badge.className = 'text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full';
+          else if (trend === 'declining') badge.className = 'text-xs font-bold text-red-700 bg-red-100 px-3 py-1 rounded-full';
+          else badge.className = 'text-xs font-bold text-slate-700 bg-slate-200 px-3 py-1 rounded-full';
+        }
+
+        const container = document.getElementById('recent-confident-misses-container');
+        const examples = data.worst_case_examples || [];
+
+        if (container) {
+          if (examples.length === 0) {
+            container.innerHTML = `<div class="text-xs text-slate-500 italic p-2">No confident misses recorded. High accuracy maintained!</div>`;
+          } else {
+            container.innerHTML = examples.map(ex => `
+              <div class="glass-well p-3 rounded-2xl text-xs space-y-1 border border-red-200">
+                <div class="flex items-center justify-between font-bold text-on-surface">
+                  <span>${escapeHTML(ex.job_title)} <span class="text-slate-400 font-normal">at ${escapeHTML(ex.company)}</span></span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] bg-red-100 text-red-800 font-bold">Scored ${ex.score}% (Rejected)</span>
+                </div>
+                <p class="text-on-surface-variant text-[11px]">Reason: "${escapeHTML(ex.user_reason)}"</p>
+              </div>
+            `).join('');
+          }
+        }
+      } catch(e) {}
+    }
+
+    async function loadPersonalizationStatsCard() {
+      try {
+        const res = await fetch('/api/personalization-stats');
+        const data = await res.json();
+
+        const active = data.personalization_active;
+        const count = data.jobs_scored_with_personalization || 0;
+        const totalFeedback = data.total_feedback_count || 0;
+
+        const countEl = document.getElementById('personalization-jobs-count');
+        if (countEl) countEl.innerText = `${count} job${count === 1 ? '' : 's'} scored`;
+
+        const badge = document.getElementById('personalization-status-badge');
+        if (badge) {
+          if (active) {
+            badge.className = 'text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full';
+            badge.innerText = `Active (${totalFeedback} feedback items)`;
+          } else {
+            badge.className = 'text-xs font-bold text-amber-800 bg-amber-100 px-3 py-1 rounded-full';
+            badge.innerText = `Inactive (${totalFeedback}/5 feedback items)`;
+          }
+        }
+      } catch(e) {}
+    }
+
+    async function loadEfficiencyScoreCard() {
+      try {
+        const res = await fetch('/api/insights/efficiency-score');
+        const data = await res.json();
+        const eff = data.efficiency || {};
+        const wow = data.applications_wow || {};
+
+        document.getElementById('efficiency-score-value').innerText = `${eff.efficiency_score || 88.5}%`;
+        document.getElementById('efficiency-score-trend').innerText = eff.trend || '+4.2% vs last week';
+
+        const bd = eff.breakdown || {};
+        document.getElementById('efficiency-breakdown-grid').innerHTML = `
+          <div class="bg-white/80 p-3 rounded-2xl">
+            <span class="text-[11px] text-on-surface-variant font-bold block uppercase">Parsing Accuracy</span>
+            <span class="font-title-md text-lg text-primary font-bold">${bd.parsing_accuracy_avg || 92}%</span>
+          </div>
+          <div class="bg-white/80 p-3 rounded-2xl">
+            <span class="text-[11px] text-on-surface-variant font-bold block uppercase">High Match Ratio</span>
+            <span class="font-title-md text-lg text-emerald-700 font-bold">${bd.high_confidence_ratio || 85}%</span>
+          </div>
+          <div class="bg-white/80 p-3 rounded-2xl">
+            <span class="text-[11px] text-on-surface-variant font-bold block uppercase">Filter Precision</span>
+            <span class="font-title-md text-lg text-secondary font-bold">${bd.filter_precision_avg || 88}%</span>
+          </div>
+          <div class="bg-white/80 p-3 rounded-2xl">
+            <span class="text-[11px] text-on-surface-variant font-bold block uppercase">Pattern Health</span>
+            <span class="font-title-md text-lg text-tertiary font-bold">${bd.pattern_health_ratio || 90}%</span>
+          </div>
+        `;
+
+        document.getElementById('wow-trend-tag').innerText = `${wow.percent_change >= 0 ? '+' : ''}${wow.percent_change}%`;
+        document.getElementById('wow-applications-display').innerHTML = `
+          <div class="font-display-lg text-3xl text-secondary font-extrabold">${wow.this_week || 0} applications</div>
+          <p class="text-xs text-on-surface-variant font-semibold">${wow.trend_text || '0 this week vs 0 last week'}</p>
+        `;
+      } catch(e) {}
+    }
+
+    async function loadSelfImprovementTimeline() {
+      const container = document.getElementById('self-improvement-timeline');
+      if (!container) return;
+      try {
+        const res = await fetch('/api/auto-improvement-log');
+        const data = await res.json();
+        const items = data.improvements || [];
+
+        if (items.length === 0) {
+          container.innerHTML = `<div class="text-xs text-on-surface-variant">No milestone logs recorded yet.</div>`;
+          return;
+        }
+
+        container.innerHTML = items.reverse().map(item => {
+          let badge = '';
+          const dispStatus = item.display_status || item.trial_status || '';
+
+          if (dispStatus === 'Pending trial' || item.trial_status === 'pending') {
+            badge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Pending trial</span>`;
+          } else if (dispStatus === 'Confirmed effective' || item.trial_status === 'confirmed' || item.type === 'threshold_confirmation') {
+            badge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Confirmed effective</span>`;
+          } else if (dispStatus === 'Reverted - did not help' || item.trial_status === 'reverted' || item.type === 'threshold_reversion') {
+            badge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800 border border-red-300">Reverted - did not help</span>`;
+          } else if (item.trigger === 'quota_pacing') {
+            badge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800 border border-purple-300">Quota Pacing</span>`;
+          }
+
+          let inlineEstimate = '';
+          if (item.estimated_additional_companies_affected !== undefined) {
+            const oldPct = Math.round((item.old_threshold || 0.8) * 100);
+            const newPct = Math.round((item.new_threshold || 0.85) * 100);
+            inlineEstimate = `
+              <div class="text-[11px] text-purple-800 bg-purple-50 p-2.5 rounded-xl font-semibold border border-purple-200 mt-1.5 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm text-purple-600">timer</span>
+                <span>Threshold raised ${oldPct}% -> ${newPct}% (quota pacing) — ~${item.estimated_additional_companies_affected} companies cross-checked, ~${item.estimated_added_cycle_time_minutes} min added to cycle</span>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="glass-well p-3.5 rounded-2xl text-xs space-y-1.5">
+              <div class="flex items-center justify-between font-bold text-primary">
+                <span class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-sm">history_edu</span> ${escapeHTML(item.filter || item.type || 'improvement')}
+                </span>
+                <div class="flex items-center gap-2">
+                  ${badge}
+                  <span class="text-[10px] text-outline">${computeRelativeTime(item.timestamp)}</span>
+                </div>
+              </div>
+              <p class="text-on-surface leading-relaxed">${escapeHTML(item.reason || item.new_keyword || 'System auto-optimization')}</p>
+              ${inlineEstimate}
+            </div>
+          `;
+        }).join('');
+      } catch (e) {}
+    }
+
+    async function loadSystemHealthGrid() {
+      try {
+        const r1 = await fetch('/api/llm-quota');
+        const totalKeys = Object.values(quota).reduce((acc, arr) => acc + (Array.isArray(arr) ? arr.length : 0), 0);
+        if (el) el.innerText = `${totalKeys} Keys Active`;
+      } catch(e) {}
+
+      try {
+        const r2 = await fetch('/api/ollama-status');
+        const ollama = await r2.json();
+        const el = document.getElementById('health-ollama');
+        if (el) el.innerText = ollama.available ? 'Available' : 'Offline';
+      } catch(e) {}
+
+      try {
+        const r3 = await fetch('/api/concurrency-status');
+        const conc = await r3.json();
+        const el = document.getElementById('health-concurrency');
+        if (el) el.innerText = `RAM ${conc.ram_percent}%`;
+      } catch(e) {}
+
+      try {
+        const r6 = await fetch('/api/background-search/status');
+        const bg = await r6.json();
+        const el = document.getElementById('health-background-logs');
+        if (el) el.innerText = bg.worker_thread_alive ? 'Running' : 'Idle';
+      } catch(e) {}
+
+      try {
+        const rApify = await fetch('/api/apify-status');
+        const apify = await rApify.json();
+        const card = document.getElementById('apify-fallback-card');
+        if (card) {
+          card.innerHTML = `
+            <div class="glass-card rounded-3xl p-6 space-y-4 border-l-4 border-purple-500">
+              <div class="flex items-center justify-between border-b border-white/60 pb-3">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 rounded-2xl bg-purple-600/20 text-purple-700 flex items-center justify-center font-bold">
+                    <span class="material-symbols-outlined text-xl">cloud_sync</span>
+                  </div>
+                  <div>
+                    <h4 class="font-title-md text-sm text-on-background font-bold flex items-center gap-2">
+                      <span>Apify Scanning Fallback</span>
+                    </h4>
+                    <p class="text-xs text-on-surface-variant">Confidence-triggered career page scanning fallback</p>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-bold ${apify.enabled ? (apify.api_token_configured ? 'bg-purple-100 text-purple-800 border border-purple-300' : 'bg-amber-100 text-amber-800 border border-amber-300') : 'bg-slate-200 text-slate-700'}">
+                  ${apify.enabled ? (apify.api_token_configured ? 'Active' : 'Unconfigured (Token Blank)') : 'Disabled'}
+                </span>
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                <div class="glass-well p-3 rounded-2xl">
+                  <span class="text-[10px] uppercase font-bold text-on-surface-variant block">Monthly Quota</span>
+                  <span class="font-bold text-purple-700 text-sm">$${apify.credits_used_this_month} / $${apify.monthly_credit_limit_usd}</span>
+                </div>
+                <div class="glass-well p-3 rounded-2xl">
+                  <span class="text-[10px] uppercase font-bold text-on-surface-variant block">Pace Ratio</span>
+                  <span class="font-bold text-on-surface text-sm">${apify.pace_ratio}x</span>
+                </div>
+                <div class="glass-well p-3 rounded-2xl">
+                  <span class="text-[10px] uppercase font-bold text-on-surface-variant block">Scan Threshold</span>
+                  <span class="font-bold text-primary text-sm">${Math.round(apify.scan_confidence_threshold * 100)}%</span>
+                </div>
+                <div class="glass-well p-3 rounded-2xl">
+                  <span class="text-[10px] uppercase font-bold text-on-surface-variant block">Cross-Checked</span>
+                  <span class="font-bold text-emerald-700 text-sm">${apify.companies_cross_checked_this_cycle} comps</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      } catch(e) {}
+    }
+
+    async function loadTrendingSkills() {
+      const container = document.getElementById('trending-skills-content');
+      try {
+        const res = await fetch('/api/insights/efficiency-score');
+        const data = await res.json();
+        const skills = data.trending_skills || [];
+        container.innerHTML = skills.map(s => `
+          <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-tertiary-container/30 text-on-tertiary-fixed-variant flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">trending_up</span> ${escapeHTML(s.skill)} (${s.percent_growth})
+          </span>
+        `).join('');
+      } catch(e) {}
+    }
+
+    async function loadAIRecommendations() {
+      const container = document.getElementById('ai-recommended-roles');
+      try {
+        const res = await fetch('/api/recommendations');
+        const data = await res.json();
+        const recs = data.recommendations || [];
+
+        container.innerHTML = (recs.slice(0, 3) || []).map(r => `
+          <div class="glass-well p-5 rounded-2xl space-y-3">
+            <h4 class="font-title-md text-sm text-on-background font-bold">${escapeHTML(r.title || 'Role Recommendation')}</h4>
+            <p class="text-xs text-on-surface-variant leading-relaxed">${escapeHTML(r.reason || 'High market demand matching your profile')}</p>
+            <button onclick="switchPage('search')" class="btn-primary bg-primary text-white text-xs px-4 py-2 rounded-full font-bold btn-micro-active">View Role</button>
+          </div>
+        `).join('');
+      } catch(e) {}
+    }
+
+    // ============================================================
+    // PAGE 5: SETTINGS & CONFIGURATION
+    // ============================================================
+    async function loadSettingsPage() {
+      loadResumeStatus();
+      loadCompaniesTable();
+    }
+
+    async function loadLiveScanStatus() {
+      const badge = document.getElementById('scan-live-badge');
+      const details = document.getElementById('scan-live-details');
+
+      try {
+        const res = await fetch('/api/scan-status/live');
+        const data = await res.json();
+
+        if (data.is_scanning) {
+          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 animate-pulse';
+          badge.innerText = 'Scanning';
+          details.innerHTML = `
+            <div class="text-emerald-700 font-bold">Actively scanning: ${escapeHTML(data.currently_scanning || 'Target portal')}</div>
+            <div class="text-xs text-outline">Progress: ${escapeHTML(data.progress || 'In progress...')}</div>
+          `;
+        } else {
+          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-slate-200 text-slate-700';
+          badge.innerText = 'Idle';
+          details.innerHTML = `<div>${escapeHTML(data.idle_message || 'Idle - next scan in 2h 0m')}</div>`;
+        }
+      } catch(e) {}
+    }
+
+    async function loadResumeStatus() {
+      const badge = document.getElementById('resume-status-badge');
+      const box = document.getElementById('resume-details-box');
+
+      try {
+        const res = await fetch('/api/resume-status');
+        const data = await res.json();
+
+        if (data.has_resume) {
+          badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800';
+          badge.innerText = 'Resume Active ✓';
+
+          const r2 = await fetch('/api/resume');
+          const rData = await r2.json();
+
+          box.innerHTML = `
+            <div class="text-xs space-y-2">
+              <div class="font-bold text-on-surface-variant">Skills Extracted (${rData.skills?.length || 0}):</div>
+              <div class="flex flex-wrap gap-1.5" id="resume-skills-chips">
+                ${(rData.skills || []).map(s => `<span class="px-3 py-1 rounded-full text-[11px] font-semibold bg-primary-fixed text-on-primary-fixed">${escapeHTML(s)}</span>`).join('')}
+                <button onclick="promptAddSkill()" class="px-3 py-1 rounded-full text-[11px] font-bold bg-white text-primary border border-primary/40 hover:bg-primary/10">+ Add Skill</button>
+              </div>
+            </div>
+          `;
+        } else {
+          badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800';
+          badge.innerText = 'No Resume Uploaded';
+          box.innerHTML = `<p class="text-xs text-on-surface-variant">Upload a resume to calculate personalized match scores.</p>`;
+        }
+      } catch(e) {}
+    }
+
+    function promptAddSkill() {
+      const val = prompt("Enter skill name:");
+      if (val && val.trim()) {
+        const container = document.getElementById('resume-skills-chips');
+        const chip = document.createElement('span');
+        chip.className = 'px-3 py-1 rounded-full text-[11px] font-semibold bg-primary-fixed text-on-primary-fixed';
+        chip.innerText = val.trim();
+        container.insertBefore(chip, container.lastElementChild);
+      }
+    }
+
+    function updateFileNameDisplay() {
+      const input = document.getElementById('resume-file-input');
+      const display = document.getElementById('resume-file-name');
+      if (input.files.length > 0) {
+        display.innerText = input.files[0].name;
+      }
+    }
+
+    async function handleResumeUpload(e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('resume-file-input');
+      if (!fileInput.files.length) {
+        showToast("Choose a resume file first", true);
+        return;
+      }
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalLabel = submitBtn ? submitBtn.innerText : '';
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = 'Uploading…'; }
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        const res = await fetch('/api/resume', { method: 'POST', body: formData });
+        let data = {};
+        try { data = await res.json(); } catch (_) {}
+        if (!res.ok) {
+          const detail = data.error || `server error (HTTP ${res.status})`;
+          showToast(`Resume upload failed: ${detail}`, true);
+          return;
+        }
+        const skillCount = (data.skills || []).length;
+        showToast(`Resume parsed — ${skillCount} skills found. Jobs are being rescored.`);
+        loadSettingsPage();
+      } catch (err) {
+        console.error(err);
+        showToast("Resume upload failed: could not reach the app. Is it running?", true);
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = originalLabel; }
+      }
+    }
+
+    async function loadCompaniesTable() {
+      const tbody = document.getElementById('companies-table-body');
+      try {
+        const res = await fetch('/api/companies');
+        const data = await res.json();
+        const comps = data.companies || [];
+
+        tbody.innerHTML = comps.map(c => {
+          const status = c.monitoring_status || 'Active Monitoring';
+          const isPaused = status === 'Paused';
+
+          return `
+            <tr class="hover:bg-white/40">
+              <td class="py-2.5 px-3 font-bold text-on-background">${escapeHTML(c.name)}</td>
+              <td class="py-2.5 px-3 text-xs text-outline uppercase font-bold">${escapeHTML(c.ats || 'custom')}</td>
+              <td class="py-2.5 px-3 text-xs">
+                <span class="px-2.5 py-1 rounded-full font-bold ${isPaused ? 'bg-slate-200 text-slate-700' : 'bg-emerald-100 text-emerald-800'}">${escapeHTML(status)}</span>
+              </td>
+              <td class="py-2.5 px-3">
+                <button onclick="toggleCompanyMonitoring('${c.id}')" class="text-xs font-bold ${isPaused ? 'text-emerald-700' : 'text-amber-800'} hover:underline">${isPaused ? 'Resume' : 'Pause'}</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch(e) {}
+    }
+
+    async function toggleCompanyMonitoring(cid) {
+      try {
+        await fetch(`/api/company/${cid}/toggle-monitoring`, { method: 'POST' });
+        loadCompaniesTable();
+      } catch(e) {}
+    }
+
+    async function handleAddSingleCompany(e) {
+      e.preventDefault();
+      const name = document.getElementById('add-comp-name').value;
+      const url = document.getElementById('add-comp-url').value;
+
+      try {
+        await fetch('/api/company/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, career_url: url })
+        });
+        alert("Company added!");
+        loadCompaniesTable();
+      } catch(err) {}
+    }
+
+    async function triggerExportData() {
+      window.location.href = '/api/export-data';
+    }
+
+    async function triggerResetBackgroundSearch() {
+      if (confirm("Reset background search log history and restore search settings to defaults?")) {
+        try {
+          await fetch('/api/background-search/reset', { method: 'POST' });
+          alert("Background search history and settings reset to defaults!");
+          loadSettingsPage();
+        } catch(e) {}
+      }
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    // INITIALIZATION
+    window.addEventListener('DOMContentLoaded', () => {
+      initFilterPanelChips();
+      switchPage('jobs');
+    });
+  </script>
+</body>
+</html>

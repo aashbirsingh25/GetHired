@@ -12,9 +12,9 @@
       {
         "provider": "groq",
         "api_key": "YOUR_GROQ_API_KEY",
-        "quota_remaining": 400,
+        "quota_remaining": 395,
         "rpm_limit": 30,
-        "used_today": 0,
+        "used_today": 5,
         "daily_limit": 400
       },
       {
@@ -42,16 +42,16 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 35,
-        "used_today": 15,
+        "quota_remaining": 32,
+        "used_today": 18,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 35,
-        "used_today": 15,
+        "quota_remaining": 27,
+        "used_today": 23,
         "rpm_limit": 8,
         "daily_limit": 50
       },

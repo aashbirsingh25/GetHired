@@ -129,6 +129,7 @@ SCAN_ORDER_FILE = os.path.join(BASE_DIR, "scan_order.json")
 RESUME_FILE = os.path.join(BASE_DIR, "resume_store.json")
 FILTER_METRICS_FILE = os.path.join(BASE_DIR, "filter_metrics.json")
 FILTERS_FILE = os.path.join(BASE_DIR, "filters.json")
+APPLY_LATER_FILE = os.path.join(BASE_DIR, "apply_later.json")
 VIEWED_JOBS_FILE = os.path.join(BASE_DIR, "viewed_jobs.json")
 SAVED_JOBS_FILE = os.path.join(BASE_DIR, "saved_jobs.json")
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
@@ -458,6 +459,33 @@ def toggle_job_saved(job_id):
     saved_data["saved_jobs"] = saved_list
     save_json(SAVED_JOBS_FILE, saved_data)
     return jsonify({"status": "updated", "job_id": job_id, "is_saved": is_saved, "total_saved": len(saved_list)}), 200
+
+@app.route("/api/jobs/<path:job_id>/toggle-apply-later", methods=["POST"])
+def toggle_apply_later(job_id):
+    """Tracker 'Apply Later' bucket - same storage pattern as saved jobs."""
+    data = load_json(APPLY_LATER_FILE, {"apply_later": []})
+    lst = data.get("apply_later", [])
+    is_on = False
+    if job_id in lst:
+        lst.remove(job_id)
+    else:
+        lst.append(job_id)
+        is_on = True
+    data["apply_later"] = lst
+    save_json(APPLY_LATER_FILE, data)
+    return jsonify({"status": "updated", "job_id": job_id,
+                    "apply_later": is_on, "total": len(lst)}), 200
+
+
+@app.route("/api/jobs/apply-later", methods=["GET"])
+def get_apply_later_jobs():
+    data = load_json(APPLY_LATER_FILE, {"apply_later": []})
+    lst = data.get("apply_later", [])
+    store_data = load_json(JOBS_FILE, {"jobs": []})
+    all_map = {j["id"]: j for j in store_data.get("jobs", []) if j.get("id")}
+    jobs = [all_map[jid] for jid in lst if jid in all_map]
+    return jsonify({"total": len(jobs), "jobs": jobs})
+
 
 @app.route("/api/jobs/saved", methods=["GET"])
 def get_saved_jobs():
