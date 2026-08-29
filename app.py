@@ -1664,7 +1664,10 @@ def _company_discovery_loop():
             run_discovery_cycle(llm_router=LLMRouter(), use_llm=True)
         except Exception as e:
             print(f"[CompanyDiscovery] cycle error: {e}")
-        time.sleep(21600)  # every 6 hours
+        # 2h cadence (was 6h): the 75% fresher-active goal needs ~630 more
+        # fresher-active companies; at 4 cycles/day the probe volume was the
+        # bottleneck, not LLM quota (1 proposal call per cycle).
+        time.sleep(7200)
 
 
 if __name__ == "__main__":

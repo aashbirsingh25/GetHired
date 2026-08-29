@@ -72,6 +72,16 @@ CATEGORIES = [
     "Indian edtech, healthtech and agritech companies",
     "airlines, hospitality and logistics companies with India tech centers",
     "automotive and manufacturing companies with India tech centers",
+    # Fresher-heavy categories added 2026-08-29 for the 75% fresher-active
+    # goal. Constraint learned from 8+ cycles: propose companies likely to
+    # use PUBLIC ATS boards (greenhouse/lever/keka/smartrecruiters/
+    # successfactors) - ~90% of rejections are 'no public ATS endpoint'.
+    "venture-funded Indian startups that hired interns or freshers in the last year and use Greenhouse, Lever or Keka for hiring",
+    "Y Combinator companies with engineering teams in India",
+    "consulting and professional services firms with India delivery centers that run graduate programmes",
+    "Indian D2C and e-commerce brands with in-house tech teams hiring early-career engineers",
+    "gaming, media and adtech companies with India engineering offices",
+    "cybersecurity and data-infrastructure companies with India teams that hire junior engineers",
 ]
 
 
