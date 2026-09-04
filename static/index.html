@@ -288,6 +288,35 @@ select:focus, input:focus { border-color: var(--blue); }
 .set-row .info .t { font-size: 14px; font-weight: 600; }
 .set-row .info .d { font-size: 12px; color: var(--text-3); margin-top: 2px; max-width: 520px; }
 
+/* liquid-glass slider */
+.lg-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; max-width: 420px; height: 5px; border-radius: 3px;
+  background: var(--surface-3); outline: none; margin: 4px 0 6px;
+}
+.lg-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  cursor: pointer; box-shadow: 0 2px 10px rgba(10,132,255,0.45);
+  transition: transform 0.15s var(--ease);
+}
+.lg-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+/* circular gauge (insights) */
+.gauge-wrap { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
+.gauge { position: relative; width: 150px; height: 150px; }
+.gauge svg { transform: rotate(-90deg); }
+.gauge .g-val {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.gauge .g-val b { font-size: 27px; font-weight: 700; letter-spacing: -0.03em; }
+.gauge .g-val span { font-size: 10.5px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+.activity-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid var(--separator); font-size: 12.5px; color: var(--text-2); align-items: baseline; }
+.activity-item:last-child { border-bottom: none; }
+.activity-item .when { color: var(--text-3); font-size: 11px; flex-shrink: 0; width: 72px; }
+
 /* toast */
 #toast {
   position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
@@ -369,20 +398,10 @@ select:focus, input:focus { border-color: var(--blue); }
       <div class="card">
         <div class="sec-label" style="margin-top:0">Location</div>
         <div class="chip-row" id="f-location"></div>
-        <div class="sec-label">Minimum match</div>
-        <div class="chip-row" id="f-score">
-          <div class="f-chip on" data-v="0">Any</div>
-          <div class="f-chip" data-v="45">45%+</div>
-          <div class="f-chip" data-v="60">60%+</div>
-          <div class="f-chip" data-v="75">75%+</div>
-        </div>
-        <div class="sec-label">Salary (annual)</div>
-        <div class="chip-row" id="f-salary">
-          <div class="f-chip on" data-v="0">Any</div>
-          <div class="f-chip" data-v="300000">3 LPA+</div>
-          <div class="f-chip" data-v="600000">6 LPA+</div>
-          <div class="f-chip" data-v="1000000">10 LPA+</div>
-        </div>
+        <div class="sec-label">Minimum match — <span id="score-bubble" style="color:var(--blue);font-weight:700">Any</span></div>
+        <input type="range" id="f-score-slider" class="lg-slider" min="0" max="95" step="5" value="0">
+        <div class="sec-label">Minimum salary — <span id="salary-bubble" style="color:var(--blue);font-weight:700">Any</span></div>
+        <input type="range" id="f-salary-slider" class="lg-slider" min="0" max="30" step="1" value="0">
         <div class="sec-label">Source</div>
         <div class="chip-row" id="f-source"></div>
         <div class="sec-label">Posted</div>
@@ -594,18 +613,48 @@ async function loadJobs() {
 }
 
 /* ---------------- search tab ---------------- */
+/* One canonical name per city: sources spell the same place many ways
+   (Bengaluru/Bangalore, Gurgaon/Gurugram, New Delhi/Delhi NCR...). */
+const CITY_CANON = [
+  [/bengaluru|bangalore/i, "Bangalore"],
+  [/gurgaon|gurugram/i, "Gurugram"],
+  [/new delhi|delhi ncr|\bdelhi\b|\bncr\b/i, "Delhi NCR"],
+  [/mumbai|bombay|navi mumbai/i, "Mumbai"],
+  [/\bnoida\b|greater noida/i, "Noida"],
+  [/\bpune\b/i, "Pune"],
+  [/chennai|madras/i, "Chennai"],
+  [/hyderabad|secunderabad/i, "Hyderabad"],
+  [/kolkata|calcutta/i, "Kolkata"],
+  [/ahmedabad/i, "Ahmedabad"],
+  [/\bjaipur\b/i, "Jaipur"],
+  [/\bindore\b/i, "Indore"],
+  [/chandigarh|mohali/i, "Chandigarh"],
+  [/kochi|cochin|trivandrum|thiruvananthapuram/i, "Kerala"],
+  [/remote|work from home|wfh|anywhere/i, "Remote"],
+];
+const MAJOR_CITIES = ["Bangalore", "Delhi NCR", "Gurugram", "Noida", "Mumbai", "Hyderabad", "Pune", "Chennai", "Remote"];
+function canonCity(loc) {
+  const s = String(loc || "");
+  for (const [re, name] of CITY_CANON) if (re.test(s)) return name;
+  const first = s.split(/[,(\/]/)[0].trim();
+  return first || "India";
+}
+
 function buildSearchFilters() {
   const locCount = {}, srcCount = {};
   FEED.forEach(j => {
-    const city = (j.location || "India").split(/[,(]/)[0].trim() || "India";
+    const city = canonCity(j.location);
     locCount[city] = (locCount[city] || 0) + 1;
     const s = (j.source || (j.sources || [])[0] || "career page").replace(/_/g, " ");
     srcCount[s] = (srcCount[s] || 0) + 1;
   });
-  const topLocs = Object.entries(locCount).sort((a, b) => b[1] - a[1]).slice(0, 12);
-  $("#f-location").innerHTML = topLocs.map(([l, n]) =>
-    `<div class="f-chip ${FILTERS_STATE.location.has(l) ? "on" : ""}" data-v="${esc(l)}">${esc(l)} <span style="opacity:.55">${n}</span></div>`).join("")
-    || `<span style="color:var(--text-3);font-size:12.5px">No location data yet</span>`;
+  /* majors first (always shown, even at 0), then the rest by count */
+  const rest = Object.entries(locCount)
+    .filter(([l]) => !MAJOR_CITIES.includes(l))
+    .sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const ordered = [...MAJOR_CITIES.map(c => [c, locCount[c] || 0]), ...rest];
+  $("#f-location").innerHTML = ordered.map(([l, n]) =>
+    `<div class="f-chip ${FILTERS_STATE.location.has(l) ? "on" : ""}" data-v="${esc(l)}">${esc(l)} <span style="opacity:.55">${n}</span></div>`).join("");
   const topSrc = Object.entries(srcCount).sort((a, b) => b[1] - a[1]).slice(0, 10);
   $("#f-source").innerHTML = topSrc.map(([s, n]) =>
     `<div class="f-chip ${FILTERS_STATE.source.has(s) ? "on" : ""}" data-v="${esc(s)}">${esc(s)} <span style="opacity:.55">${n}</span></div>`).join("");
@@ -617,16 +666,26 @@ function toggleSetChip(chip, set) {
   if (set.has(v)) { set.delete(v); chip.classList.remove("on"); }
   else { set.add(v); chip.classList.add("on"); }
 }
-/* single-select chip groups */
-[["#f-score", "score"], ["#f-salary", "salary"], ["#f-posted", "posted"]].forEach(([sel, key]) => {
-  $(sel).addEventListener("click", (e) => {
-    const chip = e.target.closest(".f-chip");
-    if (!chip) return;
-    $$(sel + " .f-chip").forEach(c => c.classList.remove("on"));
-    chip.classList.add("on");
-    FILTERS_STATE[key] = Number(chip.dataset.v);
-    renderSearch();
-  });
+/* sliders: match threshold + salary (LPA) */
+$("#f-score-slider").addEventListener("input", (e) => {
+  const v = Number(e.target.value);
+  FILTERS_STATE.score = v;
+  $("#score-bubble").textContent = v ? `${v}%+` : "Any";
+  renderSearch();
+});
+$("#f-salary-slider").addEventListener("input", (e) => {
+  const lpa = Number(e.target.value);
+  FILTERS_STATE.salary = lpa * 100000;
+  $("#salary-bubble").textContent = lpa ? `${lpa} LPA+` : "Any";
+  renderSearch();
+});
+$("#f-posted").addEventListener("click", (e) => {
+  const chip = e.target.closest(".f-chip");
+  if (!chip) return;
+  $$("#f-posted .f-chip").forEach(c => c.classList.remove("on"));
+  chip.classList.add("on");
+  FILTERS_STATE.posted = Number(chip.dataset.v);
+  renderSearch();
 });
 $("#search-sort").addEventListener("click", (e) => {
   const b = e.target.closest("button");
@@ -808,7 +867,11 @@ async function loadInsights() {
   const el = $("#insights-body");
   el.innerHTML = `<div class="spin"></div>`;
   try {
-    const [jobsD, healthD] = await Promise.all([api("/api/jobs"), api("/api/company-health").catch(() => ({}))]);
+    const [jobsD, healthD, pulseD] = await Promise.all([
+      api("/api/jobs"),
+      api("/api/company-health").catch(() => ({})),
+      api("/api/system-pulse").catch(() => ({})),
+    ]);
     const fb = jobsD.filter_breakdown || {};
     const jobs = jobsD.jobs || [];
     const llm = jobs.filter(j => (j.match || {}).tier === 1 || (j.match || {}).tier === 2).length;
@@ -824,13 +887,64 @@ async function loadInsights() {
       ["In your feed", shown, "var(--green)"],
     ].filter(x => x[1]);
     const maxV = Math.max(...drops.map(x => x[1]), 1);
+
+    /* fresher-active gauge vs 75% target */
+    const faPct = healthD.fresher_active_pct || 0;
+    const target = healthD.target_pct || 75;
+    const eta = healthD.eta_days_to_target;
+    const needed = healthD.companies_needed_for_target || 0;
+    const R = 62, C = 2 * Math.PI * R;
+    const etaText = eta == null
+      ? `No verified additions in the last 14 days — the discovery worker probes ~660 names a day; ETA appears once additions land.`
+      : eta > 365
+        ? `At the current pace (${healthD.recent_adds_14d} added in 14 days) this takes ${(eta / 365).toFixed(1)} years — needs ${needed} more fresher-active companies. New ATS unlocks (like SuccessFactors) are what actually bend this curve.`
+        : `About ${eta} days at the current pace (${healthD.recent_adds_14d} added in 14 days). ${needed} more fresher-active companies needed.`;
+
+    /* LLM quota meters */
+    const prov = (pulseD.llm_providers) || {};
+    const quotaRows = Object.entries(prov).filter(([, v]) => v.daily_limit > 0).map(([p, v]) => {
+      const pct = Math.min(100, Math.round(v.used_today / v.daily_limit * 100));
+      return `<div class="bar-row"><div class="bl">${esc(p)} — ${v.used_today}/${v.daily_limit} calls today</div>
+        <div class="track"><div class="fill" data-w="${Math.max(2, pct)}" style="background:${pct > 85 ? "var(--orange)" : "var(--blue)"}">${pct}%</div></div></div>`;
+    }).join("");
+
+    /* discovery activity feed */
+    const cycles = (healthD.discovery_recent_cycles || []).slice(-6).reverse();
+    const activity = cycles.map(c => {
+      const added = (c.added || []).length ? `added <b style="color:var(--green)">${c.added.map(esc).join(", ")}</b>` : `no new companies`;
+      return `<div class="activity-item"><span class="when">${timeAgo(c.finished_at)}</span>
+        <span>&#128062; Probed ${c.probed || 0} “${esc((c.category || "").slice(0, 52))}” — ${added}${c.verified ? ` (${c.verified} verified)` : ""}</span></div>`;
+    }).join("") || `<div class="t-empty" style="padding:16px 0">Discovery activity appears here as cycles complete.</div>`;
+
     el.innerHTML = `
       <div class="stat-grid">
         <div class="stat-card"><div class="label">Jobs scanned</div><div class="num" data-count="${total}">0</div><div class="sub">across all companies and boards</div></div>
         <div class="stat-card"><div class="label">In your feed</div><div class="num" data-count="${shown}">0</div><div class="sub">passed every filter</div></div>
         <div class="stat-card"><div class="label">AI-verified matches</div><div class="num" data-count="${llm}">0</div><div class="sub">scored by a language model</div></div>
-        <div class="stat-card"><div class="label">Companies tracked</div><div class="num" data-count="${healthD.total_companies || 0}">0</div><div class="sub">${healthD.fresher_active || 0} actively hiring freshers (${healthD.fresher_active_pct || 0}%)</div></div>
+        <div class="stat-card"><div class="label">Companies tracked</div><div class="num" data-count="${healthD.total_companies || 0}">0</div><div class="sub">${healthD.producing_jobs || 0} producing jobs right now</div></div>
       </div>
+
+      <div class="card">
+        <div class="sec-label" style="margin-top:0">Fresher-active companies — the 75% goal</div>
+        <div class="gauge-wrap">
+          <div class="gauge">
+            <svg width="150" height="150">
+              <circle cx="75" cy="75" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="11"/>
+              <circle cx="75" cy="75" r="${R}" fill="none" stroke="var(--green)" stroke-width="11" stroke-linecap="round"
+                stroke-dasharray="${C}" stroke-dashoffset="${C}" data-target-offset="${C * (1 - faPct / 100)}" style="transition:stroke-dashoffset 1.2s var(--ease)"/>
+              <line x1="75" y1="13" x2="75" y2="24" stroke="var(--orange)" stroke-width="3" stroke-dasharray="3 3"
+                transform="rotate(${target / 100 * 360} 75 75)"/>
+            </svg>
+            <div class="g-val"><b>${faPct}%</b><span>of ${healthD.total_companies || 0} · goal ${target}%</span></div>
+          </div>
+          <div style="flex:1;min-width:240px">
+            <div style="font-size:14px;font-weight:650">${healthD.fresher_active || 0} companies actively hiring freshers</div>
+            <div style="font-size:12.5px;color:var(--text-2);line-height:1.6;margin-top:6px">${etaText}</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:8px">${healthD.watchlist_size || 0} more parked on the watchlist — auto-promoted the moment they post a fresher role in India.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="sec-label" style="margin-top:0">Where ${total.toLocaleString("en-IN")} scanned jobs went</div>
         ${drops.map(([label, v, color]) => `
@@ -838,21 +952,24 @@ async function loadInsights() {
             <div class="track"><div class="fill" data-w="${Math.max(3, Math.round(v / maxV * 100))}" style="background:${color}">${v.toLocaleString("en-IN")}</div></div>
           </div>`).join("")}
       </div>
+
+      ${quotaRows ? `<div class="card"><div class="sec-label" style="margin-top:0">Today's AI scoring budget</div>${quotaRows}
+        <div style="font-size:11.5px;color:var(--text-3);margin-top:8px">Quotas refill daily at 12:30 PM IST. The best matches get scored first, so a full budget is normal by evening.</div></div>` : ""}
+
       <div class="card">
-        <div class="sec-label" style="margin-top:0">Watchlist</div>
-        <div style="font-size:13px;color:var(--text-2);line-height:1.6">
-          ${healthD.watchlist_size || 0} companies are parked — real India employers with no fresher opening <i>today</i>.
-          The system re-checks them automatically and promotes them the moment a fresher role appears.
-        </div>
+        <div class="sec-label" style="margin-top:0">What the scout did recently</div>
+        ${activity}
       </div>`;
-    /* animate counters + bars */
+    /* animate: counters, bars, gauge */
     requestAnimationFrame(() => {
       $$(".fill", el).forEach(f => f.style.width = f.dataset.w + "%");
+      const g = $("circle[data-target-offset]", el);
+      if (g) g.style.strokeDashoffset = g.dataset.targetOffset;
       $$(".num", el).forEach(n => {
-        const target = Number(n.dataset.count), t0 = performance.now(), dur = 900;
+        const target2 = Number(n.dataset.count), t0 = performance.now(), dur = 900;
         const step = (t) => {
           const p = Math.min(1, (t - t0) / dur);
-          n.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))).toLocaleString("en-IN");
+          n.textContent = Math.round(target2 * (1 - Math.pow(1 - p, 3))).toLocaleString("en-IN");
           if (p < 1) requestAnimationFrame(step);
         };
         requestAnimationFrame(step);
@@ -865,47 +982,82 @@ async function loadInsights() {
 async function loadSettings() {
   const el = $("#settings-body");
   try {
-    const f = await api("/api/filters");
+    const [f, bg] = await Promise.all([api("/api/filters"), api("/api/background-search/config").catch(() => ({}))]);
+    const bgCfg = bg.config || bg || {};
     const minScore = f.min_match_score ?? 55;
     const auto = f.auto_threshold !== false;
+    const enabled = bgCfg.enabled !== false;
+    const interval = bgCfg.interval_hours || 2;
+    const roles = ((bgCfg.default_filters || {}).roles || []).join(", ");
     el.innerHTML = `
+      <div class="sec-label" style="margin-top:0">Background search</div>
       <div class="set-row">
-        <div class="info"><div class="t">Smart match threshold</div>
-          <div class="d">Let the system pick the score cutoff from real scoring data. AI-verified jobs automatically get a fairer, lower bar.</div></div>
-        <label class="switch"><input type="checkbox" id="set-auto" ${auto ? "checked" : ""}><span class="slider"></span></label>
+        <div class="info"><div class="t">Search automatically</div>
+          <div class="d">Scans career pages and 13 job boards for fresher roles across India — strictly 0-experience, freshest first.</div></div>
+        <label class="switch"><input type="checkbox" id="set-bg-enabled" ${enabled ? "checked" : ""}><span class="slider"></span></label>
       </div>
-      <div class="set-row" id="row-threshold" style="${auto ? "opacity:.45;pointer-events:none" : ""}">
-        <div class="info"><div class="t">Minimum match score</div>
-          <div class="d">Jobs scoring below this stay out of your feed.</div></div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <input type="number" id="set-min-score" value="${minScore}" min="0" max="100" style="width:74px">
+      <div class="set-row">
+        <div class="info"><div class="t">How often</div>
+          <div class="d">Each cycle scans every company and board once.</div></div>
+        <div class="seg" id="set-interval">
+          ${[2, 3, 6].map(h => `<button class="${interval === h ? "on" : ""}" data-h="${h}">every ${h}h</button>`).join("")}
         </div>
       </div>
       <div class="set-row">
-        <div class="info"><div class="t">Background search</div>
-          <div class="d">Scans career pages and job boards around the clock: strictly fresher roles, all India, freshest first. Naukri via Apify runs once a day inside a strict monthly budget.</div></div>
-        <span class="badge llm" style="font-size:11.5px">Always on</span>
+        <div class="info"><div class="t">Roles to look for</div>
+          <div class="d">Comma-separated. These drive the job-board searches.</div></div>
+        <input type="text" id="set-roles" value="${esc(roles)}" style="width:320px">
       </div>
       <div class="set-row">
-        <div class="info"><div class="t">Save settings</div><div class="d">Applies immediately to the feed.</div></div>
+        <div class="info"><div class="t">While your computer is off</div>
+          <div class="d">Searches only run while this Mac is awake — that's physics, not a setting. Deploying to an always-on server (the pending deployment step) is what makes 24/7 search real.</div></div>
+        <span class="badge local" style="font-size:11.5px">needs deployment</span>
+      </div>
+
+      <div class="sec-label">Matching</div>
+      <div class="set-row">
+        <div class="info"><div class="t">Smart match threshold</div>
+          <div class="d">The system picks the cutoff from real scoring data; AI-verified jobs automatically get a fairer, lower bar.</div></div>
+        <label class="switch"><input type="checkbox" id="set-auto" ${auto ? "checked" : ""}><span class="slider"></span></label>
+      </div>
+      <div class="set-row" id="row-threshold" style="${auto ? "opacity:.45;pointer-events:none" : ""}">
+        <div class="info"><div class="t">Minimum match score — <span id="set-score-bubble" style="color:var(--blue)">${minScore}%</span></div>
+          <div class="d">Jobs scoring below this stay out of your feed.</div></div>
+        <input type="range" id="set-min-score" class="lg-slider" style="width:180px" min="0" max="95" step="5" value="${minScore}">
+      </div>
+
+      <div class="set-row">
+        <div class="info"><div class="t">Save settings</div><div class="d">Applies immediately.</div></div>
         <button class="btn primary" onclick="saveSettings()">Save</button>
       </div>`;
     $("#set-auto").addEventListener("change", (e) => {
       $("#row-threshold").style.cssText = e.target.checked ? "opacity:.45;pointer-events:none" : "";
+    });
+    $("#set-min-score").addEventListener("input", (e) => {
+      $("#set-score-bubble").textContent = e.target.value + "%";
+    });
+    $("#set-interval").addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b) return;
+      $$("#set-interval button").forEach(x => x.classList.remove("on"));
+      b.classList.add("on");
     });
   } catch (e) { el.innerHTML = `<div class="t-empty">Couldn't load settings.</div>`; }
   /* companies list */
   const cEl = $("#settings-companies");
   try {
     const h = await api("/api/company-health");
+    const pct = h.fresher_active_pct || 0;
     cEl.innerHTML = `
-      <div style="display:flex;gap:26px;flex-wrap:wrap;font-size:13px;color:var(--text-2);margin-bottom:6px">
+      <div style="display:flex;gap:26px;flex-wrap:wrap;font-size:13px;color:var(--text-2);margin-bottom:12px">
         <div><b style="color:var(--text);font-size:17px">${h.total_companies || 0}</b> tracked</div>
         <div><b style="color:var(--text);font-size:17px">${h.producing_jobs || 0}</b> producing jobs</div>
-        <div><b style="color:var(--green);font-size:17px">${h.fresher_active || 0}</b> fresher-active (${h.fresher_active_pct || 0}%)</div>
+        <div><b style="color:var(--green);font-size:17px">${h.fresher_active || 0}</b> fresher-active</div>
         <div><b style="color:var(--orange);font-size:17px">${h.watchlist_size || 0}</b> on watchlist</div>
       </div>
-      <div style="font-size:12px;color:var(--text-3)">The discovery worker adds verified fresher-hiring companies automatically, every 2 hours.</div>`;
+      <div style="font-size:12px;color:var(--text-2);margin-bottom:6px">Fresher-active: <b>${pct}%</b> — goal <b>${h.target_pct || 75}%</b>${h.eta_days_to_target ? ` · ~${h.eta_days_to_target > 365 ? (h.eta_days_to_target / 365).toFixed(1) + " years" : h.eta_days_to_target + " days"} at the current pace` : ""}</div>
+      <div class="meter" style="height:8px;max-width:420px"><div style="background:var(--green);width:${Math.min(100, pct / (h.target_pct || 75) * 100)}%"></div></div>
+      <div style="font-size:12px;color:var(--text-3);margin-top:10px">The discovery worker verifies new fresher-hiring companies automatically, every 2 hours, and needs ${h.companies_needed_for_target || "?"} more to hit the goal.</div>`;
   } catch (e) { cEl.innerHTML = `<div class="t-empty">Couldn't load company stats.</div>`; }
 }
 window.saveSettings = async () => {
@@ -914,9 +1066,18 @@ window.saveSettings = async () => {
     cur.auto_threshold = $("#set-auto").checked;
     if (!cur.auto_threshold) cur.min_match_score = Number($("#set-min-score").value) || 55;
     await api("/api/filters", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cur) });
+    /* background search config */
+    const bgResp = await api("/api/background-search/config").catch(() => ({}));
+    const bgCfg = bgResp.config || bgResp || {};
+    bgCfg.enabled = $("#set-bg-enabled").checked;
+    bgCfg.interval_hours = Number(($("#set-interval button.on") || {}).dataset?.h || 2);
+    bgCfg.default_filters = bgCfg.default_filters || {};
+    const roles = $("#set-roles").value.split(",").map(s => s.trim()).filter(Boolean);
+    if (roles.length) bgCfg.default_filters.roles = roles;
+    await api("/api/background-search/config", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(bgCfg) });
     toast("Settings saved");
     loadJobs();
-  } catch (e) { toast("Save failed"); }
+  } catch (e) { toast("Save failed: " + e.message); }
 };
 
 /* ---------------- counts + boot ---------------- */

@@ -601,6 +601,32 @@ def get_search_task_status(task_id):
         return jsonify(st), 404
     return jsonify(st), 200
 
+@app.route("/api/system-pulse", methods=["GET"])
+def system_pulse():
+    """Small live snapshot for the Insights tab: LLM quota + scan activity."""
+    cfg = load_json(os.path.join(BASE_DIR, "config.json"), {})
+    keys = cfg.get("llm", {}).get("keys", [])
+    prov = {}
+    for k in keys:
+        p = k.get("provider")
+        if not p:
+            continue
+        d = prov.setdefault(p, {"used_today": 0, "daily_limit": 0})
+        d["used_today"] += int(k.get("used_today", 0) or 0)
+        d["daily_limit"] += int(k.get("daily_limit", 0) or 0)
+    status = bg_worker.get_status()
+    return jsonify({
+        "llm_providers": prov,
+        "background_search": {
+            "enabled": status.get("enabled"),
+            "interval_hours": status.get("interval_hours"),
+            "last_search": status.get("last_search_time"),
+            "next_search": status.get("next_search_time"),
+            "is_running": status.get("is_running"),
+        },
+    })
+
+
 @app.route("/api/company-health", methods=["GET"])
 def company_health():
     """Transparency: how much of the company list is actually hiring freshers,
@@ -623,7 +649,32 @@ def company_health():
     cycles = disc.get("cycles", [])[-5:]
     watchlist = load_json(os.path.join(BASE_DIR, "company_watchlist.json"), {"companies": {}})
 
+    # --- progress toward the 75% fresher-active target ---
+    # Adding x fresher-active companies moves (fa + x) / (total + x); solving
+    # for 75%: x = (0.75 * total - fa) / 0.25. The ETA uses the measured
+    # verified-additions rate from the discovery log's trailing 14 days
+    # (every admission is fresher-active on day one by the gate), so the
+    # number is honest, not aspirational.
+    TARGET = 0.75
+    needed = max(0, int((TARGET * total - fresher_active) / (1 - TARGET)) + 1) \
+        if total and fresher_active / max(total, 1) < TARGET else 0
+    cutoff_dt = datetime.now(timezone.utc).timestamp() - 14 * 86400
+    recent_adds = 0
+    for cyc in disc.get("cycles", []):
+        try:
+            ts = datetime.fromisoformat(cyc.get("finished_at", "").replace("Z", "+00:00")).timestamp()
+            if ts >= cutoff_dt:
+                recent_adds += len(cyc.get("added", []) or [])
+        except Exception:
+            continue
+    rate_per_day = recent_adds / 14.0
+    eta_days = int(needed / rate_per_day) if rate_per_day > 0 and needed else None
+
     return jsonify({
+        "target_pct": 75,
+        "companies_needed_for_target": needed,
+        "recent_adds_14d": recent_adds,
+        "eta_days_to_target": eta_days,
         "total_companies": total,
         "scanned_at_least_once": scanned,
         "producing_jobs": producing,

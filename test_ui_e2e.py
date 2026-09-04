@@ -59,29 +59,41 @@ def run():
         check("search count shown", "of" in total_txt, total_txt)
         n_before = page.locator("#search-list .job-row").count()
         check("search list renders", n_before > 0, str(n_before))
-        # apply min-score filter 75%
-        page.locator('#f-score .f-chip[data-v="75"]').click()
+        # major cities pinned in the location filter
+        loc_chips = page.locator("#f-location .f-chip").all_inner_texts()
+        check("major cities pinned", any("Bangalore" in c for c in loc_chips) and any("Mumbai" in c for c in loc_chips), str(loc_chips[:5]))
+        check("no bengaluru/bangalore split", not any("Bengaluru" in c for c in loc_chips), str(loc_chips[:9]))
+        # min-match slider to 75
+        page.locator("#f-score-slider").evaluate(
+            "el => { el.value = 75; el.dispatchEvent(new Event('input', {bubbles: true})); }")
         page.wait_for_timeout(400)
+        check("score bubble updates", "75" in page.locator("#score-bubble").inner_text())
         n_after = page.locator("#search-list .job-row").count()
-        check("score filter reduces list", n_after < n_before, f"{n_before} -> {n_after}")
+        check("score slider reduces list", n_after < n_before, f"{n_before} -> {n_after}")
         # sort by best fit
         page.locator('#search-sort button[data-s="match"]').click()
         page.wait_for_timeout(400)
         s2 = [int(x) for x in page.locator("#search-list .score-ring .val").all_inner_texts()[:8] if x.strip().isdigit()]
         check("best-fit sort works", s2 == sorted(s2, reverse=True), str(s2))
         check("filtered jobs all >= 75", all(s >= 75 for s in s2), str(s2))
-        # reset filter
-        page.locator('#f-score .f-chip[data-v="0"]').click()
+        # reset slider
+        page.locator("#f-score-slider").evaluate(
+            "el => { el.value = 0; el.dispatchEvent(new Event('input', {bubbles: true})); }")
 
         # ---- tracker: apply-later round trip ----
         page.locator('.nav-item[data-tab="jobs"]').click()
-        page.wait_for_timeout(500)
-        row = page.locator("#jobs-list .job-row").first
-        if "open" not in (row.get_attribute("class") or ""):
+        page.wait_for_timeout(1200)  # let loadJobs re-render fully (cached api is fast)
+        # expand the first row; retry once if a re-render collapsed it
+        for _attempt in range(3):
+            row = page.locator("#jobs-list .job-row").first
             row.locator(".job-head").click()
-            page.wait_for_timeout(500)
+            page.wait_for_timeout(600)
+            row = page.locator("#jobs-list .job-row").first
+            if "open" in (row.get_attribute("class") or ""):
+                break
+        check("row re-expanded for tracker test", "open" in (row.get_attribute("class") or ""))
         job_id = row.get_attribute("data-id")
-        row.locator("button:has-text('Apply later')").click()
+        row.locator("button:has-text('Apply later')").click(timeout=8000)
         page.wait_for_timeout(600)
         page.locator('.nav-item[data-tab="tracker"]').click()
         page.wait_for_timeout(500)
@@ -111,12 +123,19 @@ def run():
         first_num = page.locator("#insights-body .num").first.inner_text().replace(",", "")
         check("counter animated to real value", first_num.isdigit() and int(first_num) > 1000, first_num)
         check("funnel bars render", page.locator("#insights-body .bar-row").count() >= 4)
+        check("75% goal gauge renders", page.locator("#insights-body .gauge").count() == 1)
+        check("gauge shows target", "75" in page.locator("#insights-body .g-val").inner_text())
+        check("activity feed present", "scout" in page.locator("#insights-body").inner_text().lower())
 
         # ---- settings ----
         page.locator('.nav-item[data-tab="settings"]').click()
-        page.wait_for_timeout(900)
-        check("settings rows render", page.locator("#settings-body .set-row").count() >= 3)
+        page.wait_for_timeout(1000)
+        check("settings rows render", page.locator("#settings-body .set-row").count() >= 5)
+        check("bg-search toggle present", page.locator("#set-bg-enabled").count() == 1)
+        check("interval picker present", page.locator("#set-interval button").count() == 3)
+        check("roles editor present", page.locator("#set-roles").count() == 1)
         check("companies stats render", "tracked" in page.locator("#settings-companies").inner_text())
+        check("75% goal in settings", "75" in page.locator("#settings-companies").inner_text())
 
         # ---- profile ----
         page.locator('.nav-item[data-tab="profile"]').click()
