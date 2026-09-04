@@ -41,6 +41,23 @@ def run():
         scores = [int(x) for x in page.locator("#jobs-list .score-ring .val").all_inner_texts()[:10] if x.strip().isdigit()]
         check("jobs sorted by match desc", scores == sorted(scores, reverse=True), str(scores))
 
+        # REGRESSION (user report): numbered senior roles must never appear.
+        import re as _re
+        titles = page.locator("#jobs-list .job-title-line .t").all_inner_texts()
+        leveled = [t for t in titles if _re.search(r"\b(sde|swe|engineer|developer)\s*[-‐–—]?\s*(2|3|4|ii|iii|iv)\b", t.lower())]
+        check("no SDE-2/3 style senior roles in feed", not leveled, str(leveled[:3]))
+
+        # jobs sort control works
+        page.locator('#jobs-sort button[data-s="recent"]').click()
+        page.wait_for_timeout(400)
+        check("jobs sort control switches", "on" in (page.locator('#jobs-sort button[data-s="recent"]').get_attribute("class") or ""))
+        page.locator('#jobs-sort button[data-s="verified"]').click()
+        page.wait_for_timeout(400)
+        first_badge = page.locator("#jobs-list .job-row .badge").first.inner_text()
+        check("verified-first sort puts AI jobs on top", "AI" in first_badge, first_badge)
+        page.locator('#jobs-sort button[data-s="match"]').click()
+        page.wait_for_timeout(400)
+
         # ---- expand first job ----
         page.locator("#jobs-list .job-head").first.click()
         page.wait_for_timeout(600)
@@ -112,7 +129,7 @@ def run():
 
         # tracker applied tab renders (may be empty)
         page.locator('#tracker-tabs button[data-t="applied"]').click()
-        page.wait_for_timeout(600)
+        page.wait_for_selector("#tracker-list .card, #tracker-list .t-empty, #tracker-list .job-row", timeout=15000)
         body = page.locator("#tracker-list").inner_text()
         check("applied tab renders", len(body.strip()) > 0)
 

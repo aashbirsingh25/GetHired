@@ -203,10 +203,23 @@ def execute_authoritative_pipeline(
     if raw_excludes is None:
         raw_excludes = ["Senior", "Lead", "Manager", "Principal", "Director", "Architect"]
     exclude_kws = _extract_filter_strings(raw_excludes)
+
+    # Numbered seniority levels. Keyword matching alone let "Software
+    # Engineer 3" (MongoDB), "SDE 2/3" (eBay, CloudSEK) and friends into a
+    # strictly-fresher feed - level >= 2 means years of experience even though
+    # no excluded WORD appears in the title. Level 1 / I is kept: SDE-1 is a
+    # legitimate entry-level title. Roman numerals count too ("Engineer III").
+    _leveled_seniority = re.compile(
+        r"\b(?:sde|swe|sdet|mts|software\s+(?:development\s+)?engineer|engineer|developer|"
+        r"software\s+dev(?:eloper)?)\s*[-‐–—]?\s*(?:level\s*)?(2|3|4|5|ii|iii|iv|v)\b",
+        re.IGNORECASE)
+
     exclusion_filtered = []
     for job in exp_filtered:
         t_lower = (job.get("title") or "").lower()
         if any(re.search(r"\b" + re.escape(x.lower()) + r"\b", t_lower) for x in exclude_kws):
+            continue
+        if _leveled_seniority.search(t_lower):
             continue
         exclusion_filtered.append(job)
 

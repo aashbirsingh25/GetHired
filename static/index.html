@@ -388,6 +388,14 @@ select:focus, input:focus { border-color: var(--blue); }
     <section class="tab visible" id="tab-jobs">
       <div class="page-title">Jobs</div>
       <div class="page-sub" id="jobs-sub">Ranked by match with your resume.</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div class="seg" id="jobs-sort">
+          <button class="on" data-s="match">Best match</button>
+          <button data-s="recent">Newest</button>
+          <button data-s="salary">Salary</button>
+          <button data-s="verified">AI verified first</button>
+        </div>
+      </div>
       <div id="jobs-list"><div class="spin"></div></div>
     </section>
 
@@ -592,6 +600,36 @@ window.toggleJob = (head) => {
 };
 
 /* ---------------- jobs tab ---------------- */
+let JOBS_SORT = "match";
+$("#jobs-sort").addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  $$("#jobs-sort button").forEach(x => x.classList.remove("on"));
+  b.classList.add("on");
+  JOBS_SORT = b.dataset.s;
+  renderJobsList();
+});
+
+function sortJobs(list, mode) {
+  const out = list.slice();
+  if (mode === "recent") out.sort((a, b) => new Date(postedTime(b)) - new Date(postedTime(a)));
+  else if (mode === "salary") out.sort((a, b) => (((b.salary_range_inr || {}).max) || 0) - (((a.salary_range_inr || {}).max) || 0));
+  else if (mode === "verified") out.sort((a, b) => {
+    const av = ((a.match || {}).tier === 1 || (a.match || {}).tier === 2) ? 1 : 0;
+    const bv = ((b.match || {}).tier === 1 || (b.match || {}).tier === 2) ? 1 : 0;
+    return (bv - av) || (((b.match || {}).score || 0) - ((a.match || {}).score || 0));
+  });
+  else out.sort((a, b) => ((b.match || {}).score || 0) - ((a.match || {}).score || 0));
+  return out;
+}
+
+function renderJobsList() {
+  const list = sortJobs(FEED, JOBS_SORT);
+  $("#jobs-list").innerHTML = list.length
+    ? list.map(j => jobRowHTML(j, "jobs")).join("")
+    : `<div class="t-empty">No matches yet — upload a resume in Profile and give the scanner a few minutes.</div>`;
+}
+
 async function loadJobs() {
   try {
     const d = await api("/api/jobs?sort=match");
@@ -600,9 +638,7 @@ async function loadJobs() {
     const fb = d.filter_breakdown || {};
     $("#jobs-sub").textContent =
       `${FEED.length} matches from ${(fb.total_in_store || 0).toLocaleString("en-IN")} scanned postings, ranked by fit.`;
-    $("#jobs-list").innerHTML = FEED.length
-      ? FEED.map(j => jobRowHTML(j, "jobs")).join("")
-      : `<div class="t-empty">No matches yet — upload a resume in Profile and give the scanner a few minutes.</div>`;
+    renderJobsList();
     buildSearchFilters();
     renderSearch();
     $("#sys-status").textContent = "system live";
