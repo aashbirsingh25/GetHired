@@ -76,14 +76,28 @@ class JobDeduplicator:
         # 3. Stage D: Near-Duplicate Detection across distinct canonical IDs
         final_clusters: List[List[Dict[str, Any]]] = []
 
+        # PERFORMANCE (fixed 2026-09-05): this stage compared every job against
+        # every existing cluster with up to three SequenceMatcher calls per
+        # pair - quadratic in store size. At 16k jobs that was ~250M fuzzy
+        # comparisons: measured 2,349s (39 minutes) for one deduplicate() call,
+        # which starved /api/jobs into browser timeouts.
+        #
+        # Fix: block clusters by the first 4 chars of the normalized company.
+        # comp_match requires equality or similarity ratio > 0.85, and names
+        # that similar share a prefix in practice, so candidate clusters live
+        # in the same bucket. Each job now scans only its own company bucket
+        # (typically a handful of clusters instead of thousands).
+        buckets: Dict[str, List[List[Dict[str, Any]]]] = {}
+
         for job in stage1_merged:
             placed = False
             norm_comp = job["normalized_company"]
             norm_title = job["normalized_title"]
             norm_loc = job["normalized_location"]
             req_id = job["req_id"]
+            bucket_key = (norm_comp or "")[:4]
 
-            for cluster in final_clusters:
+            for cluster in buckets.get(bucket_key, ()):
                 head = cluster[0]
                 head_comp = head["normalized_company"]
                 head_title = head["normalized_title"]
@@ -127,7 +141,9 @@ class JobDeduplicator:
                     break
 
             if not placed:
-                final_clusters.append([job])
+                new_cluster = [job]
+                final_clusters.append(new_cluster)
+                buckets.setdefault(bucket_key, []).append(new_cluster)
 
         final_jobs = [self._merge_job_cluster(cluster) for cluster in final_clusters]
 

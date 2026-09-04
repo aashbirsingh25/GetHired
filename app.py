@@ -131,6 +131,12 @@ FILTER_METRICS_FILE = os.path.join(BASE_DIR, "filter_metrics.json")
 FILTERS_FILE = os.path.join(BASE_DIR, "filters.json")
 APPLY_LATER_FILE = os.path.join(BASE_DIR, "apply_later.json")
 VIEWED_JOBS_FILE = os.path.join(BASE_DIR, "viewed_jobs.json")
+
+# Cached /api/jobs payload. The feed is expensive to compute (dedupe + filter +
+# rank ~16k jobs) and this process also runs the scanner and LLM rescorer, so
+# recomputing per request starved the web server into timeouts.
+_FEED_CACHE = {"key": None, "payload": None}
+_FEED_BUILD_LOCK = threading.Lock()
 SAVED_JOBS_FILE = os.path.join(BASE_DIR, "saved_jobs.json")
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 
@@ -258,6 +264,67 @@ def bulk_import_companies():
 @app.route("/api/jobs", methods=["GET"])
 def get_jobs():
     from pipeline import execute_authoritative_pipeline
+
+    # /api/jobs used to recompute the whole feed on every request: dedupe,
+    # filter and rank ~16k stored jobs. That is a few seconds when the process
+    # is idle, but the scan loop and the LLM rescorer run in this same process,
+    # so under load requests were starved to the point of TIMING OUT
+    # (measured 2026-09-04: 2157s for one call, then hard timeouts, which is
+    # why the new UI sat on its spinner forever).
+    #
+    # Fix: cache the computed payload, keyed on the mtimes of every file that
+    # can change the feed. While a build is already in flight, serve the last
+    # good payload instead of piling up duplicate work.
+    sort_by = request.args.get("sort", "match").lower()
+    cache_key = _feed_cache_key(sort_by)
+
+    cached = _FEED_CACHE.get("payload")
+    cache_age = time.time() - _FEED_CACHE.get("built_at", 0)
+    # Serve the cached payload when nothing changed OR when it is simply
+    # recent: the background scanner rewrites jobs_store.json every few
+    # seconds, so a pure mtime key would invalidate on almost every request
+    # and each page load would pay the full ~17s rebuild. Two minutes of
+    # staleness is invisible to the user; the next request after the window
+    # rebuilds with fresh data.
+    if cached is not None and _FEED_CACHE.get("sort") == sort_by \
+            and (_FEED_CACHE.get("key") == cache_key or cache_age < 120):
+        return jsonify(cached)
+
+    if not _FEED_BUILD_LOCK.acquire(blocking=False):
+        # Someone else is rebuilding. Serving slightly stale data beats making
+        # the user wait behind a CPU-bound rebuild.
+        if cached is not None:
+            stale = dict(cached)
+            stale["stale"] = True
+            return jsonify(stale)
+        _FEED_BUILD_LOCK.acquire()  # nothing to serve yet, so wait for it
+
+    try:
+        payload = _build_feed_payload(sort_by)
+        _FEED_CACHE["key"] = cache_key
+        _FEED_CACHE["sort"] = sort_by
+        _FEED_CACHE["built_at"] = time.time()
+        _FEED_CACHE["payload"] = payload
+        return jsonify(payload)
+    finally:
+        _FEED_BUILD_LOCK.release()
+
+
+def _feed_cache_key(sort_by):
+    """Invalidate the feed cache when anything that shapes it changes."""
+    parts = [sort_by]
+    for path in (JOBS_FILE, RESUME_FILE, FILTERS_FILE,
+                 APPLY_LATER_FILE, SAVED_JOBS_FILE, VIEWED_JOBS_FILE,
+                 os.path.join(BASE_DIR, "applications.json")):
+        try:
+            parts.append(round(os.path.getmtime(path), 3))
+        except OSError:
+            parts.append(0)
+    return tuple(parts)
+
+
+def _build_feed_payload(sort_by):
+    from pipeline import execute_authoritative_pipeline
     store_data = load_json(JOBS_FILE, {"jobs": []})
     raw_jobs = store_data.get("jobs", [])
 
@@ -269,7 +336,7 @@ def get_jobs():
     applied_job_ids = {a.get("job_id") for a in user_apps if a.get("job_id") and a.get("status") != "archived"}
     app_map = {a.get("job_id"): {"app_id": a.get("id"), "status": a.get("status"), "applied_date": a.get("applied_date")} for a in user_apps if a.get("job_id")}
 
-    sort_by = request.args.get("sort", "match").lower()
+    sort_by = (sort_by or "match").lower()
     filters_data["sort_by"] = sort_by
 
     pipeline_res = execute_authoritative_pipeline(
@@ -288,7 +355,7 @@ def get_jobs():
 
     status = bg_worker.get_status()
 
-    return jsonify({
+    return {
         "source": "authoritative_store",
         "last_search": status.get("last_search_time") or datetime.now().isoformat(),
         "next_search": status.get("next_search_time") or datetime.now().isoformat(),
@@ -297,7 +364,7 @@ def get_jobs():
         "filter_breakdown": pipeline_res.get("filter_breakdown"),
         "pipeline_metrics": pipeline_res["metrics"],
         "jobs": jobs_list
-    })
+    }
 
 @app.route("/api/jobs/add-from-url", methods=["POST"])
 def add_job_from_url():
