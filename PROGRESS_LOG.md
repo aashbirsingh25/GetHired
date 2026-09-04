@@ -754,3 +754,17 @@ IST). Silent fallback is now loud (needs a restart to take effect).
 - Monitor: one "Unterminated string" store read hit a TEST process; store
   parses fine, app log clean, production writers verified atomic
   (tmp+fsync+replace). Not reproduced.
+
+## 2026-09-05 (01:15) — UI complete: all 26 e2e tests pass; 141x perf fix
+
+- Root cause of the UI hang: JobDeduplicator stage 2 was QUADRATIC -
+  every job vs every cluster with 3 SequenceMatcher calls per pair. At 16k
+  jobs = 2,349s (39 min) per /api/jobs request -> browser timeouts.
+  Profiled stage by stage; everything else totalled ~3s.
+- Fix: company-prefix (4-char) cluster bucketing. Byte-identical output
+  on the real store (16,004 unique, 763 removed), 16.7s. Plus /api/jobs
+  payload cache (mtime-keyed + 120s freshness window + stale-serving while
+  rebuilding): cold 19.6s, cached 6ms.
+- test_ui_e2e.py: ALL 26 PASS (all six tabs, expansion, filters, sorts,
+  apply-later round trip, insights counters, settings, zero JS errors).
+- Unit suites still green.
