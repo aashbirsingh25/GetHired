@@ -267,6 +267,19 @@ def execute_authoritative_pipeline(
     # indicator; the background rescorer will give them real scores shortly,
     # after which they flow through the normal filter on the next load.
     min_score = filters.get("min_match_score", 0)
+    # Evidence cap (added after the MongoDB 'Software Engineer 3' incident):
+    # some sources (LinkedIn public sweep, a few boards) only give us title +
+    # link - the stored description is a one-line stub, and the requirements
+    # text ('3+ years experience') never reaches the filters or the local
+    # scorer. The local scorer then scores the stub alone, which produced an
+    # 81 for a senior role. A score is a claim about evidence: with no real
+    # description, an UNVERIFIED score may not exceed 60. LLM-verified scores
+    # (tier 1/2) are exempt - the LLM already judged with seniority awareness.
+    STUB_CAP = 60
+    def _is_stub_desc(j):
+        d = j.get("description") or ""
+        return len(d) < 140 or "See posting for details" in d
+
     # Tier-aware bar (recalibrated 2026-08-29 on n=464 LLM vs n=2896 local
     # scores): local tier-5 scores compress into 50-69 (median 57, inflated),
     # while LLM tier-1/2 scores are honest and spread 0-98 (median 35) - the
@@ -285,6 +298,13 @@ def execute_authoritative_pipeline(
             continue
         score = match_obj.get("score", 50) if isinstance(match_obj, dict) else 50
         is_llm_verified = isinstance(match_obj, dict) and match_obj.get("tier") in (1, 2)
+        if not is_llm_verified and score > STUB_CAP and _is_stub_desc(job):
+            # copy before capping - these dicts are live store objects
+            job = dict(job)
+            job["match"] = dict(match_obj)
+            job["match"]["score"] = STUB_CAP
+            job["match"]["evidence_capped"] = True
+            score = STUB_CAP
         bar = max(0, min_score - 10) if is_llm_verified else min_score
         if score >= bar:
             score_filtered.append(job)

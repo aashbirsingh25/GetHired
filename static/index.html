@@ -561,6 +561,7 @@ function jobRowHTML(job, ctx) {
       <div class="job-meta-right">
         <div style="margin-bottom:4px">
           <span class="badge ${isLLM ? "llm" : "local"}">${isLLM ? "AI verified" : "auto scored"}</span>
+          ${m.evidence_capped ? `<span class="badge" style="background:rgba(255,159,10,0.15);color:var(--orange)">limited info</span>` : ""}
           <span class="badge src">${esc(src)}</span>
         </div>
         <div class="time">${timeAgo(postedTime(job))}</div>
