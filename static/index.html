@@ -738,12 +738,18 @@ input::placeholder { color: var(--smoke); }
 .t-empty .main_wrapper { font-size: 4.5px; margin: 10px auto 6px; filter: saturate(0.4) sepia(0.1); }
 
 
-/* ===== error card (spirit of Sophiek9h/black-pug-58: brown retro cartoonish;
-   original not in the galaxy mirror yet) ===== */
-.err-card { max-width: 380px; margin: 26px auto; background: #f6e7d3; border: 3px solid #4a2e19; border-radius: 14px; padding: 18px 20px; box-shadow: 5px 5px 0 #4a2e19; text-align: left; font-size: 13.5px; color: #4a2e19; }
-.err-card .err-title { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.err-card .err-title::before { content: "\26A0"; font-size: 18px; }
-.err-card .err-body { line-height: 1.55; }
+/* ===== error dialog: Windows XP style (user's reference GIF - the classic
+   error-popup cascade). One dialog + one peeking behind for the joke. ===== */
+.err-stack { position: relative; max-width: 360px; margin: 30px auto; text-align: left; }
+.err-stack .err-card:nth-child(1) { position: absolute; top: -12px; left: 14px; opacity: 0.85; pointer-events: none; }
+.err-card { background: #ece9d8; border: 1px solid #0831d9; border-radius: 8px 8px 3px 3px; box-shadow: 2px 4px 14px rgba(0,0,30,0.35); font-family: "Tahoma", "Inter", sans-serif; overflow: hidden; }
+.err-titlebar { background: linear-gradient(180deg, #0997ff 0%, #0053ee 12%, #0050ee 45%, #06f 88%, #0057f0 100%); color: #fff; font-weight: 700; font-size: 12.5px; padding: 5px 8px 5px 10px; display: flex; align-items: center; justify-content: space-between; text-shadow: 1px 1px 1px rgba(0,0,0,0.4); }
+.err-titlebar .x { width: 20px; height: 20px; border-radius: 4px; background: linear-gradient(180deg, #f2957c, #d8542c 50%, #c13a13); border: 1px solid #fff; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; line-height: 1; }
+.err-body-xp { display: flex; align-items: flex-start; gap: 12px; padding: 16px 16px 12px; font-size: 12.5px; color: #000; line-height: 1.5; }
+.err-x-icon { width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff6a5e, #e02818 60%, #a51000); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 17px; box-shadow: inset -1px -2px 3px rgba(0,0,0,0.3); }
+.err-btn-row { display: flex; justify-content: center; padding: 4px 0 14px; }
+.err-fix { min-width: 76px; background: #ece9d8; border: 1px solid #003c74; border-radius: 3px; box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #aca899; padding: 4px 14px; font-family: inherit; font-size: 12px; cursor: pointer; }
+.err-fix:active { box-shadow: inset -1px -1px 0 #fff, inset 1px 1px 0 #aca899; }
 .copy-btn { display: inline-flex; align-items: center; gap: 7px; }
 .copy-btn svg { width: 14px; height: 14px; stroke: currentColor; }
 .resume-file-row { display: flex; align-items: center; gap: 14px; background: var(--mist); border-radius: var(--radius-input); padding: 14px 16px; margin-bottom: 16px; }
@@ -915,7 +921,12 @@ function emptyState(msg) {
   return `<div class="t-empty"><div class="main_wrapper"> <div class="main"> <div class="antenna"> <div class="antenna_shadow"></div> <div class="a1"></div> <div class="a1d"></div> <div class="a2"></div> <div class="a2d"></div> <div class="a_base"></div> </div> <div class="tv"> <div class="cruve"> <svg xml:space="preserve" viewBox="0 0 189.929 189.929" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" class="curve_svg" > <path d="M70.343,70.343c-30.554,30.553-44.806,72.7-39.102,115.635l-29.738,3.951C-5.442,137.659,11.917,86.34,49.129,49.13 C86.34,11.918,137.664-5.445,189.928,1.502l-3.95,29.738C143.041,25.54,100.895,39.789,70.343,70.343z" ></path> </svg> </div> <div class="display_div"> <div class="screen_out"> <div class="screen_out1"> <div class="screen"> <span class="notfound_text"> NO JOBS</span> </div> </div> </div> </div> <div class="lines"> <div class="line1"></div> <div class="line2"></div> <div class="line3"></div> </div> <div class="buttons_div"> <div class="b1"><div></div></div> <div class="b2"></div> <div class="speakers"> <div class="g1"> <div class="g11"></div> <div class="g12"></div> <div class="g13"></div> </div> <div class="g"></div> <div class="g"></div> </div> </div> </div> <div class="bottom"> <div class="base1"></div> <div class="base2"></div> <div class="base3"></div> </div> </div> <div class="text_404"> <div class="text_4041">4</div> <div class="text_4042">0</div> <div class="text_4043">4</div> </div> </div><div style="margin-top:8px">${msg}</div></div>`;
 }
 function errorState(msg) {
-  return `<div class="err-card"><div class="err-title">Something went wrong</div><div class="err-body">${msg}</div></div>`;
+  const dialog = (m) => `<div class="err-card">
+    <div class="err-titlebar"><span>Error</span><span class="x">×</span></div>
+    <div class="err-body-xp"><div class="err-x-icon">✕</div><div>${m}</div></div>
+    <div class="err-btn-row"><button class="err-fix" onclick="location.reload()">Fix</button></div>
+  </div>`;
+  return `<div class="err-stack">${dialog(msg)}${dialog(msg)}</div>`;
 }
 function toast(msg) {
   const t = $("#toast");
@@ -1538,7 +1549,7 @@ async function loadSettings() {
       <div class="set-row">
         <div class="info"><div class="t">Search automatically</div>
           <div class="d">Scans career pages and 13 job boards for fresher roles across India — strictly 0-experience, freshest first.</div></div>
-        <div class="checkbox-wrapper-35"><input class="switch35" id="set-bg-enabled" type="checkbox" ${enabled ? "checked" : ""}><label for="set-bg-enabled"><span class="switch-x-toggletext"><span class="switch-x-unchecked">Off</span><span class="switch-x-checked" style="color:#ffb500">On</span></span></label></div>
+        <div class="checkbox-wrapper-35"><input class="switch35" id="set-bg-enabled" type="checkbox" ${enabled ? "checked" : ""}><label for="set-bg-enabled"><span class="switch-x-toggletext"><span class="switch-x-unchecked">Off</span><span class="switch-x-checked" style="color:var(--sienna)">On</span></span></label></div>
       </div>
       <div class="set-row">
         <div class="info"><div class="t">How often</div>
@@ -1562,7 +1573,7 @@ async function loadSettings() {
       <div class="set-row">
         <div class="info"><div class="t">Smart match threshold</div>
           <div class="d">The system picks the cutoff from real scoring data; AI-verified jobs automatically get a fairer, lower bar.</div></div>
-        <div class="checkbox-wrapper-35"><input class="switch35" id="set-auto" type="checkbox" ${auto ? "checked" : ""}><label for="set-auto"><span class="switch-x-toggletext"><span class="switch-x-unchecked">Off</span><span class="switch-x-checked" style="color:#ffb500">On</span></span></label></div>
+        <div class="checkbox-wrapper-35"><input class="switch35" id="set-auto" type="checkbox" ${auto ? "checked" : ""}><label for="set-auto"><span class="switch-x-toggletext"><span class="switch-x-unchecked">Off</span><span class="switch-x-checked" style="color:var(--sienna)">On</span></span></label></div>
       </div>
       <div class="set-row" id="row-threshold" style="${auto ? "opacity:.45;pointer-events:none" : ""}">
         <div class="info"><div class="t">Minimum match score — <span id="set-score-bubble" style="color:var(--sienna-soft)">${minScore}%</span></div>
