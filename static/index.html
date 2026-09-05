@@ -1348,17 +1348,17 @@ async function loadTracker(tab) {
       if (tab === "shortlisted") apps = apps.filter(a => a.was_shortlisted);
       $("#badge-tracker").textContent = (d.applications || d || []).length;
       el.innerHTML = apps.length ? apps.map(trackerAppRow).join("")
-        : emptyState(`${tab === "applied" ? "Nothing tracked yet — hit “I applied” on a job." : "Nothing here yet — tick the checkbox on an applied job."}`);
+        : errorState(tab === "applied" ? "No applied jobs found. Hit \u2018I applied\u2019 on a job first." : "Nothing here yet \u2014 tick the checkbox on an applied job.");
     } else if (tab === "saved") {
       const d = await fetchWithTimeout("/api/jobs/saved");
-      el.innerHTML = (d.jobs || []).length ? d.jobs.map(j => jobRowHTML(j, "tracker")).join("") : emptyState(`No saved jobs.`);
+      el.innerHTML = (d.jobs || []).length ? d.jobs.map(j => jobRowHTML(j, "tracker")).join("") : errorState("No saved jobs found.");
     } else if (tab === "apply_later") {
       const d = await fetchWithTimeout("/api/jobs/apply-later");
-      el.innerHTML = (d.jobs || []).length ? d.jobs.map(j => jobRowHTML(j, "tracker")).join("") : emptyState(`Nothing queued for later.`);
+      el.innerHTML = (d.jobs || []).length ? d.jobs.map(j => jobRowHTML(j, "tracker")).join("") : errorState("No jobs queued for later.");
     } else if (tab === "viewed") {
       const d = await fetchWithTimeout("/api/jobs/viewed");
       const jobs = d.jobs || [];
-      el.innerHTML = jobs.length ? jobs.map(j => jobRowHTML(j, "tracker")).join("") : emptyState(`No viewed jobs yet.`);
+      el.innerHTML = jobs.length ? jobs.map(j => jobRowHTML(j, "tracker")).join("") : errorState("No viewed jobs yet.");
     }
   } catch (e) {
     el.innerHTML = errorState(`Couldn't load: ${esc(e.message)}`);
