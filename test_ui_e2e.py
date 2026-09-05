@@ -136,7 +136,7 @@ def run():
 
         # tracker applied tab renders (may be empty)
         page.locator('#tracker-tabs button[data-t="applied"]').click()
-        page.wait_for_selector("#tracker-list .card, #tracker-list .t-empty, #tracker-list .job-row", timeout=15000)
+        page.wait_for_selector("#tracker-list .card, #tracker-list .dm-card, #tracker-list .t-empty, #tracker-list .job-row", timeout=15000)
         body = page.locator("#tracker-list").inner_text()
         check("applied tab renders", len(body.strip()) > 0)
 

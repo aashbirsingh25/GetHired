@@ -293,6 +293,594 @@ input::placeholder { color: #9e9ea7; }
 @keyframes hamsterTail { from, 25%, 50%, 75%, to { transform: rotate(30deg) translateZ(-1px); } 12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(10deg) translateZ(-1px); } }
 @keyframes spoke { from { transform: rotate(0); } to { transform: rotate(-1turn); } }
 .fade-in { animation: tabIn 0.4s var(--ease) forwards; }
+
+/* ===== fat-horse-65 (Praashoo7): retro TV - used for empty states ===== */
+
+/* From Uiverse.io by Praashoo7  - Tags: card, error, card template, card animation, 404, not found, 404 not found, tv */
+/* Design Inspired by one of Stefan Devai's Design on Dribble */
+
+.main_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30em;
+  height: 30em;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5em;
+}
+
+.antenna {
+  width: 5em;
+  height: 5em;
+  border-radius: 50%;
+  border: 2px solid black;
+  background-color: #f27405;
+  margin-bottom: -6em;
+  margin-left: 0em;
+  z-index: -1;
+}
+.antenna_shadow {
+  position: absolute;
+  background-color: transparent;
+  width: 50px;
+  height: 56px;
+  margin-left: 1.68em;
+  border-radius: 45%;
+  transform: rotate(140deg);
+  border: 4px solid transparent;
+  box-shadow: inset 0px 16px #a85103, inset 0px 16px 1px 1px #a85103;
+  -moz-box-shadow: inset 0px 16px #a85103, inset 0px 16px 1px 1px #a85103;
+}
+.antenna::after {
+  content: "";
+  position: absolute;
+  margin-top: -9.4em;
+  margin-left: 0.4em;
+  transform: rotate(-25deg);
+  width: 1em;
+  height: 0.5em;
+  border-radius: 50%;
+  background-color: #f69e50;
+}
+.antenna::before {
+  content: "";
+  position: absolute;
+  margin-top: 0.2em;
+  margin-left: 1.25em;
+  transform: rotate(-20deg);
+  width: 1.5em;
+  height: 0.8em;
+  border-radius: 50%;
+  background-color: #f69e50;
+}
+.a1 {
+  position: relative;
+  top: -102%;
+  left: -130%;
+  width: 12em;
+  height: 5.5em;
+  border-radius: 50px;
+  background-image: linear-gradient(
+    #171717,
+    #171717,
+    #353535,
+    #353535,
+    #171717
+  );
+  transform: rotate(-29deg);
+  clip-path: polygon(50% 0%, 49% 100%, 52% 100%);
+}
+.a1d {
+  position: relative;
+  top: -211%;
+  left: -35%;
+  transform: rotate(45deg);
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  border: 2px solid black;
+  background-color: #979797;
+  z-index: 99;
+}
+.a2 {
+  position: relative;
+  top: -210%;
+  left: -10%;
+  width: 12em;
+  height: 4em;
+  border-radius: 50px;
+  background-color: #171717;
+  background-image: linear-gradient(
+    #171717,
+    #171717,
+    #353535,
+    #353535,
+    #171717
+  );
+  margin-right: 5em;
+  clip-path: polygon(
+    47% 0,
+    47% 0,
+    34% 34%,
+    54% 25%,
+    32% 100%,
+    29% 96%,
+    49% 32%,
+    30% 38%
+  );
+  transform: rotate(-8deg);
+}
+.a2d {
+  position: relative;
+  top: -294%;
+  left: 94%;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  border: 2px solid black;
+  background-color: #979797;
+  z-index: 99;
+}
+
+.notfound_text {
+  background-color: black;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+  font-size: 0.75em;
+  color: white;
+  letter-spacing: 0;
+  border-radius: 5px;
+  z-index: 10;
+}
+.tv {
+  width: 17em;
+  height: 9em;
+  margin-top: 3em;
+  border-radius: 15px;
+  background-color: #d36604;
+  display: flex;
+  justify-content: center;
+  border: 2px solid #1d0e01;
+  box-shadow: inset 0.2em 0.2em #e69635;
+}
+.tv::after {
+  content: "";
+  position: absolute;
+  width: 17em;
+  height: 9em;
+  border-radius: 15px;
+  background: repeating-radial-gradient(#d36604 0 0.0001%, #00000070 0 0.0002%)
+      50% 0/2500px 2500px,
+    repeating-conic-gradient(#d36604 0 0.0001%, #00000070 0 0.0002%) 60% 60%/2500px
+      2500px;
+  background-blend-mode: difference;
+  opacity: 0.09;
+}
+.curve_svg {
+  position: absolute;
+  margin-top: 0.25em;
+  margin-left: -0.25em;
+  height: 12px;
+  width: 12px;
+}
+.display_div {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  border-radius: 15px;
+  box-shadow: 3.5px 3.5px 0px #e69635;
+}
+.screen_out {
+  width: auto;
+  height: auto;
+
+  border-radius: 10px;
+}
+.screen_out1 {
+  width: 11em;
+  height: 7.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+.screen {
+  width: 13em;
+  height: 7.85em;
+  font-family: Montserrat;
+  border: 2px solid #1d0e01;
+  background: repeating-radial-gradient(#000 0 0.0001%, #ffffff 0 0.0002%) 50% 0/2500px
+      2500px,
+    repeating-conic-gradient(#000 0 0.0001%, #ffffff 0 0.0002%) 60% 60%/2500px
+      2500px;
+  background-blend-mode: difference;
+  animation: b 0.2s infinite alternate;
+  border-radius: 10px;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #252525;
+  letter-spacing: 0.15em;
+  text-align: center;
+}
+@keyframes b {
+  100% {
+    background-position: 50% 0, 60% 50%;
+  }
+}
+
+/* Another Error Screen to Use 
+
+.screen {
+  width: 13em;
+  height: 7.85em;
+  position: relative;
+  background: linear-gradient(to right, #002fc6 0%, #002bb2 14.2857142857%, #3a3a3a 14.2857142857%, #303030 28.5714285714%, #ff0afe 28.5714285714%, #f500f4 42.8571428571%, #6c6c6c 42.8571428571%, #626262 57.1428571429%, #0affd9 57.1428571429%, #00f5ce 71.4285714286%, #3a3a3a 71.4285714286%, #303030 85.7142857143%, white 85.7142857143%, #fafafa 100%);
+  border-radius: 10px;
+  border: 2px solid black;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #252525;
+  letter-spacing: 0.15em;
+  text-align: center;
+  overflow: hidden;
+}
+.screen:before, .screen:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+}
+.screen:before {
+  top: 0;
+  height: 68.4782608696%;
+  background: linear-gradient(to right, white 0%, #fafafa 14.2857142857%, #ffe60a 14.2857142857%, #f5dc00 28.5714285714%, #0affd9 28.5714285714%, #00f5ce 42.8571428571%, #10ea00 42.8571428571%, #0ed600 57.1428571429%, #ff0afe 57.1428571429%, #f500f4 71.4285714286%, #ed0014 71.4285714286%, #d90012 85.7142857143%, #002fc6 85.7142857143%, #002bb2 100%);
+}
+.screen:after {
+  bottom: 0;
+  height: 21.7391304348%;
+  background: linear-gradient(to right, #006c6b 0%, #005857 16.6666666667%, white 16.6666666667%, #fafafa 33.3333333333%, #001b75 33.3333333333%, #001761 50%, #6c6c6c 50%, #626262 66.6666666667%, #929292 66.6666666667%, #888888 83.3333333333%, #3a3a3a 83.3333333333%, #303030 100%);
+}
+
+  */
+
+.lines {
+  display: flex;
+  column-gap: 0.1em;
+  align-self: flex-end;
+}
+.line1,
+.line3 {
+  width: 2px;
+  height: 0.5em;
+  background-color: black;
+  border-radius: 25px 25px 0px 0px;
+  margin-top: 0.5em;
+}
+.line2 {
+  flex-grow: 1;
+  width: 2px;
+  height: 1em;
+  background-color: black;
+  border-radius: 25px 25px 0px 0px;
+}
+
+.buttons_div {
+  width: 4.25em;
+  align-self: center;
+  height: 8em;
+  background-color: #e69635;
+  border: 2px solid #1d0e01;
+  padding: 0.6em;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 0.75em;
+  box-shadow: 3px 3px 0px #e69635;
+}
+.b1 {
+  width: 1.65em;
+  height: 1.65em;
+  border-radius: 50%;
+  background-color: #7f5934;
+  border: 2px solid black;
+  box-shadow: inset 2px 2px 1px #b49577, -2px 0px #513721,
+    -2px 0px 0px 1px black;
+}
+.b1::before {
+  content: "";
+  position: absolute;
+  margin-top: 1em;
+  margin-left: 0.5em;
+  transform: rotate(47deg);
+  border-radius: 5px;
+  width: 0.1em;
+  height: 0.4em;
+  background-color: #000000;
+}
+.b1::after {
+  content: "";
+  position: absolute;
+  margin-top: 0.9em;
+  margin-left: 0.8em;
+  transform: rotate(47deg);
+  border-radius: 5px;
+  width: 0.1em;
+  height: 0.55em;
+  background-color: #000000;
+}
+.b1 div {
+  content: "";
+  position: absolute;
+  margin-top: -0.1em;
+  margin-left: 0.65em;
+  transform: rotate(45deg);
+  width: 0.15em;
+  height: 1.5em;
+  background-color: #000000;
+}
+.b2 {
+  width: 1.65em;
+  height: 1.65em;
+  border-radius: 50%;
+  background-color: #7f5934;
+  border: 2px solid black;
+  box-shadow: inset 2px 2px 1px #b49577, -2px 0px #513721,
+    -2px 0px 0px 1px black;
+}
+.b2::before {
+  content: "";
+  position: absolute;
+  margin-top: 1.05em;
+  margin-left: 0.8em;
+  transform: rotate(-45deg);
+  border-radius: 5px;
+  width: 0.15em;
+  height: 0.4em;
+  background-color: #000000;
+}
+.b2::after {
+  content: "";
+  position: absolute;
+  margin-top: -0.1em;
+  margin-left: 0.65em;
+  transform: rotate(-45deg);
+  width: 0.15em;
+  height: 1.5em;
+  background-color: #000000;
+}
+.speakers {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5em;
+}
+.speakers .g1 {
+  display: flex;
+  column-gap: 0.25em;
+}
+.speakers .g1 .g11,
+.g12,
+.g13 {
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  background-color: #7f5934;
+  border: 2px solid black;
+  box-shadow: inset 1.25px 1.25px 1px #b49577;
+}
+.speakers .g {
+  width: auto;
+  height: 2px;
+  background-color: #171717;
+}
+
+.bottom {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 8.7em;
+}
+.base1 {
+  height: 1em;
+  width: 2em;
+  border: 2px solid #171717;
+  background-color: #4d4d4d;
+  margin-top: -0.15em;
+  z-index: -1;
+}
+.base2 {
+  height: 1em;
+  width: 2em;
+  border: 2px solid #171717;
+  background-color: #4d4d4d;
+  margin-top: -0.15em;
+  z-index: -1;
+}
+.base3 {
+  position: absolute;
+  height: 0.15em;
+  width: 17.5em;
+  background-color: #171717;
+  margin-top: 0.8em;
+}
+
+.text_404 {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  column-gap: 6em;
+  z-index: -5;
+  margin-bottom: 2em;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  font-family: Montserrat;
+}
+.text_4041 {
+  transform: scaleY(24.5) scaleX(9);
+}
+.text_4042 {
+  transform: scaleY(24.5) scaleX(9);
+}
+.text_4043 {
+  transform: scaleY(24.5) scaleX(9);
+}
+
+
+.main_wrapper { transform: scale(0.62); transform-origin: top center; margin: 10px auto -110px; }
+.t-empty .notfound_text { font-size: inherit; }
+
+/* ===== fat-pug-54 (gagan-gv): hover-reveal share button ===== */
+
+/* From Uiverse.io by gagan-gv - Tags: social, button, hover, share */
+.share-btn {
+ position: relative;
+ display: flex;
+ overflow: hidden;
+ cursor: pointer;
+ width: 150px;
+ height: 50px;
+ background-color: #eeeeed;
+ border-radius: 80px;
+ border: none;
+ padding: 0 80px;
+ transition: all .2s ease;
+ justify-content: center;
+ align-items: center;
+}
+
+.share-btn:hover {
+ transform: scale(1.1);
+}
+
+.share-btn span {
+ position: absolute;
+ z-index: 99;
+ width: 150px;
+ height: 50px;
+ border-radius: 80px;
+ font-family: 'Courier New', Courier, monospace;
+ font-weight: 600;
+ font-size: 17px;
+ text-align: center;
+ line-height: 50px;
+ letter-spacing: 2px;
+ color: #eeeeed;
+ background-color: #1f1f1f;
+ padding: 0 10px;
+ transition: all 1.2s ease;
+}
+
+.share-btn .container {
+ display: flex;
+ width: 150px;
+ border-radius: 80px;
+ line-height: 50px;
+}
+
+.share-btn svg {
+ padding: 0 5px;
+ opacity: 0;
+}
+
+.share-btn .container svg:nth-of-type(1) {
+ transition-delay: 0.65s;
+}
+
+.share-btn .container svg:nth-of-type(2) {
+ transition-delay: 0.8s;
+}
+
+.container svg:nth-of-type(3) {
+ transition-delay: 0.5s;
+}
+
+.share-btn:hover span {
+ opacity: 0;
+}
+
+.share-btn:hover svg {
+ opacity: 1;
+}
+
+.share-btn { width: 150px; height: 44px; }
+.share-btn span { width: 150px; height: 44px; line-height: 44px; font-size: 13px; font-family: inherit; }
+.share-btn .container { width: 150px; line-height: 44px; }
+.share-btn .container a { display: inline-flex; align-items: center; }
+.share-btn svg { width: 26px; height: 26px; fill: #1f1f1f; }
+.share-btn:hover span { transform: translateX(-150px); }
+.share-btn:hover svg { opacity: 1; }
+
+/* ===== red-lionfish-43 (Bodyhc): On/Off text switch ===== */
+.checkbox-wrapper-35 .switch35 { display: none; }
+.checkbox-wrapper-35 label { align-items: center; color: #78768d; cursor: pointer; display: flex; font-size: 12px; line-height: 15px; position: relative; user-select: none; }
+.checkbox-wrapper-35 label::before, .checkbox-wrapper-35 label::after { content: ''; display: block; }
+.checkbox-wrapper-35 label::before { background-color: #05012c; border-radius: 500px; height: 15px; margin-right: 8px; transition: background-color 0.125s ease-out; width: 25px; }
+.checkbox-wrapper-35 label::after { background-color: #fff; border-radius: 13px; box-shadow: 0 3px 1px 0 rgba(37,34,71,0.05), 0 2px 2px 0 rgba(37,34,71,0.1), 0 3px 3px 0 rgba(37,34,71,0.05); height: 13px; left: 1px; position: absolute; top: 1px; transition: transform 0.125s ease-out; width: 13px; }
+.checkbox-wrapper-35 label .switch-x-toggletext { display: block; font-weight: bold; height: 15px; overflow: hidden; position: relative; width: 25px; }
+.checkbox-wrapper-35 label .switch-x-unchecked, .checkbox-wrapper-35 label .switch-x-checked { left: 0; position: absolute; top: 0; transition: transform 0.125s ease-out, opacity 0.125s ease-out; }
+.checkbox-wrapper-35 label .switch-x-unchecked { opacity: 1; transform: none; }
+.checkbox-wrapper-35 label .switch-x-checked { opacity: 0; transform: translate3d(0, 100%, 0); }
+.checkbox-wrapper-35 .switch35:checked + label::before { background-color: #ffb500; }
+.checkbox-wrapper-35 .switch35:checked + label::after { transform: translate3d(10px, 0, 0); }
+.checkbox-wrapper-35 .switch35:checked + label .switch-x-unchecked { opacity: 0; transform: translate3d(0, -100%, 0); }
+.checkbox-wrapper-35 .switch35:checked + label .switch-x-checked { opacity: 1; transform: none; }
+
+/* ===== dull-moose-30 (Creatlydev): job card for Tracker applied items ===== */
+.dm-card { --main-color: #323232; --bg-color: #fff; font-family: inherit; position: relative; display: flex; flex-direction: column; gap: 15px; padding: 15px; border-radius: 15px; background: var(--bg-color); box-shadow: 0 8px 24px rgba(65,72,86,0.08); border: 1px solid var(--line); margin-bottom: 12px; }
+.dm-card__hero { display: flex; flex-direction: column; gap: 30px; padding: 15px; border-radius: 10px; background-color: #d9f0dd; }
+.dm-card__hero-header { display: flex; align-items: center; justify-content: space-between; color: var(--main-color); font-weight: 700; font-size: 15px; }
+.dm-card__job-title { color: var(--main-color); font-weight: 600; font-size: 17px; }
+.dm-card__footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.dm-card__job-summary { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-2); }
+.dm-card__btn { padding: 10px 18px; border: none; border-radius: 8px; background-color: #323232; color: #fff; font-weight: 600; font-size: 13px; cursor: pointer; transition: background 0.2s; }
+.dm-card__btn:hover { background-color: #4f29f0; }
+
+/* ===== warm-panther-74 (JkHuger): strike-through checkbox (adapted) ===== */
+.wp-check { display: flex; align-items: center; gap: 0; cursor: pointer; user-select: none; font-size: 12.5px; color: #414856; font-weight: 600; position: relative; }
+.wp-check input[type="checkbox"] { -webkit-appearance: none; appearance: none; position: relative; height: 15px; width: 15px; outline: none; border: 2px solid #c3c8de; border-radius: 4px; margin: 0 10px 0 0; cursor: pointer; background: #fff; transition: border-color 0.3s ease; flex-shrink: 0; }
+.wp-check input[type="checkbox"]:hover { border-color: #4f29f0; }
+.wp-check input[type="checkbox"]:checked { background: #4f29f0; border-color: #4f29f0; }
+.wp-check input[type="checkbox"]:checked::after { content: "✓"; position: absolute; color: #fff; font-size: 10px; left: 1px; top: -2px; }
+.wp-check .wp-label { position: relative; transition: color 0.3s ease; }
+.wp-check .wp-label::before { content: ""; position: absolute; top: 50%; left: -2px; right: 100%; height: 2px; background: #4f29f0; border-radius: 2px; transition: right 0.4s cubic-bezier(0.55, 0, 0.1, 1); }
+.wp-check input:checked ~ .wp-label { color: #c3c8de; }
+.wp-check input:checked ~ .wp-label::before { right: -4px; }
+
+/* ===== slippery-frog-10 (alexruix): search input group ===== */
+.group { display: flex; line-height: 28px; align-items: center; position: relative; max-width: 320px; }
+.group .input { width: 100%; height: 40px; line-height: 28px; padding: 0 1rem; padding-left: 2.5rem; border: 2px solid transparent; border-radius: 8px; outline: none; background-color: #f3f3f4; color: #0d0c22; transition: .3s ease; font-family: inherit; }
+.group .input::placeholder { color: #9e9ea7; }
+.group .input:focus, .group .input:hover { outline: none; border-color: rgba(234,76,137,0.4); background-color: #fff; box-shadow: 0 0 0 4px rgb(234 76 137 / 10%); }
+.group .icon { position: absolute; left: 1rem; fill: #9e9ea7; width: 1rem; height: 1rem; }
+
+/* ===== yellow-goat-62 (Yaya12085): upload form ===== */
+.yg-container { border-radius: 10px; box-shadow: 4px 4px 30px rgba(0,0,0,.2); display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px; gap: 5px; background-color: rgba(0,110,255,0.041); }
+.yg-header { width: 100%; border: 2px dashed royalblue; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 34px 16px; cursor: pointer; transition: background 0.2s; }
+.yg-header:hover, .yg-header.drag { background: rgba(0,110,255,0.06); }
+.yg-header svg { height: 70px; }
+.yg-header p { text-align: center; color: black; font-weight: 600; margin-top: 6px; }
+.yg-footer { background-color: rgba(0,110,255,0.075); width: 100%; min-height: 40px; padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: black; border: none; font-size: 13px; }
+.yg-footer svg { height: 26px; fill: royalblue; background-color: rgba(70,66,66,0.103); border-radius: 50%; padding: 2px; }
+.yg-footer p { flex: 1; text-align: left; font-weight: 500; }
+
 </style>
 </head>
 <body>
@@ -332,10 +920,15 @@ input::placeholder { color: #9e9ea7; }
       <div class="page-title">Profile</div>
       <div class="page-sub">Your resume drives every match score in the system.</div>
       <div class="card">
-        <div class="drop-zone" id="drop-zone">
-          <div class="icon">📄</div>
-          <div style="font-size:15px;font-weight:800">Drop your resume here â I’ll fetch the matches!</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-top:5px">or click to browse — PDF up to 10 MB</div>
+        <div class="yg-container" id="drop-zone">
+          <div class="yg-header" id="yg-header">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#4169e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <p>Browse resume to upload! <span style="display:block;font-size:11.5px;color:#78768d;font-weight:500">PDF up to 10 MB — drag &amp; drop works too</span></p>
+          </div>
+          <label for="resume-file" class="yg-footer">
+            <svg fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path><path d="M18.153 6h-.009v5.342H23.5v-.002z"></path></svg>
+            <p id="yg-filename">No file selected</p>
+          </label>
           <input type="file" id="resume-file" accept=".pdf" style="display:none">
         </div>
         <div id="upload-status" style="margin-top:14px"></div>
@@ -363,6 +956,10 @@ input::placeholder { color: #9e9ea7; }
       <div class="page-title">Search</div>
       <div class="page-sub">The system searches in the background — fresher roles, all India, around the clock. Filter what it found.</div>
       <div class="card">
+        <div class="group" style="margin-bottom:16px">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><g><path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path></g></svg>
+          <input placeholder="Search title or company" type="search" class="input" id="f-text">
+        </div>
         <div class="sec-label" style="margin-top:0">Location</div>
         <div class="chip-row" id="f-location"></div>
         <div class="sec-label">Minimum match — <span id="score-bubble" style="color:var(--royal);font-weight:700">Any</span></div>
@@ -438,9 +1035,13 @@ const $$ = (s, el=document) => [...el.querySelectorAll(s)];
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 let FEED = [];            // jobs from /api/jobs (already filtered+ranked)
-let FILTERS_STATE = { location: new Set(), score: 0, salary: 0, source: new Set(), posted: 0, sort: "recent" };
+let FILTERS_STATE = { location: new Set(), score: 0, salary: 0, source: new Set(), posted: 0, sort: "recent", text: "" };
 let TRACKER_TAB = "applied";
 
+
+function emptyState(msg) {
+  return emptyState(`<div class="main_wrapper"> <div class="main"> <div class="antenna"> <div class="antenna_shadow"></div> <div class="a1"></div> <div class="a1d"></div> <div class="a2"></div> <div class="a2d"></div> <div class="a_base"></div> </div> <div class="tv"> <div class="cruve"> <svg xml:space="preserve" viewBox="0 0 189.929 189.929" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" class="curve_svg" > <path d="M70.343,70.343c-30.554,30.553-44.806,72.7-39.102,115.635l-29.738,3.951C-5.442,137.659,11.917,86.34,49.129,49.13 C86.34,11.918,137.664-5.445,189.928,1.502l-3.95,29.738C143.041,25.54,100.895,39.789,70.343,70.343z" ></path> </svg> </div> <div class="display_div"> <div class="screen_out"> <div class="screen_out1"> <div class="screen"> <span class="notfound_text"> NO JOBS</span> </div> </div> </div> </div> <div class="lines"> <div class="line1"></div> <div class="line2"></div> <div class="line3"></div> </div> <div class="buttons_div"> <div class="b1"><div></div></div> <div class="b2"></div> <div class="speakers"> <div class="g1"> <div class="g11"></div> <div class="g12"></div> <div class="g13"></div> </div> <div class="g"></div> <div class="g"></div> </div> </div> </div> <div class="bottom"> <div class="base1"></div> <div class="base2"></div> <div class="base3"></div> </div> </div> <div class="text_404"> <div class="text_4041">4</div> <div class="text_4042">0</div> <div class="text_4043">4</div> </div> </div><div style="margin-top:8px">${msg}</div>`);
+}
 function toast(msg) {
   const t = $("#toast");
   t.textContent = msg;
@@ -547,6 +1148,14 @@ function jobRowHTML(job, ctx) {
         <button class="btn" onclick="markApplied('${esc(job.id)}')">I applied</button>
         <button class="btn ghost" onclick="toggleApplyLater('${esc(job.id)}', this)">Apply later</button>
         <button class="btn ghost" onclick="toggleSave('${esc(job.id)}', this)">Save</button>
+        <div class="share-btn" title="Share this job">
+        <span>SHARE</span>
+        <div class="container">
+          <a href="https://wa.me/?text=${encodeURIComponent(job.title + ' at ' + job.company + ' — ' + job.url)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+          <a href="https://t.me/share/url?url=${encodeURIComponent(job.url)}&text=${encodeURIComponent(job.title + ' at ' + job.company)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>
+          <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(job.title + ' at ' + job.company)}&url=${encodeURIComponent(job.url)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg></a>
+        </div>
+      </div>
       </div>
     </div>
   </div>`;
@@ -596,7 +1205,7 @@ function renderJobsList() {
   $("#badge-jobs").textContent = list.length;
   $("#jobs-list").innerHTML = list.length
     ? list.map(j => jobRowHTML(j, "jobs")).join("")
-    : `<div class="t-empty">Nothing new in the last 24 hours yet — the scanner runs every 2 hours.<br>Check Search for yesterday's matches.</div>`;
+    : emptyState(`Nothing new in the last 24 hours yet — the scanner runs every 2 hours. Check Search for yesterday's matches.`);
 }
 
 async function loadJobs() {
@@ -612,7 +1221,7 @@ async function loadJobs() {
     renderSearch();
     $("#sys-status").textContent = "system live";
   } catch (e) {
-    $("#jobs-list").innerHTML = `<div class="t-empty">Couldn't reach the app: ${esc(e.message)}</div>`;
+    $("#jobs-list").innerHTML = emptyState(`Couldn't reach the app: ${esc(e.message)}`);
     $("#sys-status").textContent = "offline";
   }
 }
@@ -684,6 +1293,10 @@ $("#f-salary-slider").addEventListener("input", (e) => {
   $("#salary-bubble").textContent = lpa ? `${lpa} LPA+` : "Any";
   renderSearch();
 });
+$("#f-text").addEventListener("input", (e) => {
+  FILTERS_STATE.text = e.target.value.trim();
+  renderSearch();
+});
 $("#f-posted").addEventListener("click", (e) => {
   const chip = e.target.closest(".f-chip");
   if (!chip) return;
@@ -704,6 +1317,10 @@ $("#search-sort").addEventListener("click", (e) => {
 function renderSearch() {
   let list = FEED.slice();
   const st = FILTERS_STATE;
+  if (st.text) {
+    const q = st.text.toLowerCase();
+    list = list.filter(j => (j.title || "").toLowerCase().includes(q) || (j.company || "").toLowerCase().includes(q));
+  }
   if (st.location.size) list = list.filter(j => st.location.has((j.location || "India").split(/[,(]/)[0].trim() || "India"));
   if (st.source.size) list = list.filter(j => st.source.has((j.source || (j.sources || [])[0] || "career page").replace(/_/g, " ")));
   if (st.score) list = list.filter(j => ((j.match || {}).score || 0) >= st.score);
@@ -725,7 +1342,7 @@ function renderSearch() {
 
   let html = list.length
     ? list.map(j => jobRowHTML(j, "search")).join("")
-    : `<div class="t-empty">Nothing matches these filters.</div>`;
+    : emptyState(`Nothing matches these filters.`);
 
   /* "Last 24h" selected: below the fresh results, surface the best matches
      from the day(s) before that would otherwise be missed. Same non-time
@@ -791,17 +1408,23 @@ $("#tracker-tabs").addEventListener("click", (e) => {
 
 function trackerAppRow(a) {
   const ref = !!a.referral_received, shl = !!a.was_shortlisted;
-  return `<div class="card hoverable" style="padding:16px 18px">
-    <div style="display:flex;align-items:center;gap:14px">
-      <div style="flex:1;min-width:0">
-        <div style="font-size:14.5px;font-weight:600">${esc(a.job_title || a.title || "Unknown role")}</div>
-        <div style="font-size:12.5px;color:var(--text-2);margin-top:2px">${esc(a.company)} · applied ${timeAgo(a.applied_date || a.created_at)}</div>
+  return `<div class="dm-card">
+    <section class="dm-card__hero" style="background:${shl ? "#e5dcfb" : ref ? "#ffe9c9" : "#d9f0dd"}">
+      <header class="dm-card__hero-header">
+        <span>${shl ? "🎉 Shortlisted" : ref ? "🤝 Referred" : "📨 Applied"}</span>
+        <span style="font-size:12px;font-weight:600;color:#57606f">${timeAgo(a.applied_date || a.created_at)}</span>
+      </header>
+      <p class="dm-card__job-title">${esc(a.job_title || a.title || "Unknown role")}</p>
+    </section>
+    <footer class="dm-card__footer">
+      <div class="dm-card__job-summary"><b>${esc(a.company)}</b></div>
+      <div style="display:flex;gap:16px;align-items:center">
+        <label class="wp-check"><input type="checkbox" ${ref ? "checked" : ""}
+          onchange="setAppFlag('${esc(a.id)}','referral_received',this.checked)"><span class="wp-label">Got referral</span></label>
+        <label class="wp-check"><input type="checkbox" ${shl ? "checked" : ""}
+          onchange="setAppFlag('${esc(a.id)}','was_shortlisted',this.checked)"><span class="wp-label">Got shortlisted</span></label>
       </div>
-      <label class="acheck"><input type="checkbox" ${ref ? "checked" : ""}
-        onchange="setAppFlag('${esc(a.id)}','referral_received',this.checked)"><span class="box">&#10003;</span>Got referral</label>
-      <label class="acheck"><input type="checkbox" ${shl ? "checked" : ""}
-        onchange="setAppFlag('${esc(a.id)}','was_shortlisted',this.checked)"><span class="box">&#10003;</span>Got shortlisted</label>
-    </div>
+    </footer>
   </div>`;
 }
 window.setAppFlag = async (id, flag, val) => {
@@ -824,35 +1447,36 @@ async function loadTracker(tab) {
       if (tab === "shortlisted") apps = apps.filter(a => a.was_shortlisted);
       $("#badge-tracker").textContent = (d.applications || d || []).length;
       el.innerHTML = apps.length ? apps.map(trackerAppRow).join("")
-        : `<div class="t-empty">${tab === "applied" ? "Nothing tracked yet — hit “I applied” on a job." : "Nothing here yet — tick the checkbox on an applied job."}</div>`;
+        : emptyState(`${tab === "applied" ? "Nothing tracked yet — hit “I applied” on a job." : "Nothing here yet — tick the checkbox on an applied job."}`);
     } else if (tab === "saved") {
       const d = await api("/api/jobs/saved");
-      el.innerHTML = (d.jobs || []).length ? d.jobs.map(j => jobRowHTML(j, "tracker")).join("") : `<div class="t-empty">No saved jobs.</div>`;
+      el.innerHTML = (d.jobs || []).length ? d.jobs.map(j => jobRowHTML(j, "tracker")).join("") : emptyState(`No saved jobs.`);
     } else if (tab === "apply_later") {
       const d = await api("/api/jobs/apply-later");
-      el.innerHTML = (d.jobs || []).length ? d.jobs.map(j => jobRowHTML(j, "tracker")).join("") : `<div class="t-empty">Nothing queued for later.</div>`;
+      el.innerHTML = (d.jobs || []).length ? d.jobs.map(j => jobRowHTML(j, "tracker")).join("") : emptyState(`Nothing queued for later.`);
     } else if (tab === "viewed") {
       const d = await api("/api/jobs/viewed");
       const jobs = d.jobs || [];
-      el.innerHTML = jobs.length ? jobs.map(j => jobRowHTML(j, "tracker")).join("") : `<div class="t-empty">No viewed jobs yet.</div>`;
+      el.innerHTML = jobs.length ? jobs.map(j => jobRowHTML(j, "tracker")).join("") : emptyState(`No viewed jobs yet.`);
     }
   } catch (e) {
-    el.innerHTML = `<div class="t-empty">Couldn't load: ${esc(e.message)}</div>`;
+    el.innerHTML = emptyState(`Couldn't load: ${esc(e.message)}`);
   }
 }
 
 /* ---------------- profile ---------------- */
 const dz = $("#drop-zone");
-dz.addEventListener("click", () => $("#resume-file").click());
-dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("drag"); });
-dz.addEventListener("dragleave", () => dz.classList.remove("drag"));
+$("#yg-header").addEventListener("click", () => $("#resume-file").click());
+dz.addEventListener("dragover", (e) => { e.preventDefault(); $("#yg-header").classList.add("drag"); });
+dz.addEventListener("dragleave", () => $("#yg-header").classList.remove("drag"));
 dz.addEventListener("drop", (e) => {
-  e.preventDefault(); dz.classList.remove("drag");
+  e.preventDefault(); $("#yg-header").classList.remove("drag");
   if (e.dataTransfer.files[0]) uploadResume(e.dataTransfer.files[0]);
 });
 $("#resume-file").addEventListener("change", (e) => { if (e.target.files[0]) uploadResume(e.target.files[0]); });
 
 async function uploadResume(file) {
+  $("#yg-filename").textContent = file.name;
   const st = $("#upload-status");
   st.innerHTML = `<div style="display:flex;align-items:center;gap:10px;color:var(--text-2);font-size:13px">
     <div class="spin" style="width:16px;height:16px;margin:0"></div>Uploading and re-scoring every job against your resume…</div>`;
@@ -874,7 +1498,7 @@ async function loadResumeInfo() {
   const el = $("#resume-info");
   try {
     const d = await api("/api/resume");
-    if (!d.has_resume) { el.innerHTML = `<div class="t-empty">No resume on file yet.</div>`; return; }
+    if (!d.has_resume) { el.innerHTML = emptyState(`No resume on file yet.`); return; }
     const rs = d.rescore_status || {};
     const skills = (d.skills || d.parsed_skills || []).slice(0, 24);
     el.innerHTML = `
@@ -887,7 +1511,7 @@ async function loadResumeInfo() {
       </div>
       ${skills.length ? `<div class="sec-label">Skills the matcher sees</div><div>${skills.map(s => `<span class="skill-chip have">${esc(s)}</span>`).join("")}</div>` : ""}
     `;
-  } catch (e) { el.innerHTML = `<div class="t-empty">Couldn't load resume info.</div>`; }
+  } catch (e) { el.innerHTML = emptyState(`Couldn't load resume info.`); }
 }
 
 /* ---------------- insights ---------------- */
@@ -1003,7 +1627,7 @@ async function loadInsights() {
         requestAnimationFrame(step);
       });
     });
-  } catch (e) { el.innerHTML = `<div class="t-empty">Couldn't load insights: ${esc(e.message)}</div>`; }
+  } catch (e) { el.innerHTML = emptyState(`Couldn't load insights: ${esc(e.message)}`); }
 }
 
 /* ---------------- settings ---------------- */
@@ -1022,7 +1646,7 @@ async function loadSettings() {
       <div class="set-row">
         <div class="info"><div class="t">Search automatically</div>
           <div class="d">Scans career pages and 13 job boards for fresher roles across India — strictly 0-experience, freshest first.</div></div>
-        <label class="switch"><input type="checkbox" id="set-bg-enabled" ${enabled ? "checked" : ""}><span class="slider"></span></label>
+        <div class="checkbox-wrapper-35"><input class="switch35" id="set-bg-enabled" type="checkbox" ${enabled ? "checked" : ""}><label for="set-bg-enabled"><span class="switch-x-toggletext"><span class="switch-x-unchecked">Off</span><span class="switch-x-checked" style="color:#ffb500">On</span></span></label></div>
       </div>
       <div class="set-row">
         <div class="info"><div class="t">How often</div>
@@ -1046,7 +1670,7 @@ async function loadSettings() {
       <div class="set-row">
         <div class="info"><div class="t">Smart match threshold</div>
           <div class="d">The system picks the cutoff from real scoring data; AI-verified jobs automatically get a fairer, lower bar.</div></div>
-        <label class="switch"><input type="checkbox" id="set-auto" ${auto ? "checked" : ""}><span class="slider"></span></label>
+        <div class="checkbox-wrapper-35"><input class="switch35" id="set-auto" type="checkbox" ${auto ? "checked" : ""}><label for="set-auto"><span class="switch-x-toggletext"><span class="switch-x-unchecked">Off</span><span class="switch-x-checked" style="color:#ffb500">On</span></span></label></div>
       </div>
       <div class="set-row" id="row-threshold" style="${auto ? "opacity:.45;pointer-events:none" : ""}">
         <div class="info"><div class="t">Minimum match score — <span id="set-score-bubble" style="color:var(--royal)">${minScore}%</span></div>
@@ -1070,7 +1694,7 @@ async function loadSettings() {
       $$("#set-interval button").forEach(x => x.classList.remove("on"));
       b.classList.add("on");
     });
-  } catch (e) { el.innerHTML = `<div class="t-empty">Couldn't load settings.</div>`; }
+  } catch (e) { el.innerHTML = emptyState(`Couldn't load settings.`); }
   /* companies list */
   const cEl = $("#settings-companies");
   try {
@@ -1086,7 +1710,7 @@ async function loadSettings() {
       <div style="font-size:12px;color:var(--text-2);margin-bottom:6px">Fresher-active: <b>${pct}%</b> — goal <b>${h.target_pct || 75}%</b>${h.eta_days_to_target ? ` · ~${h.eta_days_to_target > 365 ? (h.eta_days_to_target / 365).toFixed(1) + " years" : h.eta_days_to_target + " days"} at the current pace` : ""}</div>
       <div class="meter" style="height:8px;max-width:420px"><div style="background:var(--green);width:${Math.min(100, pct / (h.target_pct || 75) * 100)}%"></div></div>
       <div style="font-size:12px;color:var(--muted);margin-top:10px">The discovery worker verifies new fresher-hiring companies automatically, every 2 hours, and needs ${h.companies_needed_for_target || "?"} more to hit the goal.</div>`;
-  } catch (e) { cEl.innerHTML = `<div class="t-empty">Couldn't load company stats.</div>`; }
+  } catch (e) { cEl.innerHTML = emptyState(`Couldn't load company stats.`); }
 }
 window.saveSettings = async () => {
   try {
