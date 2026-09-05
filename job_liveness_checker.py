@@ -80,16 +80,26 @@ def check_job_alive(url):
     return True, "no closed markers"
 
 
+CLOSED_FILE = os.path.join(BASE_DIR, "closed_jobs.json")
+
+
 def _mark_closed(job_id, reason):
-    from scan_coordinator import save_json
-    data = json.load(open(JOBS_FILE, encoding="utf-8"))
-    for j in data.get("jobs", []):
-        if j.get("id") == job_id:
-            j["closed"] = True
-            j["closed_detected_at"] = datetime.now(timezone.utc).isoformat()
-            j["closed_reason"] = reason
-            break
-    save_json(JOBS_FILE, data)
+    """Record closure in a file OWNED by this checker.
+
+    First version set closed=True on the job row in jobs_store.json - the
+    scanner rewrites that file every few seconds from its own in-memory rows,
+    and all three flags from the first sweep were silently clobbered within
+    minutes. A separate one-writer file has no such race; the pipeline
+    consults it when filtering."""
+    try:
+        data = json.load(open(CLOSED_FILE, encoding="utf-8"))
+    except Exception:
+        data = {}
+    data[job_id] = {"reason": reason, "at": datetime.now(timezone.utc).isoformat()}
+    tmp = CLOSED_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=1)
+    os.replace(tmp, CLOSED_FILE)
 
 
 def liveness_loop():

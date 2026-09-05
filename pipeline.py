@@ -142,6 +142,15 @@ def execute_authoritative_pipeline(
     ↓ SORT
     ↓ FEED
     """
+    # jobs the liveness checker verified as dead (separate one-writer file;
+    # see job_liveness_checker._mark_closed for why not a store flag)
+    try:
+        import json as _json, os as _os
+        with open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "closed_jobs.json"), encoding="utf-8") as _f:
+            _closed_ids = set(_json.load(_f).keys())
+    except Exception:
+        _closed_ids = set()
+
     filters = custom_filters or {}
     deduplicator = JobDeduplicator()
     
@@ -151,7 +160,7 @@ def execute_authoritative_pipeline(
     # 2. REMOVE INVALID / CLOSED JOBS
     valid_jobs = []
     for job in deduped_jobs:
-        if job.get("closed"):
+        if job.get("closed") or job.get("id") in _closed_ids:
             continue
         is_valid, _ = check_job_posting_validity(job)
         if is_valid:
