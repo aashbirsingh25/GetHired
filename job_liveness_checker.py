@@ -65,13 +65,13 @@ def _save_state(st):
 def check_job_alive(url):
     """Returns (alive: bool, reason: str). Errs on the side of 'alive'."""
     try:
-        req = urllib.request.Request(url, headers=UA)
-        r = urllib.request.urlopen(req, timeout=20)
-        html = r.read().decode("utf-8", errors="ignore")
-    except urllib.error.HTTPError as e:
-        if e.code in (404, 410):
-            return False, f"HTTP {e.code}"
-        return True, f"inconclusive HTTP {e.code}"
+        from hardened_fetch import hardened_get
+        r = hardened_get(url, timeout=20)
+        if r.status_code in (404, 410):
+            return False, f"HTTP {r.status_code}"
+        if r.status_code != 200:
+            return True, f"inconclusive HTTP {r.status_code}"
+        html = r.text
     except Exception as e:
         return True, f"inconclusive: {str(e)[:60]}"
     m = _CLOSED_RE.search(html)
