@@ -1157,6 +1157,7 @@ def upload_resume():
 
     resume_data = {
         "has_resume": True,
+        "filename": filename,
         "skills": skills,
         "estimated_years_experience": exp,
         "chunk_count": len(chunks),
@@ -1170,6 +1171,7 @@ def upload_resume():
 
     return jsonify({
         "has_resume": True,
+        "filename": filename,
         "skills": skills,
         "estimated_years_experience": exp,
         "chunk_count": len(chunks),
@@ -1181,10 +1183,28 @@ def get_resume():
     data = load_json(RESUME_FILE, {"has_resume": False, "skills": [], "chunk_count": 0})
     return jsonify({
         "has_resume": data.get("has_resume", False),
+        "filename": data.get("filename"),
         "skills": data.get("skills", []),
         "chunk_count": data.get("chunk_count", 0),
         "uploaded_at": data.get("uploaded_at")
     })
+
+@app.route("/api/resume/file", methods=["GET"])
+def get_resume_file():
+    """Serve the currently uploaded resume PDF for in-app viewing."""
+    data = load_json(RESUME_FILE, {})
+    fname = data.get("filename")
+    if not fname:
+        try:
+            pdfs = sorted((f for f in os.listdir(UPLOAD_FOLDER) if f.lower().endswith(".pdf")),
+                          key=lambda f: os.path.getmtime(os.path.join(UPLOAD_FOLDER, f)), reverse=True)
+            fname = pdfs[0] if pdfs else None
+        except OSError:
+            fname = None
+    if not fname or not os.path.exists(os.path.join(UPLOAD_FOLDER, fname)):
+        return jsonify({"error": "No resume file on disk"}), 404
+    from flask import send_from_directory
+    return send_from_directory(UPLOAD_FOLDER, fname)
 
 @app.route("/api/resume-status", methods=["GET"])
 def get_resume_status():
@@ -1418,6 +1438,20 @@ def list_applications():
     tracker = ApplicationTracker()
     apps = tracker.list_applications(status=st, company=comp, location=loc)
     return jsonify({"applications": apps, "total": len(apps)})
+
+@app.route("/api/applications/with-jobs", methods=["GET"])
+def applications_with_jobs():
+    """Applications joined with their full job objects (expandable tracker rows)."""
+    tracker = ApplicationTracker()
+    apps = [a for a in tracker.list_applications() if a.get("status") != "archived"]
+    store = load_json(JOBS_FILE, {"jobs": []})
+    by_id = {j.get("id"): j for j in store.get("jobs", []) if j.get("id")}
+    out = []
+    for a in apps:
+        item = dict(a)
+        item["job"] = by_id.get(a.get("job_id"))
+        out.append(item)
+    return jsonify({"applications": out, "total": len(out)})
 
 @app.route("/api/applications/<app_id>", methods=["GET"])
 def get_single_application(app_id):

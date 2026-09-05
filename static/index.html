@@ -737,6 +737,22 @@ input::placeholder { color: var(--smoke); }
 
 .t-empty .main_wrapper { font-size: 4.5px; margin: 10px auto 6px; filter: saturate(0.4) sepia(0.1); }
 
+
+/* ===== error card (spirit of Sophiek9h/black-pug-58: brown retro cartoonish;
+   original not in the galaxy mirror yet) ===== */
+.err-card { max-width: 380px; margin: 26px auto; background: #f6e7d3; border: 3px solid #4a2e19; border-radius: 14px; padding: 18px 20px; box-shadow: 5px 5px 0 #4a2e19; text-align: left; font-size: 13.5px; color: #4a2e19; }
+.err-card .err-title { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.err-card .err-title::before { content: "\26A0"; font-size: 18px; }
+.err-card .err-body { line-height: 1.55; }
+.copy-btn { display: inline-flex; align-items: center; gap: 7px; }
+.copy-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+.resume-file-row { display: flex; align-items: center; gap: 14px; background: var(--mist); border-radius: var(--radius-input); padding: 14px 16px; margin-bottom: 16px; }
+.resume-file-row .doc { width: 42px; height: 52px; background: var(--paper); border: 1px solid var(--hairline); border-radius: 6px; position: relative; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--sienna); }
+.resume-file-row .meta { flex: 1; min-width: 0; }
+.resume-file-row .meta .n { font-weight: 600; font-size: 13.5px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.resume-file-row .meta .d { font-size: 11.5px; color: var(--slate); margin-top: 2px; }
+.dm-card .job-row { border-top: none; box-shadow: none; margin: 0; }
+
 </style>
 </head>
 <body>
@@ -898,6 +914,9 @@ let TRACKER_TAB = "applied";
 function emptyState(msg) {
   return `<div class="t-empty"><div class="main_wrapper"> <div class="main"> <div class="antenna"> <div class="antenna_shadow"></div> <div class="a1"></div> <div class="a1d"></div> <div class="a2"></div> <div class="a2d"></div> <div class="a_base"></div> </div> <div class="tv"> <div class="cruve"> <svg xml:space="preserve" viewBox="0 0 189.929 189.929" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" class="curve_svg" > <path d="M70.343,70.343c-30.554,30.553-44.806,72.7-39.102,115.635l-29.738,3.951C-5.442,137.659,11.917,86.34,49.129,49.13 C86.34,11.918,137.664-5.445,189.928,1.502l-3.95,29.738C143.041,25.54,100.895,39.789,70.343,70.343z" ></path> </svg> </div> <div class="display_div"> <div class="screen_out"> <div class="screen_out1"> <div class="screen"> <span class="notfound_text"> NO JOBS</span> </div> </div> </div> </div> <div class="lines"> <div class="line1"></div> <div class="line2"></div> <div class="line3"></div> </div> <div class="buttons_div"> <div class="b1"><div></div></div> <div class="b2"></div> <div class="speakers"> <div class="g1"> <div class="g11"></div> <div class="g12"></div> <div class="g13"></div> </div> <div class="g"></div> <div class="g"></div> </div> </div> </div> <div class="bottom"> <div class="base1"></div> <div class="base2"></div> <div class="base3"></div> </div> </div> <div class="text_404"> <div class="text_4041">4</div> <div class="text_4042">0</div> <div class="text_4043">4</div> </div> </div><div style="margin-top:8px">${msg}</div></div>`;
 }
+function errorState(msg) {
+  return `<div class="err-card"><div class="err-title">Something went wrong</div><div class="err-body">${msg}</div></div>`;
+}
 function toast(msg) {
   const t = $("#toast");
   t.textContent = msg;
@@ -1004,14 +1023,9 @@ function jobRowHTML(job, ctx) {
         <button class="btn" onclick="markApplied('${esc(job.id)}')">I applied</button>
         <button class="btn ghost" onclick="toggleApplyLater('${esc(job.id)}', this)">Apply later</button>
         <button class="btn ghost" onclick="toggleSave('${esc(job.id)}', this)">Save</button>
-        <div class="share-btn" title="Share this job">
-        <span>SHARE</span>
-        <div class="container">
-          <a href="https://wa.me/?text=${encodeURIComponent(job.title + ' at ' + job.company + ' — ' + job.url)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
-          <a href="https://t.me/share/url?url=${encodeURIComponent(job.url)}&text=${encodeURIComponent(job.title + ' at ' + job.company)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>
-          <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(job.title + ' at ' + job.company)}&url=${encodeURIComponent(job.url)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg></a>
-        </div>
-      </div>
+        <button class="btn ghost copy-btn" onclick="copyJobLink('${esc(job.url)}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy job link</button>
       </div>
     </div>
   </div>`;
@@ -1077,7 +1091,7 @@ async function loadJobs() {
     renderSearch();
     $("#sys-status").textContent = "system live";
   } catch (e) {
-    $("#jobs-list").innerHTML = emptyState(`Couldn't reach the app: ${esc(e.message)}`);
+    $("#jobs-list").innerHTML = errorState(`Couldn't reach the app: ${esc(e.message)}`);
     $("#sys-status").textContent = "offline";
   }
 }
@@ -1242,6 +1256,17 @@ window.toggleApplyLater = async (id, btn) => {
     toast(d.apply_later ? "Added to Apply Later" : "Removed from Apply Later");
   } catch (e) { toast("Failed"); }
 };
+window.copyJobLink = async (url) => {
+  try {
+    await navigator.clipboard.writeText(url);
+    toast("Job link copied");
+  } catch (e) {
+    const t = document.createElement("textarea");
+    t.value = url; document.body.appendChild(t); t.select();
+    document.execCommand("copy"); t.remove();
+    toast("Job link copied");
+  }
+};
 window.markApplied = async (id) => {
   const job = FEED.find(j => j.id === id) || {};
   try {
@@ -1267,21 +1292,22 @@ function trackerAppRow(a) {
   const status = shl ? ["Shortlisted", "var(--ok-soft)", "var(--ok)"]
                : ref ? ["Referred", "var(--peach)", "var(--sienna)"]
                : ["Applied", "var(--mist)", "var(--slate)"];
-  return `<div class="dm-card">
-    <div style="display:flex;align-items:center;gap:12px">
+  const flags = `<div style="display:flex;gap:18px;align-items:center;padding:12px 22px;border-top:1px solid var(--hairline)">
       <span class="badge" style="background:${status[1]};color:${status[2]}">${status[0]}</span>
-      <span style="font-size:11.5px;color:var(--smoke)">${timeAgo(a.applied_date || a.created_at)}</span>
-    </div>
+      <span style="font-size:11.5px;color:var(--smoke)">applied ${timeAgo(a.applied_date || a.created_at)}</span>
+      <span style="flex:1"></span>
+      <label class="wp-check"><input type="checkbox" ${ref ? "checked" : ""}
+        onchange="setAppFlag('${esc(a.id)}','referral_received',this.checked)"><span class="wp-label">Got referral</span></label>
+      <label class="wp-check"><input type="checkbox" ${shl ? "checked" : ""}
+        onchange="setAppFlag('${esc(a.id)}','was_shortlisted',this.checked)"><span class="wp-label">Got shortlisted</span></label>
+    </div>`;
+  if (a.job) {
+    return `<div class="dm-card" style="padding:0;overflow:hidden">${jobRowHTML(a.job, "tracker")}${flags}</div>`;
+  }
+  return `<div class="dm-card">
     <p class="dm-card__job-title">${esc(a.job_title || a.title || "Unknown role")}</p>
-    <div class="dm-card__footer">
-      <div class="dm-card__job-summary"><b style="color:var(--ink)">${esc(a.company)}</b></div>
-      <div style="display:flex;gap:18px;align-items:center">
-        <label class="wp-check"><input type="checkbox" ${ref ? "checked" : ""}
-          onchange="setAppFlag('${esc(a.id)}','referral_received',this.checked)"><span class="wp-label">Got referral</span></label>
-        <label class="wp-check"><input type="checkbox" ${shl ? "checked" : ""}
-          onchange="setAppFlag('${esc(a.id)}','was_shortlisted',this.checked)"><span class="wp-label">Got shortlisted</span></label>
-      </div>
-    </div>
+    <div class="dm-card__job-summary"><b style="color:var(--ink)">${esc(a.company)}</b></div>
+    ${flags.replace("border-top:1px solid var(--hairline)", "padding:0")}
   </div>`;
 }
 window.setAppFlag = async (id, flag, val) => {
@@ -1305,7 +1331,7 @@ async function loadTracker(tab) {
   el.innerHTML = `<div aria-label="Loading" role="img" class="wheel-and-hamster"><div class="wheel"></div><div class="hamster"><div class="hamster__body"><div class="hamster__head"><div class="hamster__ear"></div><div class="hamster__eye"></div><div class="hamster__nose"></div></div><div class="hamster__limb hamster__limb--fr"></div><div class="hamster__limb hamster__limb--fl"></div><div class="hamster__limb hamster__limb--br"></div><div class="hamster__limb hamster__limb--bl"></div><div class="hamster__tail"></div></div></div><div class="spoke"></div></div>`;
   try {
     if (["applied", "referral", "shortlisted"].includes(tab)) {
-      const d = await fetchWithTimeout("/api/applications");
+      const d = await fetchWithTimeout("/api/applications/with-jobs");
       let apps = (d.applications || d || []).filter(a => a.status !== "archived");
       if (tab === "referral") apps = apps.filter(a => a.referral_received);
       if (tab === "shortlisted") apps = apps.filter(a => a.was_shortlisted);
@@ -1324,7 +1350,7 @@ async function loadTracker(tab) {
       el.innerHTML = jobs.length ? jobs.map(j => jobRowHTML(j, "tracker")).join("") : emptyState(`No viewed jobs yet.`);
     }
   } catch (e) {
-    el.innerHTML = emptyState(`Couldn't load: ${esc(e.message)}`);
+    el.innerHTML = errorState(`Couldn't load: ${esc(e.message)}`);
   }
 }
 
@@ -1362,20 +1388,22 @@ async function loadResumeInfo() {
   const el = $("#resume-info");
   try {
     const d = await api("/api/resume");
-    if (!d.has_resume) { el.innerHTML = emptyState(`No resume on file yet.`); return; }
+    if (!d.has_resume) { el.innerHTML = emptyState("No resume on file yet."); return; }
     const rs = d.rescore_status || {};
     const skills = (d.skills || d.parsed_skills || []).slice(0, 24);
     el.innerHTML = `
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
-        <div style="width:44px;height:44px;border-radius:12px;background:#f3f3f4;display:flex;align-items:center;justify-content:center;font-size:20px">&#128100;</div>
-        <div>
-          <div style="font-size:15px;font-weight:650">${esc(d.filename || "Resume on file")}</div>
-          <div style="font-size:12px;color:var(--ash)">uploaded ${timeAgo(d.uploaded_at)} · scoring ${esc(rs.status || "idle")}${rs.scored_jobs ? ` (${rs.scored_jobs.toLocaleString("en-IN")} jobs)` : ""}</div>
+      <div class="sec-label" style="margin-top:0">Current resume</div>
+      <div class="resume-file-row">
+        <div class="doc">PDF</div>
+        <div class="meta">
+          <div class="n">${esc(d.filename || "Resume on file")}</div>
+          <div class="d">uploaded ${timeAgo(d.uploaded_at)} · scoring ${esc(rs.status || "idle")}${rs.scored_jobs ? ` · ${rs.scored_jobs.toLocaleString("en-IN")} jobs scored` : ""}</div>
         </div>
+        <a class="btn ghost" href="/api/resume/file" target="_blank" rel="noopener">View PDF</a>
       </div>
       ${skills.length ? `<div class="sec-label">Skills the matcher sees</div><div>${skills.map(s => `<span class="skill-chip have">${esc(s)}</span>`).join("")}</div>` : ""}
     `;
-  } catch (e) { el.innerHTML = emptyState(`Couldn't load resume info.`); }
+  } catch (e) { el.innerHTML = errorState("Couldn't load resume info."); }
 }
 
 /* ---------------- insights ---------------- */
@@ -1420,8 +1448,8 @@ async function loadInsights() {
     const prov = (pulseD.llm_providers) || {};
     const quotaRows = Object.entries(prov).filter(([, v]) => v.daily_limit > 0).map(([p, v]) => {
       const pct = Math.min(100, Math.round(v.used_today / v.daily_limit * 100));
-      return `<div class="bar-row"><div class="bl">${esc(p)} — ${v.used_today}/${v.daily_limit} calls today</div>
-        <div class="track"><div class="fill" data-w="${Math.max(2, pct)}" style="background:${pct > 85 ? "var(--sienna-soft)" : "var(--sienna-soft)"}">${pct}%</div></div></div>`;
+      return `<div class="bar-row"><div class="bl">${esc(p)} — ${v.used_today}/${v.daily_limit} calls (${pct}%)</div>
+        <div class="track"><div class="fill" data-w="${Math.max(2, pct)}" style="background:${pct > 85 ? "var(--sienna-soft)" : "var(--ok)"};min-width:0;padding:0"></div></div></div>`;
     }).join("");
 
     /* discovery activity feed */
@@ -1491,7 +1519,7 @@ async function loadInsights() {
         requestAnimationFrame(step);
       });
     });
-  } catch (e) { el.innerHTML = emptyState(`Couldn't load insights: ${esc(e.message)}`); }
+  } catch (e) { el.innerHTML = errorState(`Couldn't load insights: ${esc(e.message)}`); }
 }
 
 /* ---------------- settings ---------------- */
@@ -1558,7 +1586,7 @@ async function loadSettings() {
       $$("#set-interval button").forEach(x => x.classList.remove("on"));
       b.classList.add("on");
     });
-  } catch (e) { el.innerHTML = emptyState(`Couldn't load settings.`); }
+  } catch (e) { el.innerHTML = errorState(`Couldn't load settings.`); }
   /* companies list */
   const cEl = $("#settings-companies");
   try {
@@ -1574,7 +1602,7 @@ async function loadSettings() {
       <div style="font-size:12px;color:var(--slate);margin-bottom:6px">Fresher-active: <b>${pct}%</b> — goal <b>${h.target_pct || 75}%</b>${h.eta_days_to_target ? ` · ~${h.eta_days_to_target > 365 ? (h.eta_days_to_target / 365).toFixed(1) + " years" : h.eta_days_to_target + " days"} at the current pace` : ""}</div>
       <div class="meter" style="height:8px;max-width:420px"><div style="background:var(--ok);width:${Math.min(100, pct / (h.target_pct || 75) * 100)}%"></div></div>
       <div style="font-size:12px;color:var(--ash);margin-top:10px">The discovery worker verifies new fresher-hiring companies automatically, every 2 hours, and needs ${h.companies_needed_for_target || "?"} more to hit the goal.</div>`;
-  } catch (e) { cEl.innerHTML = emptyState(`Couldn't load company stats.`); }
+  } catch (e) { cEl.innerHTML = errorState(`Couldn't load company stats.`); }
 }
 window.saveSettings = async () => {
   try {
