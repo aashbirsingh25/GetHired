@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800&display=swap');
+body { font-family:"Nunito",-apple-system,sans-serif; background:#FAF6F0; margin:0; padding:34px; color:#3B372F; }
+.lbl { font-size:20px; font-weight:800; margin:30px 0 4px; }
+.hint { display:block; font-size:13px; color:#8A8172; margin-bottom:12px; font-weight:600; max-width:720px; line-height:1.5;}
+.t { font-size:15px; font-weight:800; } .c { font-size:12.5px; color:#7A7264; margin-top:2px; font-weight:600;}
+.right { margin-left:auto; text-align:right; } .time { font-size:11px; color:#A89F8F; font-weight:700; margin-top:4px;}
+
+/* A: soft & airy */
+.cardA { background:#fff; border:1px solid rgba(120,105,85,.14); border-radius:20px; padding:16px 20px; box-shadow:0 2px 14px rgba(120,100,70,.07); display:flex; align-items:center; gap:16px; max-width:740px;}
+.ringA { width:48px;height:48px;border-radius:50%;border:4px solid #4CBB8F; display:flex;align-items:center;justify-content:center;font-weight:800;}
+.badgeA { font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:9px;background:#D4F0E2;color:#2E8B67;}
+.btnA { background:linear-gradient(135deg,#6C9BF2,#8F7BE0);color:#fff;border:none;border-radius:13px;font-family:inherit;font-weight:800;font-size:13px;padding:9px 18px;box-shadow:0 4px 14px rgba(108,155,242,.3);}
+
+/* B: crisp & minimal */
+.cardB { background:#fff; border:1px solid #E8E3DA; border-left:5px solid #4CBB8F; border-radius:12px; padding:16px 20px; display:flex; align-items:center; gap:16px; max-width:740px; font-family:"Inter",sans-serif;}
+.scoreB { font-size:24px; font-weight:800; color:#4CBB8F; min-width:52px; }
+.scoreB small { display:block; font-size:9px; color:#A89F8F; letter-spacing:.08em; font-weight:800;}
+.badgeB { font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:#F2F7F4;color:#2E8B67;border:1px solid #CBE7DA;}
+.btnB { background:#2E2A24;color:#fff;border:none;border-radius:8px;font-family:inherit;font-weight:700;font-size:13px;padding:9px 18px;}
+
+/* C: playful & bold */
+.cardC { background:#FFFDF8; border:2.5px solid #3B372F; border-radius:18px; padding:16px 20px; box-shadow:4px 4px 0 #3B372F; display:flex; align-items:center; gap:16px; max-width:740px;}
+.ringC { width:50px;height:50px;border-radius:14px;background:#FFD9C0;border:2.5px solid #3B372F;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;}
+.badgeC { font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:20px;background:#B8EBD0;color:#1F5C42;border:2px solid #3B372F;}
+.btnC { background:#FFC94D;color:#3B372F;border:2.5px solid #3B372F;border-radius:12px;font-family:inherit;font-weight:800;font-size:13px;padding:8px 18px;box-shadow:3px 3px 0 #3B372F;}
+
+/* D: glass on gradient */
+.wrapD { background:linear-gradient(120deg,#FFE8D6,#E4DDFF 55%,#D6EFFF); padding:22px; border-radius:24px; max-width:740px;}
+.cardD { background:rgba(255,255,255,.55); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.8); border-radius:18px; padding:16px 20px; display:flex; align-items:center; gap:16px; box-shadow:0 8px 24px rgba(150,120,180,.15);}
+.ringD { width:48px;height:48px;border-radius:50%;background:conic-gradient(#8F7BE0 0 88%, rgba(255,255,255,.5) 88%);display:flex;align-items:center;justify-content:center;font-weight:800;color:#3B372F;}
+.ringD span { background:rgba(255,255,255,.85); width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.badgeD { font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.7);color:#6a4fd0;}
+.btnD { background:rgba(59,55,47,.9);color:#fff;border:none;border-radius:20px;font-family:inherit;font-weight:800;font-size:13px;padding:9px 20px;}
+
+/* E: paper & ink (editorial) */
+.cardE { background:#FFFEF9; border:1px solid #DDD5C6; border-radius:6px; padding:18px 22px; display:flex; align-items:center; gap:18px; max-width:740px; box-shadow:0 1px 3px rgba(120,100,70,.08);}
+.scoreE { font-family:Georgia,serif; font-size:30px; color:#3B372F; min-width:54px; border-right:1px solid #DDD5C6; padding-right:16px;}
+.tE { font-family:Georgia,serif; font-size:17px; font-weight:700;}
+.badgeE { font-size:10px;font-weight:800;letter-spacing:.1em;color:#8A6E2F;background:#F6EDD8;padding:3px 9px;border-radius:3px;}
+.btnE { background:transparent;color:#3B372F;border:1.5px solid #3B372F;border-radius:6px;font-family:inherit;font-weight:700;font-size:13px;padding:8px 18px;}
+
+/* F: candy gradient card */
+.cardF { background:linear-gradient(115deg,#FFF6EC,#FDEFFF); border:none; border-radius:22px; padding:17px 21px; display:flex; align-items:center; gap:16px; max-width:740px; box-shadow:0 6px 20px rgba(200,150,200,.18);}
+.ringF { width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#FF9A8B,#FF6A88 55%,#FF99AC);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:15px; box-shadow:0 4px 12px rgba(255,199,150,.5);}
+.badgeF { font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:20px;background:#fff;color:#E5678E; box-shadow:0 2px 6px rgba(200,150,200,.25);}
+.btnF { background:linear-gradient(135deg,#FF8FA2,#B08CFF);color:#fff;border:none;border-radius:22px;font-family:inherit;font-weight:800;font-size:13px;padding:10px 22px; box-shadow:0 5px 16px rgba(230,140,180,.4);}
+</style></head><body>
+
+<div class="lbl">A — Soft &amp; airy</div>
+<span class="hint">Like a fresh hotel room: white cards floating on warm cream, round green score ring, one blue-purple gradient button. Calm, nothing shouts. This is the current look.</span>
+<div class="cardA"><div class="ringA">88</div><div><div class="t">DS/ML Intern</div><div class="c">Fi Money · Bangalore</div></div><div class="right"><span class="badgeA">AI verified</span><div class="time">10h ago</div></div><button class="btnA">Open &amp; Apply</button></div>
+
+<div class="lbl">B — Crisp &amp; minimal</div>
+<span class="hint">Like a banking app made by designers: flat, tight, no decorations — the score is just a big confident number with a green edge-stripe. Feels efficient and grown-up. For when cute feels childish.</span>
+<div class="cardB"><div class="scoreB">88<small>MATCH</small></div><div><div class="t">DS/ML Intern</div><div class="c">Fi Money · Bangalore</div></div><div class="right"><span class="badgeB">AI VERIFIED</span><div class="time">10h ago</div></div><button class="btnB">Open &amp; Apply</button></div>
+
+<div class="lbl">C — Playful &amp; bold</div>
+<span class="hint">Like a comic-book sticker: thick ink outlines, cards that cast hard cartoon shadows, sunny yellow button. Maximum personality — the app that high-fives you. Duolingo cousin.</span>
+<div class="cardC"><div class="ringC">88</div><div><div class="t">DS/ML Intern</div><div class="c">Fi Money · Bangalore</div></div><div class="right"><span class="badgeC">✓ AI verified</span><div class="time">10h ago</div></div><button class="btnC">Open &amp; Apply</button></div>
+
+<div class="lbl">D — Frosted glass on sunrise</div>
+<span class="hint">Like iOS widgets on a pastel sky: a soft peach-lavender-blue gradient glows behind semi-transparent frosted cards. Dreamy and premium — the "expensive phone" feeling, without darkness.</span>
+<div class="wrapD"><div class="cardD"><div class="ringD"><span>88</span></div><div><div class="t">DS/ML Intern</div><div class="c">Fi Money · Bangalore</div></div><div class="right"><span class="badgeD">AI verified</span><div class="time">10h ago</div></div><button class="btnD">Open &amp; Apply</button></div></div>
+
+<div class="lbl">E — Paper &amp; ink</div>
+<span class="hint">Like a beautiful newspaper: serif headlines, thin ruled lines, outlined buttons, a gold-stamped badge. Quiet, literary, timeless — for someone who finds most apps too loud.</span>
+<div class="cardE"><div class="scoreE">88</div><div><div class="tE">DS/ML Intern</div><div class="c">Fi Money · Bangalore</div></div><div class="right"><span class="badgeE">AI VERIFIED</span><div class="time">10h ago</div></div><button class="btnE">Open &amp; Apply</button></div>
+
+<div class="lbl">F — Candy gradients</div>
+<span class="hint">Like a dessert menu: cards blush from cream to pink, the score sits in a juicy coral bubble, buttons melt from pink to violet. Sweetest and most "aesthetic Instagram" of the six.</span>
+<div class="cardF"><div class="ringF">88</div><div><div class="t">DS/ML Intern</div><div class="c">Fi Money · Bangalore</div></div><div class="right"><span class="badgeF">AI verified</span><div class="time">10h ago</div></div><button class="btnF">Open &amp; Apply</button></div>
+
+</body></html>
