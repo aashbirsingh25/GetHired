@@ -1845,6 +1845,11 @@ if __name__ == "__main__":
     print(f"Starting GetHired Flask server on http://127.0.0.1:{port}...")
     from linkedin_detail_enricher import start_enrichment_thread
     start_enrichment_thread()
+    from store_pruner import prune_old_jobs
+    try:
+        prune_old_jobs()
+    except Exception as _e:
+        print(f"[App] startup prune failed: {_e}")
     from job_liveness_checker import start_liveness_thread
     start_liveness_thread()
     print("[App] Job liveness checker started (250/day, top of feed first).")

@@ -63,6 +63,18 @@ def _matches_role_title(target_role: str, title: str) -> bool:
 _EXP_RANGE_RE = re.compile(
     r"(\d{1,2})\s*(?:-|–|to)\s*(\d{1,2})\s*\+?\s*(?:years?|yrs?)", re.I)
 _EXP_PLUS_RE = re.compile(r"(\d{1,2})\s*\+\s*(?:years?|yrs?)", re.I)
+# "N years of (professional/relevant/...) experience" - anchored on the word
+# experience so "5 years of company history" stays a non-match
+_EXP_OF_EXP_RE = re.compile(
+    r"(\d{1,2})\s*\+?\s*(?:years?|yrs?)(?:['\u2019]s?)?\s*(?:of\s+)?"
+    r"(?:relevant\s+|professional\s+|industry\s+|prior\s+|hands.on\s+|work(?:ing)?\s+)*experience", re.I)
+# "experience: 4 years" / "experience required - 3 yrs"
+_EXP_LABEL_RE = re.compile(
+    r"experience\s*(?:required|needed)?\s*[:\-–]\s*(\d{1,2})\s*\+?\s*(?:years?|yrs?)", re.I)
+# "minimum 4 years" / "min. 2 yrs" / "at least 3 years" / "requires 6 years"
+_EXP_QUALIFIER_RE = re.compile(
+    r"(?:min\.?(?:imum)?|at\s+least|requires?|needs?|must\s+have)\s+(?:of\s+)?"
+    r"(\d{1,2})\s*\+?\s*(?:years?|yrs?)", re.I)
 _EXP_MIN_RE = re.compile(
     r"(?:minimum(?:\s+of)?|at\s+least)\s+(\d{1,2})\s*(?:years?|yrs?)", re.I)
 
@@ -76,6 +88,9 @@ def _extract_min_experience_years(job: Dict[str, Any]) -> Any:
         mins.append(int(m.group(1)))
     for m in _EXP_MIN_RE.finditer(text):
         mins.append(int(m.group(1)))
+    for rx in (_EXP_OF_EXP_RE, _EXP_LABEL_RE, _EXP_QUALIFIER_RE):
+        for m in rx.finditer(text):
+            mins.append(int(m.group(1)))
     return min(mins) if mins else None
 
 def _max_user_experience_years(filters: Dict[str, Any]) -> Any:
@@ -167,7 +182,11 @@ def execute_authoritative_pipeline(
             valid_jobs.append(job)
             
     # 3. CHECK RECENCY
-    hours = filters.get("upload_time_hours") or filters.get("recency_hours") or 720
+    # Freshness-first (user request 2026-09-05): the store only retains ~72h
+    # of jobs now, and the feed shows at most that. The Jobs tab narrows
+    # further to 24h client-side; Search gets the full 72h for its
+    # "yesterday's best you missed" section.
+    hours = filters.get("upload_time_hours") or filters.get("recency_hours") or 72
     recency_jobs = filter_by_recency(valid_jobs, max_hours=hours)
     if not recency_jobs and valid_jobs:
         recency_jobs = valid_jobs

@@ -391,6 +391,15 @@ class ScanCoordinator:
         finally:
             self.scanner.close()
 
+        # Retention: the user wants only the freshest jobs (72h max, tracked
+        # jobs protected). Pruning at cycle end keeps the store permanently
+        # small instead of letting it grow between app restarts.
+        try:
+            from store_pruner import prune_old_jobs
+            prune_old_jobs()
+        except Exception as _pe:
+            print(f"[ScanCoordinator] prune failed: {_pe}")
+
         # Score jobs (single pass; HybridJobScorer skips jobs already scored
         # against the current resume version, so this is incremental).
         resume_data = load_json(os.path.join(BASE_DIR, "resume_store.json"), {})

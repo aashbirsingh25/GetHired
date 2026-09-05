@@ -638,21 +638,30 @@ function sortJobs(list, mode) {
   return out;
 }
 
+function jobAgeHours(j) {
+  const t = new Date(postedTime(j)).getTime();
+  return isNaN(t) ? 0 : (Date.now() - t) / 3600000;
+}
+
 function renderJobsList() {
-  const list = sortJobs(FEED, JOBS_SORT);
+  /* Jobs tab = the freshest only: last 24 hours (newer scans included as
+     they land). Older survivors live in Search's "yesterday" section. */
+  const fresh = FEED.filter(j => jobAgeHours(j) <= 24);
+  const list = sortJobs(fresh, JOBS_SORT);
+  $("#badge-jobs").textContent = list.length;
   $("#jobs-list").innerHTML = list.length
     ? list.map(j => jobRowHTML(j, "jobs")).join("")
-    : `<div class="t-empty">No matches yet — upload a resume in Profile and give the scanner a few minutes.</div>`;
+    : `<div class="t-empty">Nothing new in the last 24 hours yet — the scanner runs every 2 hours.<br>Check Search for yesterday's matches.</div>`;
 }
 
 async function loadJobs() {
   try {
     const d = await api("/api/jobs?sort=match");
     FEED = d.jobs || [];
-    $("#badge-jobs").textContent = FEED.length;
     const fb = d.filter_breakdown || {};
+    const fresh24 = FEED.filter(j => jobAgeHours(j) <= 24).length;
     $("#jobs-sub").textContent =
-      `${FEED.length} matches from ${(fb.total_in_store || 0).toLocaleString("en-IN")} scanned postings, ranked by fit.`;
+      `${fresh24} jobs from the last 24 hours (of ${(fb.total_in_store || 0).toLocaleString("en-IN")} scanned). New finds appear right after each scan.`;
     renderJobsList();
     buildSearchFilters();
     renderSearch();
@@ -768,9 +777,32 @@ function renderSearch() {
   else if (st.sort === "salary") list.sort((a, b) => (((b.salary_range_inr || {}).max) || 0) - (((a.salary_range_inr || {}).max) || 0));
   else list.sort((a, b) => ((b.match || {}).score || 0) - ((a.match || {}).score || 0));
   $("#search-count").textContent = `${list.length} of ${FEED.length} jobs`;
-  $("#search-list").innerHTML = list.length
+
+  let html = list.length
     ? list.map(j => jobRowHTML(j, "search")).join("")
     : `<div class="t-empty">Nothing matches these filters.</div>`;
+
+  /* "Last 24h" selected: below the fresh results, surface the best matches
+     from the day(s) before that would otherwise be missed. Same non-time
+     filters apply; ranked purely by match score. */
+  if (st.posted === 1) {
+    let missed = FEED.filter(j => {
+      const h = jobAgeHours(j);
+      return h > 24 && h <= 72;
+    });
+    if (st.location.size) missed = missed.filter(j => st.location.has(canonCity(j.location)));
+    if (st.source.size) missed = missed.filter(j => st.source.has((j.source || (j.sources || [])[0] || "career page").replace(/_/g, " ")));
+    if (st.score) missed = missed.filter(j => ((j.match || {}).score || 0) >= st.score);
+    if (st.salary) missed = missed.filter(j => { const sr = j.salary_range_inr; return sr && (sr.max || sr.min || 0) >= st.salary; });
+    missed.sort((a, b) => ((b.match || {}).score || 0) - ((a.match || {}).score || 0));
+    missed = missed.slice(0, 10);
+    if (missed.length) {
+      html += `<div class="sec-label" style="margin:26px 0 12px;font-size:12.5px">
+        ✨ Best matches from yesterday you might have missed</div>`
+        + missed.map(j => jobRowHTML(j, "search")).join("");
+    }
+  }
+  $("#search-list").innerHTML = html;
 }
 
 /* ---------------- actions ---------------- */
