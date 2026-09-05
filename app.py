@@ -607,9 +607,21 @@ def system_pulse():
     cfg = load_json(os.path.join(BASE_DIR, "config.json"), {})
     keys = cfg.get("llm", {}).get("keys", [])
     prov = {}
+    # config.json sanitizes every api_key to a YOUR_* placeholder on disk, so
+    # the file cannot tell live providers from empty template rows (claude /
+    # openai). The environment can: only providers with real keys loaded count.
+    live_providers = set()
+    if os.environ.get("GEMINI_API_KEYS"):
+        live_providers.add("gemini")
+    if os.environ.get("GROQ_API_KEY"):
+        live_providers.add("groq")
+    if os.environ.get("CLAUDE_API_KEY") or os.environ.get("ANTHROPIC_API_KEY"):
+        live_providers.add("claude")
+    if os.environ.get("OPENAI_API_KEY"):
+        live_providers.add("openai")
     for k in keys:
         p = k.get("provider")
-        if not p:
+        if not p or p not in live_providers:
             continue
         d = prov.setdefault(p, {"used_today": 0, "daily_limit": 0})
         d["used_today"] += int(k.get("used_today", 0) or 0)

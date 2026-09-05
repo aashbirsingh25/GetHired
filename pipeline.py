@@ -105,7 +105,14 @@ def _matches_location(target_loc: str, location: str, description: str = "") -> 
     d_lower = (description or "").lower()
 
     if loc_clean == "remote":
-        return "remote" in l_lower or bool(re.search(r"\bremote\b", d_lower))
+        # The location FIELD must say remote. Falling back to the description
+        # let any foreign on-site job that merely mentions the word (e.g.
+        # "remote work possible on Fridays") into an India-only feed - Adyen
+        # Amsterdam and DoorDash San Francisco were live examples. Only when
+        # the job states no location at all is the description consulted.
+        if "remote" in l_lower or "work from home" in l_lower or "wfh" in l_lower:
+            return True
+        return not l_lower.strip() and bool(re.search(r"\bremote\b", d_lower))
 
     synonyms = LOCATION_SYNONYMS.get(loc_clean, [loc_clean])
     for syn in synonyms:
