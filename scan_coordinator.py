@@ -315,8 +315,14 @@ class ScanCoordinator:
                             comp_map[cid]["ats"] = discovered_ats
                             print(f"[ScanCoordinator] Learned ATS for {cname}: {discovered_ats} (fast lane next cycle)")
 
+                from store_pruner import load_tombstones
+                _tombs = load_tombstones()
                 for job in jobs:
                     jid = job["id"]
+                    if jid in _tombs:
+                        # pruned as too old; career pages re-yield the same
+                        # rows every cycle - do not resurrect them as "new"
+                        continue
                     if jid not in existing_jobs:
                         existing_jobs[jid] = job
                     else:

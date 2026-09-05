@@ -309,10 +309,14 @@ class BackgroundSearchWorker:
             store_data = load_json(JOBS_STORE_FILE, {"jobs": []})
             by_id = {j.get("id"): j for j in store_data.get("jobs", [])}
             added = 0
+            from store_pruner import load_tombstones
+            _tombs = load_tombstones()
             for job in deduped_raw_jobs:
                 jid = job.get("id")
                 if not jid:
                     continue
+                if jid in _tombs and jid not in by_id:
+                    continue  # pruned as too old; don't resurrect
                 if jid in by_id:
                     # keep any existing match; refresh other fields
                     existing_match = by_id[jid].get("match")

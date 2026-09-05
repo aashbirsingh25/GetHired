@@ -10,7 +10,12 @@ def filter_by_recency(jobs: List[Dict[str, Any]], days: float = None, max_hours:
 
     recent_jobs = []
     for job in jobs:
-        ts_str = job.get("first_seen") or job.get("posted_date") or job.get("scan_timestamp") or job.get("first_seen_at")
+        # posted_date is the employer's own timestamp - when it exists it
+        # always wins. first_seen is only OUR discovery time: career-page
+        # jobs get re-captured every scan, so after a prune they come back
+        # with a fresh first_seen and a 15-day-old posting masqueraded as
+        # new (user caught this live).
+        ts_str = job.get("posted_date") or job.get("first_seen") or job.get("scan_timestamp") or job.get("first_seen_at")
         is_recent = True
 
         if ts_str:

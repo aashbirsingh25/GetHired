@@ -18,6 +18,17 @@ from datetime import datetime, timezone
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JOBS_FILE = os.path.join(BASE_DIR, "jobs_store.json")
 MAX_AGE_HOURS = 72
+TOMBSTONE_FILE = os.path.join(BASE_DIR, "pruned_tombstones.json")
+TOMBSTONE_KEEP_DAYS = 30
+
+
+def load_tombstones() -> set:
+    """Ids of jobs we pruned - re-scans must not resurrect them as 'new'."""
+    try:
+        data = json.load(open(TOMBSTONE_FILE, encoding="utf-8"))
+        return set(data.keys())
+    except Exception:
+        return set()
 
 
 def _job_age_hours(job, now):
@@ -78,6 +89,24 @@ def prune_old_jobs(max_age_hours: float = MAX_AGE_HOURS) -> dict:
     if dropped:
         data["jobs"] = kept
         save_json(JOBS_FILE, data)
+        # tombstone the dropped ids so the next scan can't re-add them with
+        # a fresh first_seen (career pages re-yield the same jobs every cycle)
+        try:
+            tombs = json.load(open(TOMBSTONE_FILE, encoding="utf-8"))
+        except Exception:
+            tombs = {}
+        now_iso = now.isoformat()
+        kept_ids = {j.get("id") for j in kept}
+        for j in jobs:
+            if j.get("id") and j["id"] not in kept_ids:
+                tombs[j["id"]] = now_iso
+        cutoff_iso = datetime.fromtimestamp(
+            now.timestamp() - TOMBSTONE_KEEP_DAYS * 86400, tz=timezone.utc).isoformat()
+        tombs = {k: v for k, v in tombs.items() if v >= cutoff_iso}
+        tmp = TOMBSTONE_FILE + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(tombs, f)
+        os.replace(tmp, TOMBSTONE_FILE)
     stats = {"before": len(jobs), "kept": len(kept), "dropped": dropped,
              "protected": len(protected)}
     print(f"[Prune] jobs store: {stats['before']} -> {stats['kept']} "
