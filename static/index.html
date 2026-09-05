@@ -24,16 +24,17 @@
   --peach: #fbe1d1;
   --peach-deep: #f6cfae;
   --sienna: #5d2a1a;
-  --sienna-soft: #8a4a32;
+  --sienna-soft: #d96f4e;  /* bright terracotta - the warm accent */
   --hairline: #ececec;
-  --ok: #3e6b4f;          /* muted forest - quiet success tone */
-  --ok-soft: #e7efe9;
+  --ok: #16a06d;          /* vivid emerald - alive, not muddy */
+  --ok-soft: #ddf5ea;
   --radius-card: 24px;
   --radius-el: 20px;
   --radius-input: 16px;
   --pill: 9999px;
   --sidebar-w: 232px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: cubic-bezier(0.34, 1.3, 0.5, 1);
   --shadow-artifact: 0 0 0 1px rgba(4,23,43,0.05), 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.08);
   --serif: "Source Serif 4", Georgia, ui-serif, serif;
   --sans: "Inter", -apple-system, sans-serif;
@@ -90,7 +91,8 @@ body { font-family: var(--sans); background: var(--fog); color: var(--ink); over
 #jobs-list .job-row:first-child, #search-list .job-row:first-child { border-top: none; }
 .job-row { background: transparent; border: none; border-top: 1px solid var(--hairline); border-radius: 0; margin: 0; overflow: hidden; transition: background 0.35s var(--ease); }
 .job-row:hover, .job-row.open { background: var(--fog); }
-.job-head { display: flex; align-items: center; gap: 16px; padding: 15px 22px; cursor: pointer; user-select: none; }
+.job-head { display: flex; align-items: center; gap: 16px; padding: 15px 22px; cursor: pointer; user-select: none; transition: transform 0.15s var(--ease); }
+.job-head:active { transform: scale(0.992); }
 .score-ring { position: relative; width: 46px; height: 46px; flex-shrink: 0; }
 .score-ring svg { transform: rotate(-90deg); width: 46px; height: 46px; display: block; }
 .score-ring .val { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 14.5px; color: var(--ink); }
@@ -103,10 +105,10 @@ body { font-family: var(--sans); background: var(--fog); color: var(--ink); over
 .badge.llm { background: var(--peach); color: var(--sienna); }
 .badge.local { background: var(--mist); color: var(--ash); }
 .badge.src { background: transparent; color: var(--ash); border: 1px solid var(--hairline); text-transform: none; letter-spacing: 0; }
-.chev { color: var(--smoke); transition: transform 0.45s var(--ease); flex-shrink: 0; }
-.job-row.open .chev { transform: rotate(90deg); }
-.job-body { max-height: 0; overflow: hidden; transition: max-height 0.65s var(--ease), padding 0.45s var(--ease); padding: 0 22px; }
-.job-row.open .job-body { max-height: 1400px; padding: 0 22px 22px; overflow-y: auto; }
+.chev { color: var(--smoke); transition: transform 0.5s var(--spring); flex-shrink: 0; }
+.job-row.open .chev { transform: rotate(90deg) scale(1.15); }
+.job-body { max-height: 0; overflow: hidden; transition: max-height 0.7s var(--spring), padding 0.5s var(--ease), opacity 0.5s var(--ease); opacity: 0; padding: 0 22px; }
+.job-row.open .job-body { max-height: 1400px; padding: 0 22px 22px; overflow-y: auto; opacity: 1; }
 .conf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 8px 0 18px; }
 .conf-cell { background: var(--mist); border-radius: var(--radius-input); padding: 14px 16px; }
 .conf-cell .k { font-size: 10px; color: var(--ash); font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; }
@@ -173,9 +175,9 @@ input::placeholder { color: var(--smoke); }
 .wp-check input[type="checkbox"]:checked { background: var(--sienna); border-color: var(--sienna); }
 .wp-check input[type="checkbox"]:checked::after { content: "✓"; position: absolute; color: #fff; font-size: 10px; left: 1.5px; top: -1.5px; }
 .wp-check .wp-label { position: relative; transition: color 0.4s var(--ease); }
-.wp-check .wp-label::before { content: ""; position: absolute; top: 50%; left: -2px; right: 100%; height: 1.5px; background: var(--sienna); border-radius: 2px; transition: right 0.45s var(--ease); }
+.wp-check .wp-label::before { content: ""; position: absolute; top: 50%; left: 0; width: 0; height: 1.5px; background: var(--sienna); border-radius: 2px; transition: width 0.45s var(--ease); }
 .wp-check input:checked ~ .wp-label { color: var(--smoke); }
-.wp-check input:checked ~ .wp-label::before { right: -4px; }
+.wp-check input:checked ~ .wp-label::before { width: calc(100% + 4px); }
 
 /* ---- yellow-goat upload, ink/peach tones ---- */
 .yg-container { border-radius: var(--radius-el); display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 12px; gap: 8px; background: var(--mist); }
@@ -204,17 +206,18 @@ input::placeholder { color: var(--smoke); }
 .share-btn:hover svg { opacity: 1; }
 
 /* ---- dull-moose tracker card, theme tints ---- */
-.dm-card { position: relative; display: flex; flex-direction: column; gap: 14px; padding: 14px; border-radius: var(--radius-el); background: var(--paper); box-shadow: var(--shadow-artifact); margin-bottom: 14px; }
+.dm-card { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 20px 22px; border-radius: var(--radius-el); background: var(--paper); box-shadow: var(--shadow-artifact); margin-bottom: 14px; transition: transform 0.35s var(--ease); }
+.dm-card:hover { transform: translateY(-2px); }
 .dm-card__hero { display: flex; flex-direction: column; gap: 26px; padding: 16px; border-radius: var(--radius-input); }
 .dm-card__hero-header { display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 14px; }
-.dm-card__job-title { font-family: var(--serif); font-weight: 400; font-size: 19px; }
+.dm-card__job-title { font-family: var(--serif); font-weight: 400; font-size: 21px; letter-spacing: -0.01em; }
 .dm-card__footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 .dm-card__job-summary { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--slate); }
 
 /* ---- profile / tracker / empty ---- */
 .tracker-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 .t-empty { text-align: center; color: var(--ash); padding: 30px 0 34px; font-size: 14px; }
-.main_wrapper { transform: scale(0.55); transform-origin: top center; margin: 0 auto -130px; filter: saturate(0.35) sepia(0.12); }
+.main_wrapper { font-size: 4.5px !important; margin: 10px auto 6px !important; filter: saturate(0.4) sepia(0.1); }
 
 /* ---- insights ---- */
 .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-bottom: 24px; }
@@ -280,8 +283,9 @@ input::placeholder { color: var(--smoke); }
 @keyframes hamsterBRLimb { from, 25%, 50%, 75%, to { transform: rotate(-60deg) translateZ(-1px); } 12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(20deg) translateZ(-1px); } }
 @keyframes hamsterBLLimb { from, 25%, 50%, 75%, to { transform: rotate(20deg); } 12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(-60deg); } }
 @keyframes hamsterTail { from, 25%, 50%, 75%, to { transform: rotate(30deg) translateZ(-1px); } 12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(10deg) translateZ(-1px); } }
-@keyframes spoke { from { transform: rotate(0); }
-/* ===== fat-horse-65 (Praashoo7): retro TV - used for empty states ===== */
+@keyframes spoke { from { transform: rotate(0); } to { transform: rotate(-1turn); } }
+
+/* ===== fat-horse-65 (Praashoo7) FULL original CSS ===== */
 
 /* From Uiverse.io by Praashoo7  - Tags: card, error, card template, card animation, 404, not found, 404 not found, tv */
 /* Design Inspired by one of Stefan Devai's Design on Dribble */
@@ -731,9 +735,7 @@ input::placeholder { color: var(--smoke); }
 }
 
 
-
-.t-empty .notfound_text { font-size: inherit; }
-
+.t-empty .main_wrapper { font-size: 4.5px; margin: 10px auto 6px; filter: saturate(0.4) sepia(0.1); }
 
 </style>
 </head>
@@ -1262,23 +1264,24 @@ $("#tracker-tabs").addEventListener("click", (e) => {
 
 function trackerAppRow(a) {
   const ref = !!a.referral_received, shl = !!a.was_shortlisted;
+  const status = shl ? ["Shortlisted", "var(--ok-soft)", "var(--ok)"]
+               : ref ? ["Referred", "var(--peach)", "var(--sienna)"]
+               : ["Applied", "var(--mist)", "var(--slate)"];
   return `<div class="dm-card">
-    <section class="dm-card__hero" style="background:${shl ? "var(--peach)" : ref ? "var(--peach)" : "var(--mist)"};color:${shl || ref ? "var(--sienna)" : "var(--ink)"}">
-      <header class="dm-card__hero-header">
-        <span>${shl ? "Shortlisted ✓" : ref ? "Referred ✓" : "Applied"}</span>
-        <span style="font-size:12px;font-weight:600;opacity:.65">${timeAgo(a.applied_date || a.created_at)}</span>
-      </header>
-      <p class="dm-card__job-title">${esc(a.job_title || a.title || "Unknown role")}</p>
-    </section>
-    <footer class="dm-card__footer">
-      <div class="dm-card__job-summary"><b>${esc(a.company)}</b></div>
-      <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="badge" style="background:${status[1]};color:${status[2]}">${status[0]}</span>
+      <span style="font-size:11.5px;color:var(--smoke)">${timeAgo(a.applied_date || a.created_at)}</span>
+    </div>
+    <p class="dm-card__job-title">${esc(a.job_title || a.title || "Unknown role")}</p>
+    <div class="dm-card__footer">
+      <div class="dm-card__job-summary"><b style="color:var(--ink)">${esc(a.company)}</b></div>
+      <div style="display:flex;gap:18px;align-items:center">
         <label class="wp-check"><input type="checkbox" ${ref ? "checked" : ""}
           onchange="setAppFlag('${esc(a.id)}','referral_received',this.checked)"><span class="wp-label">Got referral</span></label>
         <label class="wp-check"><input type="checkbox" ${shl ? "checked" : ""}
           onchange="setAppFlag('${esc(a.id)}','was_shortlisted',this.checked)"><span class="wp-label">Got shortlisted</span></label>
       </div>
-    </footer>
+    </div>
   </div>`;
 }
 window.setAppFlag = async (id, flag, val) => {
