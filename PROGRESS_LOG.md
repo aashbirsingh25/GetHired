@@ -768,3 +768,30 @@ IST). Silent fallback is now loud (needs a restart to take effect).
 - test_ui_e2e.py: ALL 26 PASS (all six tabs, expansion, filters, sorts,
   apply-later round trip, insights counters, settings, zero JS errors).
 - Unit suites still green.
+
+## 2026-09-05 (12:45) — Weekly review #2 + nice-to-have list
+
+### Weekly review findings
+- **Watchlist promotion mechanism PROVEN LIVE: GoKwik auto-promoted** (was
+  parked Aug 29 with 19 India roles, predicted likeliest promotion). The
+  park -> re-probe -> promote loop works end to end.
+- Fresher-active 24.6% (69) - up from 18.6%. Mix of manual batch adds and
+  existing companies posting fresher roles; no metric artifact found.
+- Discovery since Aug 29: 12 cycles, 330 probed, 0 direct adds, 23 parked.
+  Rejections still dominated by "no public ATS endpoint" (307/330).
+  Reviewer trap hit: log key is candidates_probed, NOT probed - misread
+  it first as "worker probing nothing", which was wrong.
+- Old-log red herring: Jitterbit triple-add entries are all pre-gate-fix
+  (Aug 23-24); single row in companies.json, no defect.
+- Occasional "LLM propose error (gemini): 504" - proposals skip that
+  cycle; acceptable, mining still supplies candidates.
+
+### Nice-to-haves shipped
+- **Ollama installed** (brew), qwen2.5:7b pulling; scorer already supports
+  it (tier 4) - free unlimited local scoring once model lands.
+- **LinkedIn description enricher** (linkedin_detail_enricher.py): stub
+  descriptions are why MongoDB SE-3 slipped through. Detail pages ARE
+  readable logged-out (verified live). Gentle loop: 1 fetch/20s, 60/day,
+  feed candidates (score>=50) first, authwall => stop for the day,
+  permanent fail-mark per job. Verified end to end: 1,877-char description
+  merged, stale tier-5 match cleared for rescore. 566 stub candidates queued.

@@ -1831,4 +1831,7 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 5050))
     print(f"Starting GetHired Flask server on http://127.0.0.1:{port}...")
+    from linkedin_detail_enricher import start_enrichment_thread
+    start_enrichment_thread()
+    print("[App] LinkedIn description enricher started (60/day, 1 per 20s).")
     app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
