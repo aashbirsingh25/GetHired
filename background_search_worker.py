@@ -16,6 +16,7 @@ from fetchers.freshersworld_fetcher import fetch_freshersworld_jobs
 from fetchers.adzuna_fetcher import fetch_adzuna_jobs
 from fetchers.jooble_fetcher import fetch_jooble_jobs
 from fetchers.apify_naukri_fetcher import fetch_apify_naukri_jobs
+from fetchers.jobspy_indeed_fetcher import fetch_jobspy_indeed_jobs
 from fetchers.linkedin_fetcher import fetch_linkedin_jobs, fetch_linkedin_fresher_targets
 from job_deduplicator import JobDeduplicator
 from recency_filter import expand_search_if_sparse
@@ -433,6 +434,7 @@ class BackgroundSearchWorker:
             "remotive": [],
             "internshala": [],
             "naukri_apify": [],
+            "indeed_jobspy": [],
             "shine": [],
             "freshersworld": [],
             "adzuna": [],
@@ -517,6 +519,15 @@ class BackgroundSearchWorker:
                 print(f"[BackgroundSearchWorker] ApifyNaukri error: {e}")
                 results["naukri_apify"] = []
 
+        def fetch_jobspy_indeed():
+            # Isolated-venv subprocess; our direct Indeed fetcher has been
+            # blocked for weeks while this path returns real posted dates.
+            try:
+                results["indeed_jobspy"] = fetch_jobspy_indeed_jobs(role=role, max_results=30)
+            except Exception as e:
+                print(f"[BackgroundSearchWorker] JobSpyIndeed error: {e}")
+                results["indeed_jobspy"] = []
+
         def fetch_shine():
             try:
                 import time as _t
@@ -590,6 +601,7 @@ class BackgroundSearchWorker:
                 executor.submit(fetch_jooble),
                 executor.submit(fetch_linkedin),
                 executor.submit(fetch_apify_naukri),
+                executor.submit(fetch_jobspy_indeed),
             ]
             for f in futures:
                 f.result()
