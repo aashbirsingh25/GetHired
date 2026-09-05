@@ -4,17 +4,17 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 37,
-        "used_today": 13,
+        "quota_remaining": 41,
+        "used_today": 9,
         "rpm_limit": 8,
         "daily_limit": 50
       },
       {
         "provider": "groq",
         "api_key": "YOUR_GROQ_API_KEY",
-        "quota_remaining": 395,
+        "quota_remaining": 400,
         "rpm_limit": 30,
-        "used_today": 5,
+        "used_today": 0,
         "daily_limit": 400
       },
       {
@@ -34,32 +34,8 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 36,
-        "used_today": 14,
-        "rpm_limit": 8,
-        "daily_limit": 50
-      },
-      {
-        "provider": "gemini",
-        "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 32,
-        "used_today": 18,
-        "rpm_limit": 8,
-        "daily_limit": 50
-      },
-      {
-        "provider": "gemini",
-        "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 27,
-        "used_today": 23,
-        "rpm_limit": 8,
-        "daily_limit": 50
-      },
-      {
-        "provider": "gemini",
-        "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 37,
-        "used_today": 13,
+        "quota_remaining": 41,
+        "used_today": 9,
         "rpm_limit": 8,
         "daily_limit": 50
       },
@@ -82,8 +58,32 @@
       {
         "provider": "gemini",
         "api_key": "YOUR_GEMINI_API_KEY",
-        "quota_remaining": 48,
-        "used_today": 2,
+        "quota_remaining": 37,
+        "used_today": 13,
+        "rpm_limit": 8,
+        "daily_limit": 50
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 39,
+        "used_today": 11,
+        "rpm_limit": 8,
+        "daily_limit": 50
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 42,
+        "used_today": 8,
+        "rpm_limit": 8,
+        "daily_limit": 50
+      },
+      {
+        "provider": "gemini",
+        "api_key": "YOUR_GEMINI_API_KEY",
+        "quota_remaining": 50,
+        "used_today": 0,
         "rpm_limit": 8,
         "daily_limit": 50
       },
@@ -105,7 +105,7 @@
       }
     ],
     "current_key_index": 0,
-    "quota_date": "2026-08-29"
+    "quota_date": "2026-09-04"
   },
   "background_search": {
     "enabled": true,

@@ -1,41 +1,40 @@
 # Weekly Company-Discovery Review
 
-Generated: 2026-08-29T21:02:28.111425+00:00
+Generated: 2026-09-05T04:06:09.490911+00:00
 
 Orchestrator: verify the decisions below, then teach the worker by
 editing `discovery_rules.json` (blocklist_names, force_watch_names,
 min_fresher_to_admit, notes). The worker reads that file every cycle.
 
 ## Activity (last 7 days)
-- discovery cycles: 24
-- candidates probed: 627
-- ADDED to list: 3 -> Jitterbit, Jitterbit, Jitterbit
-- PROMOTED from watchlist: 0 -> none
+- discovery cycles: 11
+- candidates probed: 305
+- ADDED to list: 0 -> none
+- PROMOTED from watchlist: 1 -> GoKwik
 - watchlist size: 17
 
 ## Rejection reasons (nothing is deleted; all are re-checked)
-- 582 x no public ATS endpoint found
-- 25 x no fresher-eligible openings right now
-- 17 x no India-based openings
+- 284 x no public ATS endpoint found
+- 19 x no fresher-eligible openings right now
+- 2 x no India-based openings
 
 ## Near-misses to review (real India hiring, no fresher role yet)
 These are the highest-risk calls: if the worker is wrong about a
 company, it will most likely be one of these.
+- MosChip Technologies (keka) - 30 India jobs, 0 fresher, checked 1x
 - DevRev (greenhouse) - 23 India jobs, 0 fresher, checked 1x
-- GoKwik (keka) - 19 India jobs, 0 fresher, checked 1x
 - NK Securities Research (greenhouse) - 16 India jobs, 0 fresher, checked 1x
 - Refyne (smartrecruiters) - 9 India jobs, 0 fresher, checked 1x
-- Iris Software Inc. (smartrecruiters) - 4 India jobs, 0 fresher, checked 17x
+- Iris Software Inc. (smartrecruiters) - 4 India jobs, 0 fresher, checked 19x
 - Dhan (keka) - 4 India jobs, 0 fresher, checked 1x
 - Skyflow (ashby) - 4 India jobs, 0 fresher, checked 1x
 - ZF Group (successfactors) - 4 India jobs, 0 fresher, checked 1x
 - Testsigma (keka) - 3 India jobs, 0 fresher, checked 1x
-- Capgemini (successfactors) - 1 India jobs, 0 fresher, checked 9x
 - ValueLabs (smartrecruiters) - 1 India jobs, 0 fresher, checked 1x
 
 ## Long-parked watchlist entries (checked most often, still no fresher)
-- Iris Software Inc. - checked 17x, best fresher seen 0
-- Capgemini - checked 9x, best fresher seen 0
+- Iris Software Inc. - checked 19x, best fresher seen 0
+- Capgemini - checked 11x, best fresher seen 0
 - Coalition Technologies - checked 5x, best fresher seen 0
 - BOLD - checked 5x, best fresher seen 0
 - Kellton Tech Solutions - checked 1x, best fresher seen 2
