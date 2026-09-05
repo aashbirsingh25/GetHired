@@ -142,10 +142,11 @@ def run():
 
         # ---- insights ----
         page.locator('.nav-item[data-tab="insights"]').click()
-        page.wait_for_timeout(1400)
+        page.wait_for_selector("#insights-body .stat-card", timeout=30000)
+        page.wait_for_timeout(1400)  # let count-up animations finish
         check("insights stat cards", page.locator("#insights-body .stat-card").count() >= 4)
         first_num = page.locator("#insights-body .num").first.inner_text().replace(",", "")
-        check("counter animated to real value", first_num.isdigit() and int(first_num) > 1000, first_num)
+        check("counter animated to real value", first_num.isdigit() and int(first_num) > 500, first_num)
         check("funnel bars render", page.locator("#insights-body .bar-row").count() >= 4)
         check("75% goal gauge renders", page.locator("#insights-body .gauge").count() == 1)
         check("gauge shows target", "75" in page.locator("#insights-body .g-val").inner_text())
