@@ -1,211 +1,135 @@
 # GetHired
 
-GetHired is an automated job discovery, aggregation, filtering, deduplication, and resume-matching platform built with Python (Flask) and a single-page web dashboard. It collects job postings from direct company career pages and external job sources, standardizes and deduplicates listings, filters out invalid or irrelevant roles, and evaluates candidate fit using a tiered scoring engine combining LLMs, local vector embeddings, and rule-based keyword matching.
+**A self-hosted, zero-recurring-cost job discovery engine that hunts while you sleep.**
 
-## What It Does
+GetHired autonomously scans company career pages and job boards, scores every posting against your resume using LLMs, and serves a ranked feed of fresh, relevant openings — built for one very specific mission: landing an entry-level software role in India, fast.
 
-GetHired automates the job discovery workflow through a deterministic 11-step execution pipeline:
+> Freshness first: the feed only shows jobs posted in the last **24 hours**. Anything older than **72 hours** is pruned. Stale listings are the enemy.
 
-1. **Job Collection**: Ingests job postings via headless browser career site scrapers (Playwright), job board API actors (Apify), dedicated fetchers (Indeed, Naukri), and manual LinkedIn URL imports.
-2. **Filtering & Validation**: Validates job posting structural integrity and status to filter out closed or malformed listings.
-3. **Deduplication**: Generates canonical job IDs, normalizes URLs and tracking parameters, and merges duplicate postings across sources.
-4. **Targeted Filtering**: Applies configurable filters for roles, target locations, recency windows, and title exclusion keywords (e.g., filtering out senior or management roles).
-5. **Resume & Job Matching**: Computes personalized relevance scores by comparing candidate resume data against job descriptions.
-6. **Scoring & Ranking**: Employs a multi-tier fallback scoring architecture to assign match percentages and confidence levels.
-7. **Feed Generation & Tracking**: Sorts curated jobs by relevance, recency, or compensation, excluding already-applied positions while tracking application statuses.
+---
 
-## Key Features
+## Why
 
-- **Automated Career Page Scraping**: Parses direct company career pages using Playwright and HTML pattern recognition.
-- **Multi-Source Job Aggregation**: Integrates third-party scraper actors via Apify alongside direct platform fetchers.
-- **Canonical Job Deduplication**: Merges duplicate listings across multiple job boards using URL canonicalization, fuzzy title matching, and req ID extraction.
-- **Tiered Multi-Model Scoring Engine**: Dynamically routes candidate-job evaluation across 6 scoring tiers based on availability and quota headroom:
-  - **Tier 1**: Google Gemini (with multi-key round-robin rotation) & Groq API
-  - **Tier 2**: Anthropic Claude API
-  - **Tier 3**: OpenAI API
-  - **Tier 4**: Local Ollama model (`qwen2.5:7b`)
-  - **Tier 5**: Hybrid Semantic Vector Search using `SentenceTransformers` (`all-mpnet-base-v2`) and FAISS CPU vector index
-  - **Tier 6**: Rule-based local keyword and role classifier fallback
-- **Score Verification & Consensus**: Runs second-opinion verification for ambiguous score ranges to prevent model disagreement.
-- **Application Tracking & Feed Management**: Tracks application states (`Applied`, `Bookmarked`, `Dismissed`) and excludes applied positions from main recommendations.
-- **Job Market Analytics & Insights**: Aggregates company activity, role distributions, location density, and timeline metrics.
-- **Web Dashboard**: Single-page web UI built with Vanilla JavaScript and Tailwind CSS tokens for interactive job search, filtering, resume upload, and analytics viewing.
+Job boards are noisy, slow, and full of dead or senior-level postings. Checking 300 company career pages by hand is impossible. GetHired does it every few hours, filters ruthlessly for **0-experience-friendly roles in Gurugram / Bangalore / Delhi NCR / Noida / remote**, explains *why* each job matches, and throws away anything stale, dead, or mislabeled.
 
-## How It Works
+## How it works
 
 ```
-Raw Job Postings (Career Pages / Apify / Fetchers / Manual Import)
-                         │
-                         ▼
-        [ Store Integrity & Structural Validation ]
-                         │
-                         ▼
-          [ Canonical URL & Title Deduplication ]
-                         │
-                         ▼
-    [ Filters: Role / Location / Recency / Exclusions ]
-                         │
-                         ▼
-            [ Tiered Scoring Architecture ]
-  ┌──────────────────────────────────────────────────┐
-  │ Tier 1: Gemini & Groq APIs (Key Rotation)        │
-  │ Tier 2: Anthropic Claude API                     │
-  │ Tier 3: OpenAI API                               │
-  │ Tier 4: Ollama Local (`qwen2.5:7b`)              │
-  │ Tier 5: Hybrid Semantic (SentenceTransformers+FAISS)│
-  │ Tier 6: Local Keyword Rule-Based Scorer          │
-  └──────────────────────────────────────────────────┘
-                         │
-                         ▼
-            [ Score Consensus Verification ]
-                         │
-                         ▼
-  [ Final Feed Generation & Application Tracking UI ]
+ 13 job sources                    autonomous discovery
+ (career pages, boards, APIs)      (finds new companies every 2h)
+        │                                   │
+        ▼                                   ▼
+ ┌─────────────────────────────────────────────────┐
+ │  Scan coordinator — parallel workers,           │
+ │  sequential browser lane, per-company dormancy  │
+ └─────────────────────────────────────────────────┘
+        │
+        ▼
+ validation → dedup (company-bucketed) → tombstone check
+        │
+        ▼
+ filters: experience (0 yrs) · location (India/remote) ·
+          seniority (SDE-2/3, Engineer III blocked) · recency
+        │
+        ▼
+ ┌─────────────────────────────────────────────────┐
+ │  Tiered scoring engine                          │
+ │  1-2. LLM (Gemini ×10 keys, Groq) w/ quotas     │
+ │  3.   Local LLM (Ollama qwen2.5:7b)             │
+ │  4.   Semantic vectors (mpnet + FAISS)          │
+ │  5.   Rule-based keyword fallback               │
+ └─────────────────────────────────────────────────┘
+        │
+        ▼
+ ranked feed (24h window) → web dashboard → apply
 ```
 
-## Tech Stack
+## Key features
 
-- **Backend**: Python 3.10+, Flask, Werkzeug, Gunicorn
-- **Machine Learning & NLP**: `sentence-transformers` (`all-mpnet-base-v2`), `faiss-cpu`, `scikit-learn`, `numpy`
-- **LLM Integrations**: Google Gemini API, Groq API, Anthropic Claude API, OpenAI API, Ollama (Local `qwen2.5:7b`)
-- **Scraping & Automation**: Playwright, BeautifulSoup4, Feedparser, Requests, Apify Client
-- **Frontend**: HTML5, Vanilla JavaScript, Tailwind CSS (via CDN), Google Fonts (Plus Jakarta Sans, Hanken Grotesk)
-- **Data Storage**: Local JSON store files (`jobs_store.json`, `companies.json`, `pattern_store.json`, `applications.json`)
+**Collection**
+- Playwright-driven career-page scraping with per-ATS extractors (Greenhouse, Lever, Workday, SuccessFactors, and more)
+- Job board fetchers: Adzuna, Jooble, Internshala, Freshersworld, Cutshort, Naukri (via Apify, budget-capped), Indeed (via JobSpy in a quarantined venv)
+- TLS-impersonation fetching (Scrapling) to reach bot-walled sites
+- LinkedIn description enrichment — logged-out only, strictly rate-limited (1 req / 20 s, 60/day)
 
-## Project Structure
+**Autonomy**
+- Company discovery worker finds and verifies new employers every 2 hours across 18 categories
+- Watchlist with park → reprobe → promote lifecycle for companies that aren't hiring freshers *yet*
+- Zero-yield sweeps demote dead sources; dormancy backs off quiet companies
+- Job liveness checker marks dead postings closed; closed jobs never resurface
 
-```
-GetHired/
-├── app.py                            # Main Flask Web Application and REST API server
-├── pipeline.py                       # Authoritative 11-step deterministic execution pipeline
-├── scan_coordinator.py               # Orchestrator for multi-company career site scanning
-├── background_search_worker.py       # Background worker for continuous automated search
-├── hybrid_scorer.py                  # Tiered multi-model scoring orchestrator (Tiers 1-6)
-├── llm_router.py                     # API key provider router, rate-limit manager, and fallback selector
-├── local_scorer.py                   # Rule-based local keyword and role classifier scorer
-├── hybrid_semantic_fallback.py       # Vector-based semantic similarity scoring fallback
-├── embedding_service.py              # SentenceTransformers vector embedding service
-├── vector_store.py                   # FAISS CPU vector index manager
-├── job_deduplicator.py               # Job deduplication engine
-├── job_identity.py                   # Canonical ID generator and URL normalizer
-├── apify_scanner.py                  # Job scraper integration using Apify actors
-├── browser_scanner.py                # Direct career page scraper using Playwright & BeautifulSoup
-├── fetchers/                         # Source-specific fetchers (Indeed, Naukri)
-│   ├── indeed_fetcher.py
-│   └── naukri_fetcher.py
-├── resume_parser.py                  # Candidate resume text and skill parser
-├── application_tracker.py            # Application state tracker
-├── recommendation_engine.py          # Market insights and recommendation generator
-├── insights_aggregator.py            # Analytics aggregator across companies, roles, and locations
-├── store_integrity_checker.py        # Integrity checker for job data structures
-├── test_suite.py                     # Integrated regression test suite
-├── static/                           # Web dashboard static frontend
-│   └── index.html                    # Single-page interface template and scripts
-├── deployment/                       # Deployment guides
-│   └── ollama_setup.md               # Setup instructions for Ollama on Linux VMs
-├── config.json                       # Application configuration settings
-├── companies.json                    # Target company directory
-├── requirements.txt                  # Python dependencies
-└── .env.example                      # Environment variables template file
-```
+**Freshness**
+- Feed shows last 24 h only; store retains 72 h (tracked jobs protected)
+- 30-day tombstones stop pruned jobs from resurrecting on rescan
+- `posted_date` always beats `first_seen` for recency
 
-## Setup
+**Scoring**
+- Tiered engine with real quota accounting: daily rollover at midnight US-Pacific, headroom-ordered provider selection, escalating backoff
+- Score verification: ambiguous scores get a second opinion from a different model
+- Evidence cap: stub descriptions can't score above 60 ("limited info" badge)
+- Transparent explanations — every score says why
 
-Follow these instructions to set up and run GetHired locally.
+**Dashboard**
+- Single-page app (vanilla JS + hand-rolled CSS): ranked feed, search with filters, application tracker (applied / referred / shortlisted / apply-later / viewed / saved), insights, quota pulse, resume upload
+- Feed API answers in ~6 ms thanks to mtime-keyed caching
 
-### 1. Clone Repository
-```bash
-git clone https://github.com/aashbirsingh25/GetHired.git
-cd GetHired
-```
-
-### 2. Create Python Virtual Environment
-```bash
-python -m venv venv
-```
-
-Activate the environment:
-- **On Linux/macOS**:
-  ```bash
-  source venv/bin/activate
-  ```
-- **On Windows**:
-  ```cmd
-  venv\Scripts\activate
-  ```
-
-### 3. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-*(Optional for browser-based scraping)*: Install Playwright browsers:
-```bash
-playwright install chromium
-```
-
-### 4. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-
-Edit `.env` and fill in your API keys (see [Environment Variables](#environment-variables)).
-
-### 5. Run the Application
-```bash
-python app.py
-```
-The application will start locally on `http://127.0.0.1:5000`.
-
-## Environment Variables
-
-GetHired supports multiple API providers. Configure any or all of the following in `.env`:
-
-| Variable | Description | Required / Optional |
-|---|---|---|
-| `GEMINI_API_KEY` | Google Gemini API key | Optional (Tier 1 scoring) |
-| `GEMINI_API_KEYS` | Comma-separated Gemini API keys for round-robin rotation | Optional |
-| `GROQ_API_KEY` | Groq API key | Optional (Tier 1 scoring) |
-| `CLAUDE_API_KEY` | Anthropic Claude API key | Optional (Tier 2 scoring) |
-| `OPENAI_API_KEY` | OpenAI API key | Optional (Tier 3 scoring) |
-| `APIFY_API_TOKEN` | Apify API token for third-party job actor scraping | Optional (Apify scans) |
-
-*Note: If no external API keys are configured, GetHired automatically falls back to local Ollama (Tier 4), hybrid semantic vector search (Tier 5), or rule-based local keyword scoring (Tier 6).*
-
-## Running Tests
-
-Run the integrated regression test suite to verify deduplication, pipeline filtering, scoring logic, and application tracking:
+## Running it
 
 ```bash
-python test_suite.py
+# 1. main environment (Python 3.12)
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/playwright install chromium
+
+# 2. secrets — copy and fill (never commit this)
+cp .env.example .env    # GEMINI_API_KEYS, GROQ_API_KEY, APIFY_API_TOKEN,
+                        # ADZUNA_*, JOOBLE_API_KEY
+
+# 3. optional: local LLM tier
+ollama serve &
+ollama pull qwen2.5:7b
+
+# 4. optional: Indeed fetcher (isolated — its deps conflict)
+python3 -m venv .venv-jobspy && .venv-jobspy/bin/pip install python-jobspy
+
+# 5. run
+.venv/bin/python app.py     # dashboard on http://localhost:5050
 ```
 
-The test suite executes 12 regression test cases without requiring external network connectivity.
+macOS note: `OMP_NUM_THREADS=1` is set first thing in `app.py` — removing it segfaults the embedding stack.
 
-## Deployment
+## Testing
 
-GetHired supports running local LLM scoring via Ollama on Linux server instances (such as Oracle Cloud Always Free ARM instances).
+```bash
+OMP_NUM_THREADS=1 .venv/bin/python test_ui_e2e.py            # 40+ Playwright checks
+OMP_NUM_THREADS=1 .venv/bin/python -m pytest test_scan_scheduler.py test_experience_filter.py test_phase3_stability.py
+```
 
-Refer to [deployment/ollama_setup.md](deployment/ollama_setup.md) for step-by-step instructions on setting up Ollama with the `qwen2.5:7b` model as a `systemd` service.
+## Project layout
 
-## Limitations
+```
+app.py                     Flask app + API
+pipeline.py                filtering & scoring gates
+scan_coordinator.py        parallel scan orchestration
+browser_scanner.py         Playwright career-page scraping + ATS extractors
+company_discovery.py       autonomous employer discovery
+hybrid_scorer.py           tiered scoring engine
+llm_router.py              provider rotation, quotas, backoff
+job_deduplicator.py        company-bucketed dedup
+store_pruner.py            72h retention + tombstones
+job_liveness_checker.py    dead-posting detection
+linkedin_detail_enricher.py  description enrichment (rate-limited)
+hardened_fetch.py          TLS-impersonation fetch helper
+fetchers/                  per-board fetchers
+static/index.html          the entire dashboard
+```
 
-- **Storage Layer**: Currently relies on local JSON files (`jobs_store.json`, `applications.json`) for persistence, intended for single-user local deployment.
-- **Scraper Maintenance**: Direct career page DOM selectors may require periodic pattern updates when company websites change layout.
-- **Model Initial Load**: Initial execution of semantic vector scoring downloads the `SentenceTransformers` model (`all-mpnet-base-v2`), which requires initial bandwidth and RAM.
+## Ground rules this project follows
 
-## Future Improvements
+- **No fake data.** If a source can't be verified, it doesn't enter the store.
+- **Polite scraping.** Rate limits, backoff, dormancy; LinkedIn only logged-out and heavily throttled; one account per provider.
+- **Zero recurring cost.** Free LLM tiers with honest quota tracking; the only paid call (Apify) is capped at $4.50/month and gated to one run per 20 hours.
 
-- Transition local JSON storage to a relational database (such as PostgreSQL or SQLite).
-- Implement multi-user candidate profile support.
-- Add real-time email or webhook alerts for high-matching job postings.
+## Status
 
-## License
-
-No license has currently been specified for this project.
-
-## Author
-
-**Aashbir Singh**  
-GitHub: [https://github.com/aashbirsingh25](https://github.com/aashbirsingh25)
+Actively developed and in daily use. Current store: ~7,600 jobs across ~283 companies, with autonomous discovery growing coverage toward 1,000 companies.
